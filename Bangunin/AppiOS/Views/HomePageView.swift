@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct HomePageView: View {
+    
+    @State private var showAddAlarm: Bool = false //buat tampilin sheet add alarm
+    
     var body: some View {
         ZStack {
             VStack {
@@ -26,7 +29,7 @@ struct HomePageView: View {
                     Spacer()
                     
                     Button {
-                        
+                        showAddAlarm = true
                     } label: {
                         Image(systemName: "plus")
                             .frame(width: 40, height: 40)
@@ -52,7 +55,7 @@ struct HomePageView: View {
                 // tambahin if else disini (kalau tidak ada data alarm masuk ke empty state)
                 
                 // empty state
-                VStack(spacing: 8) {
+                VStack(spacing: 10) {
                     Text("No alarms yet")
                         .font(.title2)
                         .fontWeight(.medium)
@@ -65,6 +68,9 @@ struct HomePageView: View {
                 Spacer()
             }
             .padding(.all)
+        }
+        .sheet(isPresented: $showAddAlarm) { //tampilin sheet add alarm
+            AddAlarmView()
         }
     }
 }
