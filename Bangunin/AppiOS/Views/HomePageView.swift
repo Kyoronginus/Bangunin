@@ -94,6 +94,7 @@ struct HomePageView: View {
                 Spacer()
             }
             .padding(.all)
+            .ignoresSafeArea(edges: .bottom)
         }
         .sheet(isPresented: $showAddAlarm) { //tampilin sheet add alarm
             AddAlarmView()
