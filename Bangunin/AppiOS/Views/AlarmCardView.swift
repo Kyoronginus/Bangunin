@@ -1,5 +1,5 @@
 //
-//  Untitled.swift
+//  AlarmCardView.swift
 //  Bangunin
 //
 //  Created by Tohru Djunaedi Sato on 02/07/26.
@@ -9,54 +9,34 @@ import SwiftUI
 
 struct AlarmCardView: View {
     
-    var alarmLabel: String = "Work"
-    var departureStation: String = "Cisauk"
-    var destinationStation: String = "Palmerah"
-    
-    @State var isOn: Bool = false
+    @Binding var alarm: Alarm
     
     var body: some View {
         HStack{
             VStack(alignment: .leading){
-                Text(alarmLabel)
+                Text(alarm.label)
                     .foregroundStyle(.gray)
                 HStack {
-                    Text(departureStation)
+                    Text(alarm.departureStation)
                         .bold()
                         .font(.title)
 //                        .lineLimit(1)
 //                        .minimumScaleFactor(0.6)
                     Image(systemName: "arrow.right")
-                    Text(destinationStation)
+                    Text(alarm.destinationStation)
                         .bold()
                         .font(.title)
 //                        .lineLimit(1)
 //                        .minimumScaleFactor(0.6)
                 }
-                Text("Repeat every weekday")
+                Text(alarm.repeatStatus)
             }
             Spacer()
-            Toggle("", isOn: $isOn)
+            Toggle("", isOn: $alarm.isActive)
                 .tint(.green)
                 .labelsHidden()
                 .offset(y:20)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
     }
-}
-
-#Preview {
-    AlarmCardView(
-        alarmLabel: "Work",
-        departureStation: "Kebayoran",
-        destinationStation: "Rangkasbitung",
-        isOn: true
-    )
-    Divider()
-    AlarmCardView(
-        alarmLabel: "Work",
-        departureStation: "Juranmangu",
-        destinationStation: "Cisauk",
-        isOn: true
-    )
 }

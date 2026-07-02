@@ -9,6 +9,23 @@ import SwiftUI
 
 struct HomePageView: View {
     
+    @State private var alarms: [Alarm] = [
+        Alarm(
+            label: "Work",
+            departureStation: "Cisauk",
+            destinationStation: "Palmerah",
+            repeatStatus: "Every weekday",
+            isActive: true
+        ),
+        Alarm(
+            label: "Home",
+            departureStation: "Palmerah",
+            destinationStation: "Cisauk",
+            repeatStatus: "Every weekday",
+            isActive: false
+        )
+    ]
+    
     @State private var showAddAlarm: Bool = false //buat tampilin sheet add alarm
     
     var body: some View {
@@ -52,17 +69,26 @@ struct HomePageView: View {
                 
                 Spacer()
                 
-                // tambahin if else disini (kalau tidak ada data alarm masuk ke empty state)
-                
-                // empty state
-                VStack(spacing: 10) {
-                    Text("No alarms yet")
-                        .font(.title2)
-                        .fontWeight(.medium)
-                    
-                    Text("Click the + button to add your alarm")
-                        .font(.body)
-                        .fontWeight(.regular)
+                // if else empty state
+                if alarms.isEmpty {
+                    VStack(spacing: 10) {
+                        Text("No alarms yet")
+                            .font(.title2)
+                            .fontWeight(.medium)
+                        
+                        Text("Click the + button to add your alarm")
+                            .font(.body)
+                            .fontWeight(.regular)
+                    }
+                } else {
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            ForEach($alarms) { alarm in
+                                AlarmCardView(alarm: alarm)
+                                Divider()
+                            }
+                        }
+                    }
                 }
                 
                 Spacer()
