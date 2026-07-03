@@ -8,7 +8,7 @@ import SwiftUI
 struct RouteSelectionView: View {
     @Environment(\.dismiss) private var dismiss
     let isDeparture: Bool
-    @Binding var selectedStation: String
+    @Binding var selectedStation: Station
     
     let routes = RouteLine.allCases
     
@@ -45,13 +45,13 @@ struct RouteSelectionView: View {
                 VStack(spacing: 0) {
                     if isDeparture {
                         Button {
-                            selectedStation = "None"
+                            selectedStation = .none
                         } label: {
                             HStack {
                                 Text("None")
                                     .foregroundColor(.primary)
                                 Spacer()
-                                if selectedStation == "None" {
+                                if selectedStation == .none {
                                     Image(systemName: "checkmark")
                                         .foregroundColor(.orange)
                                         .bold()
