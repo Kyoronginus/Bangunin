@@ -13,7 +13,8 @@ struct HomePageView: View {
     @Query private var alarms: [Alarm]
     @Environment(\.modelContext) private var modelContext
 
-    @State private var showAddAlarm: Bool = false //buat tampilin sheet add alarm
+    @State private var showAddAlarm: Bool = false // buat create
+    @State private var selectedAlarm: Alarm? = nil //buat edit
 
     var body: some View {
         ZStack {
@@ -72,6 +73,10 @@ struct HomePageView: View {
                         VStack(spacing: 20) {
                             ForEach(alarms) { alarm in
                                 AlarmCardView(alarm: alarm)
+                                    .contentShape(Rectangle())  // biar area kosong ikut ke-tap
+                                    .onTapGesture {
+                                        selectedAlarm = alarm
+                                    }
                                 Divider()
                             }
                         }
@@ -83,8 +88,11 @@ struct HomePageView: View {
             .padding(.all)
             .ignoresSafeArea(edges: .bottom)
         }
-        .sheet(isPresented: $showAddAlarm) { //tampilin sheet add alarm
+        .sheet(isPresented: $showAddAlarm) {
             AddAlarmView()
+        }
+        .sheet(item: $selectedAlarm) { alarm in
+            AddAlarmView(editingAlarm: alarm)
         }
     }
 }
