@@ -3,8 +3,8 @@
 //  Bangunin
 //
 
-import Foundation
 import Combine
+import Foundation
 import SwiftData
 
 class AddAlarmViewModel: ObservableObject {
@@ -17,7 +17,9 @@ class AddAlarmViewModel: ObservableObject {
     @Published var isSoundOn: Bool = false
 
     var repeatText: String {
-        let weekdays: Set<RepeatOption> = [.monday, .tuesday, .wednesday, .thursday, .friday]
+        let weekdays: Set<RepeatOption> = [
+            .monday, .tuesday, .wednesday, .thursday, .friday,
+        ]
         let weekends: Set<RepeatOption> = [.saturday, .sunday]
 
         if selectedRepeatOptions.isEmpty {
@@ -29,12 +31,20 @@ class AddAlarmViewModel: ObservableObject {
         } else if selectedRepeatOptions == weekends {
             return "Every Weekend"
         } else {
-            return RepeatOption.allCases.filter { selectedRepeatOptions.contains($0) }
-                .map { String($0.rawValue.replacingOccurrences(of: "Every ", with: "").prefix(3)) }
-                .joined(separator: ", ")
+            return RepeatOption.allCases.filter {
+                selectedRepeatOptions.contains($0)
+            }
+            .map {
+                String(
+                    $0.rawValue.replacingOccurrences(of: "Every ", with: "")
+                        .prefix(3)
+                )
+            }
+            .joined(separator: ", ")
         }
     }
 
+    // CREATE
     func saveAlarm(context: ModelContext) {
         let newAlarm = Alarm(
             label: alarmName,
@@ -46,5 +56,12 @@ class AddAlarmViewModel: ObservableObject {
             isSoundOn: isSoundOn
         )
         context.insert(newAlarm)
+
+        do {
+            try context.save()
+            print("Alarm berhasil disimpan: (newAlarm.label)")
+        } catch {
+            print("Gagal: (error)")
+        }
     }
 }
