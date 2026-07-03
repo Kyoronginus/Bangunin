@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddAlarmView: View {
     @Environment(\.dismiss) private var dismiss
-    
+    @Environment(\.modelContext) private var modelContext
+
     @StateObject private var viewModel = AddAlarmViewModel()
 
     var body: some View {
@@ -37,7 +39,7 @@ struct AddAlarmView: View {
                     Spacer()
 
                     Button {
-                        viewModel.saveAlarm()
+                        viewModel.saveAlarm(context: modelContext)
                         dismiss()
                     } label: {
                         Image(systemName: "checkmark")
@@ -51,7 +53,7 @@ struct AddAlarmView: View {
                 .padding(.horizontal)
                 .padding(.top, 16)
                 .padding(.bottom, 8)
-                
+
                 ScrollView {
                     VStack(spacing: 16) {
                         // Alarm Name
@@ -59,7 +61,7 @@ struct AddAlarmView: View {
                             .padding()
                             .background(Color(UIColor.systemGray6))
                             .cornerRadius(12)
-                        
+
                         // Stations
                         VStack(spacing: 0) {
                             NavigationLink {
@@ -77,10 +79,10 @@ struct AddAlarmView: View {
                                 }
                                 .padding()
                             }
-                            
+
                             Divider()
                                 .padding(.horizontal)
-                            
+
                             NavigationLink {
                                 RouteSelectionView(isDeparture: false, selectedStation: $viewModel.destinationStation)
                             } label: {
@@ -99,7 +101,7 @@ struct AddAlarmView: View {
                         }
                         .background(Color(UIColor.systemGray6))
                         .cornerRadius(12)
-                        
+
                         // Wake me up at
                         HStack {
                             Text("Wake me up at")
@@ -124,7 +126,7 @@ struct AddAlarmView: View {
                         .padding()
                         .background(Color(UIColor.systemGray6))
                         .cornerRadius(12)
-                        
+
                         // Repeat
                         NavigationLink {
                             RepeatSelectionView(selectedRepeatOptions: $viewModel.selectedRepeatOptions)
@@ -143,14 +145,14 @@ struct AddAlarmView: View {
                             .background(Color(UIColor.systemGray6))
                             .cornerRadius(12)
                         }
-                        
+
                         // Vibration
                         Toggle("Vibration", isOn: $viewModel.isVibrationOn)
                             .tint(.green)
                             .padding()
                             .background(Color(UIColor.systemGray6))
                             .cornerRadius(12)
-                        
+
                         // Sound
                         Toggle("Sound", isOn: $viewModel.isSoundOn)
                             .tint(.green)

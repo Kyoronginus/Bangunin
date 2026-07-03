@@ -5,6 +5,7 @@
 
 import Foundation
 import Combine
+import SwiftData
 
 class AddAlarmViewModel: ObservableObject {
     @Published var alarmName: String = ""
@@ -14,11 +15,11 @@ class AddAlarmViewModel: ObservableObject {
     @Published var selectedRepeatOptions: Set<RepeatOption> = []
     @Published var isVibrationOn: Bool = true
     @Published var isSoundOn: Bool = false
-    
+
     var repeatText: String {
         let weekdays: Set<RepeatOption> = [.monday, .tuesday, .wednesday, .thursday, .friday]
         let weekends: Set<RepeatOption> = [.saturday, .sunday]
-        
+
         if selectedRepeatOptions.isEmpty {
             return "Never"
         } else if selectedRepeatOptions.count == RepeatOption.allCases.count {
@@ -33,8 +34,17 @@ class AddAlarmViewModel: ObservableObject {
                 .joined(separator: ", ")
         }
     }
-    
-    func saveAlarm() {
-        // Implement save logic here
+
+    func saveAlarm(context: ModelContext) {
+        let newAlarm = Alarm(
+            label: alarmName,
+            departureStation: departureStation,
+            destinationStation: destinationStation,
+            wakeUpTime: wakeMeUpAt,
+            repeatOptions: Array(selectedRepeatOptions),
+            isVibrationOn: isVibrationOn,
+            isSoundOn: isSoundOn
+        )
+        context.insert(newAlarm)
     }
 }

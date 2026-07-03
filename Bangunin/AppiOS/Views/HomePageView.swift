@@ -6,35 +6,22 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomePageView: View {
-    
-    @State private var alarms: [Alarm] = [
-        Alarm(
-            label: "Work",
-            departureStation: "Cisauk",
-            destinationStation: "Palmerah",
-            repeatStatus: "Every weekday",
-            isActive: true
-        ),
-        Alarm(
-            label: "Home",
-            departureStation: "Palmerah",
-            destinationStation: "Cisauk",
-            repeatStatus: "Every weekday",
-            isActive: false
-        )
-    ]
-    
+
+    @Query private var alarms: [Alarm]
+    @Environment(\.modelContext) private var modelContext
+
     @State private var showAddAlarm: Bool = false //buat tampilin sheet add alarm
-    
+
     var body: some View {
         ZStack {
             VStack {
                 // top bar
                 HStack {
                     Button {
-                    
+
                     } label: {
                         Text("Edit")
                             .padding(.horizontal, 18)
@@ -42,9 +29,9 @@ struct HomePageView: View {
                             .background(.gray.opacity(0.2))
                             .clipShape(Capsule())
                     }
-                    
+
                     Spacer()
-                    
+
                     Button {
                         showAddAlarm = true
                     } label: {
@@ -53,29 +40,29 @@ struct HomePageView: View {
                             .background(.gray.opacity(0.2))
                             .clipShape(Circle())
                     }
-                    
+
                 }
                 .padding(.horizontal)
-                
+
                 // title
                 HStack {
                     Text("Alarms")
                         .font(.system(size: 40, weight: .bold))
-                    
+
                     Spacer()
                 }
                 .padding(.horizontal)
                 .padding(.top, 20)
-                
+
                 Spacer()
-                
+
                 // if else empty state
                 if alarms.isEmpty {
                     VStack(spacing: 10) {
                         Text("No alarms yet")
                             .font(.title2)
                             .fontWeight(.medium)
-                        
+
                         Text("Click the + button to add your alarm")
                             .font(.body)
                             .fontWeight(.regular)
@@ -83,14 +70,14 @@ struct HomePageView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 20) {
-                            ForEach($alarms) { alarm in
+                            ForEach(alarms) { alarm in
                                 AlarmCardView(alarm: alarm)
                                 Divider()
                             }
                         }
                     }
                 }
-                
+
                 Spacer()
             }
             .padding(.all)
@@ -104,4 +91,5 @@ struct HomePageView: View {
 
 #Preview {
     HomePageView()
+        .modelContainer(for: Alarm.self, inMemory: true)
 }

@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct AlarmCardView: View {
-    
-    @Binding var alarm: Alarm
-    
+
+    @Bindable var alarm: Alarm
+
     var body: some View {
         HStack{
             VStack(alignment: .leading){
@@ -20,14 +20,10 @@ struct AlarmCardView: View {
                     Text(alarm.departureStation)
                         .bold()
                         .font(.title)
-//                        .lineLimit(1)
-//                        .minimumScaleFactor(0.6)
                     Image(systemName: "arrow.right")
                     Text(alarm.destinationStation)
                         .bold()
                         .font(.title)
-//                        .lineLimit(1)
-//                        .minimumScaleFactor(0.6)
                 }
                 Text(alarm.repeatStatus)
             }

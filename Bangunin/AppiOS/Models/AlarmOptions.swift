@@ -5,7 +5,7 @@
 
 import Foundation
 
-enum WakeUpTime: String, CaseIterable {
+enum WakeUpTime: String, CaseIterable, Codable {
     case atDestination = "At the destination"
     case fiveMin = "5 minutes before"
     case tenMin = "10 minutes before"
@@ -15,7 +15,7 @@ enum WakeUpTime: String, CaseIterable {
     case thirtyMin = "30 minutes before"
 }
 
-enum RepeatOption: String, CaseIterable {
+enum RepeatOption: String, CaseIterable, Codable {
     case sunday = "Every Sunday"
     case monday = "Every Monday"
     case tuesday = "Every Tuesday"
