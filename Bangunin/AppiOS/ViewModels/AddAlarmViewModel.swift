@@ -65,7 +65,7 @@ class AddAlarmViewModel: ObservableObject {
     }
 
     func saveAlarm(context: ModelContext) {
-        if let alarm = editingAlarm { // UPDATE
+        if let alarm = editingAlarm {  // UPDATE
             alarm.label = alarmName
             alarm.departureStation = departureStation
             alarm.destinationStation = destinationStation
@@ -74,7 +74,7 @@ class AddAlarmViewModel: ObservableObject {
             alarm.isVibrationOn = isVibrationOn
             alarm.isSoundOn = isSoundOn
         } else {
-            let newAlarm = Alarm( // CREATE
+            let newAlarm = Alarm(  // CREATE
                 label: alarmName,
                 departureStation: departureStation,
                 destinationStation: destinationStation,
@@ -84,13 +84,13 @@ class AddAlarmViewModel: ObservableObject {
                 isSoundOn: isSoundOn
             )
             context.insert(newAlarm)
-        }
 
-        do {
-            try context.save()
-            print("Alarm berhasil disimpan: (newAlarm.label)")
-        } catch {
-            print("Gagal: (error)")
+            do {
+                try context.save()
+                print("Alarm berhasil disimpan: \(newAlarm.label)")
+            } catch {
+                print("Gagal: \(error)")
+            }
         }
     }
 }
