@@ -12,7 +12,8 @@ import SwiftData
 struct IOSApp: App {
     var body: some Scene {
         WindowGroup {
-            HomePageView()
+//            HomePageView()
+            LocationDebugView()
         }.modelContainer(for: Alarm.self)
     }
 }

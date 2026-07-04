@@ -8,7 +8,7 @@ import SwiftUI
 struct StationSelectionView: View {
     @Environment(\.dismiss) private var dismiss
     let route: RouteLine
-    @Binding var selectedStation: String
+    @Binding var selectedStation: Station
     
     var body: some View {
         VStack(spacing: 16) {
@@ -48,7 +48,7 @@ struct StationSelectionView: View {
                             selectedStation = station
                         } label: {
                             HStack {
-                                Text(station)
+                                Text(station.name)
                                     .foregroundColor(.primary)
                                 Spacer()
                                 if selectedStation == station {
