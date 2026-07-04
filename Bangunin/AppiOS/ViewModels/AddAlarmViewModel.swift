@@ -28,13 +28,23 @@ class AddAlarmViewModel: ObservableObject {
 
         if let alarm = editingAlarm {
             self.alarmName = alarm.label
-            self.departureStation = alarm.departureStation
-            self.destinationStation = alarm.destinationStation
+            self.departureStation = Self.findStation(name: alarm.departureStation) ?? .none
+            self.destinationStation = Self.findStation(name: alarm.destinationStation) ?? Station(name: "Palmerah", latitude: -6.2074, longitude: 106.7969)
             self.wakeMeUpAt = alarm.wakeUpTime
             self.selectedRepeatOptions = Set(alarm.repeatOptions)
             self.isVibrationOn = alarm.isVibrationOn
             self.isSoundOn = alarm.isSoundOn
         }
+    }
+    
+    // Helper to find a station's coordinates by name
+    private static func findStation(name: String) -> Station? {
+        for (_, stations) in routeStations {
+            if let found = stations.first(where: { $0.name == name }) {
+                return found
+            }
+        }
+        return nil
     }
 
     var repeatText: String {
@@ -58,7 +68,6 @@ class AddAlarmViewModel: ObservableObject {
     
     func saveAlarm(context: ModelContext) {
         // Convert wakeMeUpAt to an approximate distance radius
-        // perlu diganti jadi logic geofencing pake kecepatan kereta konstan
         var distanceRadiusInMeters: Double = 0
         switch wakeMeUpAt {
             case .atDestination: distanceRadiusInMeters = 500
@@ -68,45 +77,39 @@ class AddAlarmViewModel: ObservableObject {
             case .twentyMin: distanceRadiusInMeters = 20000
             case .twentyFiveMin: distanceRadiusInMeters = 25000
             case .thirtyMin: distanceRadiusInMeters = 30000
+        }
+        
+        let finalLabel = alarmName.isEmpty ? "New Alarm" : alarmName
+
         if let alarm = editingAlarm {  // UPDATE
-            alarm.label = alarmName
-            alarm.departureStation = departureStation
-            alarm.destinationStation = destinationStation
+            alarm.label = finalLabel
+            alarm.departureStation = departureStation.name
+            alarm.destinationStation = destinationStation.name
             alarm.wakeUpTime = wakeMeUpAt
             alarm.repeatOptions = Array(selectedRepeatOptions)
             alarm.isVibrationOn = isVibrationOn
             alarm.isSoundOn = isSoundOn
         } else {
             let newAlarm = Alarm(  // CREATE
-                label: alarmName,
-                departureStation: departureStation,
-                destinationStation: destinationStation,
+                label: finalLabel,
+                departureStation: departureStation.name,
+                destinationStation: destinationStation.name,
                 wakeUpTime: wakeMeUpAt,
                 repeatOptions: Array(selectedRepeatOptions),
                 isVibrationOn: isVibrationOn,
-                isSoundOn: isSoundOn
+                isSoundOn: isSoundOn,
+                isActive: true
             )
             context.insert(newAlarm)
-
-            do {
-                try context.save()
-                print("Alarm berhasil disimpan: \(newAlarm.label)")
-            } catch {
-                print("Gagal: \(error)")
-            }
         }
         
-        let newAlarm = Alarm(
-            label: alarmName.isEmpty ? "New Alarm" : alarmName,
-            departureStation: departureStation.name,
-            destinationStation: destinationStation.name,
-            wakeUpTime: wakeMeUpAt,
-            repeatOptions: Array(selectedRepeatOptions),
-            isVibrationOn: isVibrationOn,
-            isSoundOn: isSoundOn,
-            isActive: true
-        )
-        context.insert(newAlarm)
+        // Save Context
+        do {
+            try context.save()
+            print("Alarm berhasil disimpan: \(finalLabel)")
+        } catch {
+            print("Gagal menyimpan alarm: \(error)")
+        }
         
         // Start monitoring using LocationManager singleton
         LocationManager.shared.startMonitoringDeparture(
@@ -117,6 +120,6 @@ class AddAlarmViewModel: ObservableObject {
         )
         LocationManager.shared.startMonitoring(destination: destinationStation, radius: distanceRadiusInMeters)
         
-        print("Alarm saved for \(destinationStation.name) with radius \(distanceRadiusInMeters)m")
+        print("Alarm geofences registered for \(destinationStation.name) with radius \(distanceRadiusInMeters)m")
     }
 }
