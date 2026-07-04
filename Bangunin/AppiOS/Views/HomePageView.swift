@@ -13,7 +13,8 @@ struct HomePageView: View {
     @Query private var alarms: [Alarm]
     @Environment(\.modelContext) private var modelContext
 
-    @State private var showAddAlarm: Bool = false //buat tampilin sheet add alarm
+    @State private var showAddAlarm: Bool = false // buat create
+    @State private var selectedAlarm: Alarm? = nil // buat edit (update)
 
     var body: some View {
         ZStack {
@@ -68,14 +69,24 @@ struct HomePageView: View {
                             .fontWeight(.regular)
                     }
                 } else {
-                    ScrollView {
-                        VStack(spacing: 20) {
-                            ForEach(alarms) { alarm in
-                                AlarmCardView(alarm: alarm)
-                                Divider()
-                            }
+                    List {
+                        ForEach(alarms) { alarm in
+                            AlarmCardView(alarm: alarm)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    selectedAlarm = alarm
+                                }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) { //delete alarm kalau di swipe
+                                    Button(role: .destructive) {
+                                        deleteAlarm(alarm)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
                         }
                     }
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
                 }
 
                 Spacer()
@@ -83,8 +94,22 @@ struct HomePageView: View {
             .padding(.all)
             .ignoresSafeArea(edges: .bottom)
         }
-        .sheet(isPresented: $showAddAlarm) { //tampilin sheet add alarm
+        .sheet(isPresented: $showAddAlarm) {
             AddAlarmView()
+        }
+        .sheet(item: $selectedAlarm) { alarm in
+            AddAlarmView(editingAlarm: alarm)
+        }
+    }
+
+    private func deleteAlarm(_ alarm: Alarm) {
+        modelContext.delete(alarm)
+
+        do {
+            try modelContext.save()
+            print("Alarm dihapus: \(alarm.label)")
+        } catch {
+            print("Alarm gagal dihapus: \(error)")
         }
     }
 }

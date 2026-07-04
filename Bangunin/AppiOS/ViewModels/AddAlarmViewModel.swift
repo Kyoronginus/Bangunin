@@ -16,7 +16,27 @@ class AddAlarmViewModel: ObservableObject {
     @Published var selectedRepeatOptions: Set<RepeatOption> = []
     @Published var isVibrationOn: Bool = true
     @Published var isSoundOn: Bool = false
-    
+
+    private var editingAlarm: Alarm?
+
+    var isEditMode: Bool {
+        editingAlarm != nil
+    }
+
+    init(editingAlarm: Alarm? = nil) {
+        self.editingAlarm = editingAlarm
+
+        if let alarm = editingAlarm {
+            self.alarmName = alarm.label
+            self.departureStation = alarm.departureStation
+            self.destinationStation = alarm.destinationStation
+            self.wakeMeUpAt = alarm.wakeUpTime
+            self.selectedRepeatOptions = Set(alarm.repeatOptions)
+            self.isVibrationOn = alarm.isVibrationOn
+            self.isSoundOn = alarm.isSoundOn
+        }
+    }
+
     var repeatText: String {
         let weekdays: Set<RepeatOption> = [.monday, .tuesday, .wednesday, .thursday, .friday]
         let weekends: Set<RepeatOption> = [.saturday, .sunday]
@@ -48,6 +68,32 @@ class AddAlarmViewModel: ObservableObject {
             case .twentyMin: distanceRadiusInMeters = 20000
             case .twentyFiveMin: distanceRadiusInMeters = 25000
             case .thirtyMin: distanceRadiusInMeters = 30000
+        if let alarm = editingAlarm {  // UPDATE
+            alarm.label = alarmName
+            alarm.departureStation = departureStation
+            alarm.destinationStation = destinationStation
+            alarm.wakeUpTime = wakeMeUpAt
+            alarm.repeatOptions = Array(selectedRepeatOptions)
+            alarm.isVibrationOn = isVibrationOn
+            alarm.isSoundOn = isSoundOn
+        } else {
+            let newAlarm = Alarm(  // CREATE
+                label: alarmName,
+                departureStation: departureStation,
+                destinationStation: destinationStation,
+                wakeUpTime: wakeMeUpAt,
+                repeatOptions: Array(selectedRepeatOptions),
+                isVibrationOn: isVibrationOn,
+                isSoundOn: isSoundOn
+            )
+            context.insert(newAlarm)
+
+            do {
+                try context.save()
+                print("Alarm berhasil disimpan: \(newAlarm.label)")
+            } catch {
+                print("Gagal: \(error)")
+            }
         }
         
         let newAlarm = Alarm(

@@ -5,14 +5,20 @@
 //  Created by Kezia Karen Amelia on 02/07/26.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct AddAlarmView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
 
     @StateObject private var viewModel = AddAlarmViewModel()
+
+    init(editingAlarm: Alarm? = nil) {
+        _viewModel = StateObject(
+            wrappedValue: AddAlarmViewModel(editingAlarm: editingAlarm)
+        )
+    }
 
     var body: some View {
         NavigationStack {
@@ -27,7 +33,12 @@ struct AddAlarmView: View {
                             .frame(width: 44, height: 44)
                             .background(Color(UIColor.systemBackground))
                             .clipShape(Circle())
-                            .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+                            .shadow(
+                                color: .black.opacity(0.05),
+                                radius: 5,
+                                x: 0,
+                                y: 2
+                            )
                     }
 
                     Spacer()
@@ -47,7 +58,12 @@ struct AddAlarmView: View {
                             .frame(width: 44, height: 44)
                             .background(Color(UIColor.systemBackground))
                             .clipShape(Circle())
-                            .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+                            .shadow(
+                                color: .black.opacity(0.05),
+                                radius: 5,
+                                x: 0,
+                                y: 2
+                            )
                     }
                 }
                 .padding(.horizontal)
@@ -65,7 +81,10 @@ struct AddAlarmView: View {
                         // Stations
                         VStack(spacing: 0) {
                             NavigationLink {
-                                RouteSelectionView(isDeparture: true, selectedStation: $viewModel.departureStation)
+                                RouteSelectionView(
+                                    isDeparture: true,
+                                    selectedStation: $viewModel.departureStation
+                                )
                             } label: {
                                 HStack {
                                     Text("Departure Station")
@@ -84,7 +103,11 @@ struct AddAlarmView: View {
                                 .padding(.horizontal)
 
                             NavigationLink {
-                                RouteSelectionView(isDeparture: false, selectedStation: $viewModel.destinationStation)
+                                RouteSelectionView(
+                                    isDeparture: false,
+                                    selectedStation: $viewModel
+                                        .destinationStation
+                                )
                             } label: {
                                 HStack {
                                     Text("Destination Station")
@@ -108,8 +131,12 @@ struct AddAlarmView: View {
                                 .foregroundColor(.primary)
                             Spacer()
                             Menu {
-                                Picker("Wake me up at", selection: $viewModel.wakeMeUpAt) {
-                                    ForEach(WakeUpTime.allCases, id: \.self) { time in
+                                Picker(
+                                    "Wake me up at",
+                                    selection: $viewModel.wakeMeUpAt
+                                ) {
+                                    ForEach(WakeUpTime.allCases, id: \.self) {
+                                        time in
                                         Text(time.rawValue).tag(time)
                                     }
                                 }
@@ -129,7 +156,10 @@ struct AddAlarmView: View {
 
                         // Repeat
                         NavigationLink {
-                            RepeatSelectionView(selectedRepeatOptions: $viewModel.selectedRepeatOptions)
+                            RepeatSelectionView(
+                                selectedRepeatOptions: $viewModel
+                                    .selectedRepeatOptions
+                            )
                         } label: {
                             HStack {
                                 Text("Repeat")
