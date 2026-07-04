@@ -8,6 +8,47 @@
 import Foundation
 import CoreLocation
 
+enum RegionPurpose: String {
+    case departure
+    case destination
+}
+
+struct RegionIdentifier {
+    let purpose: RegionPurpose
+    let stationName: String
+    let targetDestination: String?
+    
+    // Memberwise initializer
+    init(purpose: RegionPurpose, stationName: String, targetDestination: String? = nil) {
+        self.purpose = purpose
+        self.stationName = stationName
+        self.targetDestination = targetDestination
+    }
+    
+    var stringValue: String {
+        if let dest = targetDestination {
+            return "\(purpose.rawValue)|\(stationName)|\(dest)"
+        }
+        return "\(purpose.rawValue)|\(stationName)"
+    }
+    
+    // Failable initializer from string
+    init?(stringValue: String) {
+        let parts = stringValue.split(separator: "|")
+        guard parts.count >= 2,
+              let purpose = RegionPurpose(rawValue: String(parts[0])) else {
+            return nil
+        }
+        self.purpose = purpose
+        self.stationName = String(parts[1])
+        if parts.count == 3 {
+            self.targetDestination = String(parts[2])
+        } else {
+            self.targetDestination = nil
+        }
+    }
+}
+
 @Observable
 class LocationManager: NSObject, CLLocationManagerDelegate {
 
@@ -20,6 +61,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     // Properties that your Views can observe
     var userLocation: CLLocation?
     var authorizationStatus: CLAuthorizationStatus
+    
+    var isMonitoringRoute: Bool = false
     var lastUpdateTimestamp: Date?
     var lastError: String?
 
@@ -65,10 +108,11 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             return
         }
         
+        let identifier = RegionIdentifier(purpose: .destination, stationName: destination.name).stringValue
         let region = CLCircularRegion(
             center: destination.coordinate,
             radius: radius,
-            identifier: destination.name
+            identifier: identifier
         )
         region.notifyOnEntry = true
         region.notifyOnExit = false
@@ -81,6 +125,25 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         for region in manager.monitoredRegions {
             manager.stopMonitoring(for: region)
         }
+    }
+    
+    // MARK: - Testing / Departure
+    
+    func startMonitoringDeparture(stationName: String, destinationName: String, radius: CLLocationDistance, coordinate: CLLocationCoordinate2D) {
+        guard CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) else {
+            print("Geofencing is not supported on this device!")
+            return
+        }
+        
+        let identifier = RegionIdentifier(purpose: .departure, stationName: stationName, targetDestination: destinationName).stringValue
+        let region = CLCircularRegion(center: coordinate, radius: radius, identifier: identifier)
+        region.notifyOnEntry = true
+        region.notifyOnExit = false
+        
+        manager.startMonitoring(for: region)
+        // Request the state immediately to see if we are already inside
+        manager.requestState(for: region)
+        print("Started monitoring DEPARTURE region around \(stationName) with radius \(radius) meters.")
     }
 
     // MARK: - CLLocationManagerDelegate
@@ -105,13 +168,45 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     // Triggered when the user enters the geofence radius
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        if let circularRegion = region as? CLCircularRegion {
-            print("Entered region: \(circularRegion.identifier)")
-            // Trigger the alarm!
-            AlarmTriggerManager.shared.triggerAlarm(for: circularRegion.identifier)
+        print("Did Enter Region: \(region.identifier)")
+        
+        // Logika untuk stasiun:
+        handleRegionEvent(region: region, state: .inside)
+    }
+    
+    // Triggered when we request the state (e.g. immediately after registering)
+    func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
+        print("Did Determine State for \(region.identifier): \(state == .inside ? "Inside" : "Outside/Unknown")")
+        
+        if state == .inside {
+            handleRegionEvent(region: region, state: .inside)
+        }
+    }
+    
+    private func handleRegionEvent(region: CLRegion, state: CLRegionState) {
+        // Prevent double triggering if already monitoring route
+        guard state == .inside else { return }
+        
+        // Decode the structured identifier
+        guard let regionId = RegionIdentifier(stringValue: region.identifier) else {
+            print("Unknown region format: \(region.identifier)")
+            return
+        }
+        
+        switch regionId.purpose {
+        case .departure:
+            if !self.isMonitoringRoute {
+                print("User is at departure station. Start alarm monitoring state.")
+                // Synchronously set to true to prevent double triggers if called rapidly
+                self.isMonitoringRoute = true
+                
+                let destName = regionId.targetDestination ?? "Destination"
+                AlarmTriggerManager.shared.triggerDepartureNotification(for: destName)
+            }
             
-            // Stop monitoring after triggering
-            manager.stopMonitoring(for: region)
+        case .destination:
+            print("User near destination station! Trigger alarm!")
+            AlarmTriggerManager.shared.triggerAlarm(for: regionId.stationName)
         }
     }
 

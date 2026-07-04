@@ -65,6 +65,36 @@ struct LocationDebugView: View {
                     }
                 }
                 
+                Section(header: Text("Alarm & Monitoring State")) {
+                    HStack {
+                        Text("Monitoring Route")
+                        Spacer()
+                        Text(locationManager.isMonitoringRoute ? "ACTIVE" : "IDLE")
+                            .foregroundColor(locationManager.isMonitoringRoute ? .green : .gray)
+                            .bold()
+                    }
+                    
+                    Button("Test: Enter Departure Station") {
+                        if let loc = locationManager.userLocation {
+                            // Request Notification permission just in case
+                            AlarmTriggerManager.shared.requestPermissions()
+                            
+                            // Start a mock geofence at current location with 100m radius
+                            locationManager.startMonitoringDeparture(stationName: "MockStation", destinationName: "DestinationMockStation", radius: 100, coordinate: loc.coordinate)
+                        } else {
+                            print("No location available for mock geofence")
+                        }
+                    }
+                    .foregroundColor(.blue)
+                    
+                    
+                    Button("Reset Alarm State & Geofences") {
+                        locationManager.stopMonitoringAllRegions()
+                        locationManager.isMonitoringRoute = false
+                    }
+                    .foregroundColor(.red)
+                }
+                
                 Section(header: Text("System State")) {
                     if let error = locationManager.lastError {
                         VStack(alignment: .leading) {

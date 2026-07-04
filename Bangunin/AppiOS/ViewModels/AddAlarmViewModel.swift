@@ -38,24 +38,38 @@ class AddAlarmViewModel: ObservableObject {
     
     func saveAlarm(context: ModelContext) {
         // Convert wakeMeUpAt to an approximate distance radius
-        // Assuming average train speed 60 km/h -> 1 km per minute
+        // perlu diganti jadi logic geofencing pake kecepatan kereta konstan
         var distanceRadiusInMeters: Double = 0
         switch wakeMeUpAt {
-        case .atDestination: distanceRadiusInMeters = 500 // 500 meters (approx at station)
-        case .fiveMin: distanceRadiusInMeters = 5000 // 5 km
-        case .tenMin: distanceRadiusInMeters = 10000 // 10 km
-        case .fifteenMin: distanceRadiusInMeters = 15000 // 15 km
-        case .twentyMin: distanceRadiusInMeters = 20000 // 20 km
-        case .twentyFiveMin: distanceRadiusInMeters = 25000 // 25 km
-        case .thirtyMin: distanceRadiusInMeters = 30000 // 30 km
+            case .atDestination: distanceRadiusInMeters = 500
+            case .fiveMin: distanceRadiusInMeters = 5000
+            case .tenMin: distanceRadiusInMeters = 10000
+            case .fifteenMin: distanceRadiusInMeters = 15000
+            case .twentyMin: distanceRadiusInMeters = 20000
+            case .twentyFiveMin: distanceRadiusInMeters = 25000
+            case .thirtyMin: distanceRadiusInMeters = 30000
         }
         
-        // Start monitoring using LocationManager singleton
-        LocationManager.shared.startMonitoring(destination: destinationStation, radius: distanceRadiusInMeters)
+        let newAlarm = Alarm(
+            label: alarmName.isEmpty ? "New Alarm" : alarmName,
+            departureStation: departureStation.name,
+            destinationStation: destinationStation.name,
+            wakeUpTime: wakeMeUpAt,
+            repeatOptions: Array(selectedRepeatOptions),
+            isVibrationOn: isVibrationOn,
+            isSoundOn: isSoundOn,
+            isActive: true
+        )
+        context.insert(newAlarm)
         
-        // Create Alarm for SwiftData / CoreData if needed
-        // let newAlarm = Alarm(...)
-        // context.insert(newAlarm)
+        // Start monitoring using LocationManager singleton
+        LocationManager.shared.startMonitoringDeparture(
+            stationName: departureStation.name,
+            destinationName: destinationStation.name,
+            radius: 100, // radius buat departure station
+            coordinate: departureStation.coordinate
+        )
+        LocationManager.shared.startMonitoring(destination: destinationStation, radius: distanceRadiusInMeters)
         
         print("Alarm saved for \(destinationStation.name) with radius \(distanceRadiusInMeters)m")
     }

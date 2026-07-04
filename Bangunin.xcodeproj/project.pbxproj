@@ -6,14 +6,76 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		077AE4BB2FF8C37000FD607A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 077AE4BA2FF8C37000FD607A /* WidgetKit.framework */; };
+		077AE4BD2FF8C37000FD607A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 077AE4BC2FF8C37000FD607A /* SwiftUI.framework */; };
+		077AE4CE2FF8C37200FD607A /* BanguninWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 077AE4B82FF8C37000FD607A /* BanguninWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		077AE4CC2FF8C37200FD607A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 077AE1D92FF5FAA200FD607A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 077AE4B72FF8C37000FD607A;
+			remoteInfo = BanguninWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		077AE4CF2FF8C37200FD607A /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				077AE4CE2FF8C37200FD607A /* BanguninWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		077AE1E12FF5FAA200FD607A /* Bangunin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bangunin.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		077AE4B82FF8C37000FD607A /* BanguninWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BanguninWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		077AE4BA2FF8C37000FD607A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		077AE4BC2FF8C37000FD607A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		077AE4D22FF8C37200FD607A /* Exceptions for "BanguninWidget" folder in "BanguninWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 077AE4B72FF8C37000FD607A /* BanguninWidgetExtension */;
+		};
+		077AE4DA2FF8D3EA00FD607A /* Exceptions for "Bangunin" folder in "BanguninWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Shared/LiveActivities/AlarmAttributes.swift,
+				Shared/LiveActivities/CancelAlarmIntent.swift,
+			);
+			target = 077AE4B72FF8C37000FD607A /* BanguninWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		077AE1E32FF5FAA200FD607A /* Bangunin */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				077AE4DA2FF8D3EA00FD607A /* Exceptions for "Bangunin" folder in "BanguninWidgetExtension" target */,
+			);
 			path = Bangunin;
+			sourceTree = "<group>";
+		};
+		077AE4BE2FF8C37000FD607A /* BanguninWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				077AE4D22FF8C37200FD607A /* Exceptions for "BanguninWidget" folder in "BanguninWidgetExtension" target */,
+			);
+			path = BanguninWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -26,6 +88,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		077AE4B52FF8C37000FD607A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				077AE4BD2FF8C37000FD607A /* SwiftUI.framework in Frameworks */,
+				077AE4BB2FF8C37000FD607A /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -33,6 +104,8 @@
 			isa = PBXGroup;
 			children = (
 				077AE1E32FF5FAA200FD607A /* Bangunin */,
+				077AE4BE2FF8C37000FD607A /* BanguninWidget */,
+				077AE4B92FF8C37000FD607A /* Frameworks */,
 				077AE1E22FF5FAA200FD607A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,8 +114,18 @@
 			isa = PBXGroup;
 			children = (
 				077AE1E12FF5FAA200FD607A /* Bangunin.app */,
+				077AE4B82FF8C37000FD607A /* BanguninWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		077AE4B92FF8C37000FD607A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				077AE4BA2FF8C37000FD607A /* WidgetKit.framework */,
+				077AE4BC2FF8C37000FD607A /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -55,10 +138,12 @@
 				077AE1DD2FF5FAA200FD607A /* Sources */,
 				077AE1DE2FF5FAA200FD607A /* Frameworks */,
 				077AE1DF2FF5FAA200FD607A /* Resources */,
+				077AE4CF2FF8C37200FD607A /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				077AE4CD2FF8C37200FD607A /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				077AE1E32FF5FAA200FD607A /* Bangunin */,
@@ -69,6 +154,28 @@
 			productName = Bangunin;
 			productReference = 077AE1E12FF5FAA200FD607A /* Bangunin.app */;
 			productType = "com.apple.product-type.application";
+		};
+		077AE4B72FF8C37000FD607A /* BanguninWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 077AE4D32FF8C37200FD607A /* Build configuration list for PBXNativeTarget "BanguninWidgetExtension" */;
+			buildPhases = (
+				077AE4B42FF8C37000FD607A /* Sources */,
+				077AE4B52FF8C37000FD607A /* Frameworks */,
+				077AE4B62FF8C37000FD607A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				077AE4BE2FF8C37000FD607A /* BanguninWidget */,
+			);
+			name = BanguninWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = BanguninWidgetExtension;
+			productReference = 077AE4B82FF8C37000FD607A /* BanguninWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -81,6 +188,9 @@
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
 					077AE1E02FF5FAA200FD607A = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					077AE4B72FF8C37000FD607A = {
 						CreatedOnToolsVersion = 26.6;
 					};
 				};
@@ -100,12 +210,20 @@
 			projectRoot = "";
 			targets = (
 				077AE1E02FF5FAA200FD607A /* Bangunin */,
+				077AE4B72FF8C37000FD607A /* BanguninWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		077AE1DF2FF5FAA200FD607A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		077AE4B62FF8C37000FD607A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +240,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		077AE4B42FF8C37000FD607A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		077AE4CD2FF8C37200FD607A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 077AE4B72FF8C37000FD607A /* BanguninWidgetExtension */;
+			targetProxy = 077AE4CC2FF8C37200FD607A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		077AE1EA2FF5FAA500FD607A /* Debug */ = {
@@ -258,6 +391,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow location access (always)";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow location access (in-app)";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -292,6 +426,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow location access (always)";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow location access (in-app)";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -307,6 +442,66 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		077AE4D02FF8C37200FD607A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BanguninWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = BanguninWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.denzel.Bangunin.BanguninWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		077AE4D12FF8C37200FD607A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BanguninWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = BanguninWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.denzel.Bangunin.BanguninWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
@@ -331,6 +526,15 @@
 			buildConfigurations = (
 				077AE1ED2FF5FAA500FD607A /* Debug */,
 				077AE1EE2FF5FAA500FD607A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		077AE4D32FF8C37200FD607A /* Build configuration list for PBXNativeTarget "BanguninWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				077AE4D02FF8C37200FD607A /* Debug */,
+				077AE4D12FF8C37200FD607A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
