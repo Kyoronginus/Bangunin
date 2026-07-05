@@ -71,7 +71,7 @@ struct HomePageView: View {
                 } else {
                     List {
                         ForEach(alarms) { alarm in
-                            AlarmCardView(alarm: alarm)
+                            AlarmCardView(viewModel: AlarmCardViewModel(alarm: alarm))
                                 .contentShape(Rectangle())
                                 .onTapGesture {
                                     selectedAlarm = alarm
