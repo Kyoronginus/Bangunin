@@ -8,14 +8,15 @@ import SwiftData
 import Combine
 import CoreLocation
 
-class AddAlarmViewModel: ObservableObject {
-    @Published var alarmName: String = ""
-    @Published var departureStation: Station = .none
-    @Published var destinationStation: Station = Station(name: "Palmerah", latitude: -6.2074, longitude: 106.7969)
-    @Published var wakeMeUpAt: WakeUpTime = .fiveMin
-    @Published var selectedRepeatOptions: Set<RepeatOption> = []
-    @Published var isVibrationOn: Bool = true
-    @Published var isSoundOn: Bool = false
+@Observable
+class AddAlarmViewModel {
+    var alarmName: String = ""
+    var departureStation: Station = .none
+    var destinationStation: Station = Station(name: "Palmerah", latitude: -6.2074, longitude: 106.7969)
+    var wakeMeUpAt: WakeUpTime = .fiveMin
+    var selectedRepeatOptions: Set<RepeatOption> = []
+    var isVibrationOn: Bool = true
+    var isSoundOn: Bool = false
 
     private var editingAlarm: Alarm?
 
@@ -28,8 +29,8 @@ class AddAlarmViewModel: ObservableObject {
 
         if let alarm = editingAlarm {
             self.alarmName = alarm.label
-            self.departureStation = Self.findStation(name: alarm.departureStation) ?? .none
-            self.destinationStation = Self.findStation(name: alarm.destinationStation) ?? Station(name: "Palmerah", latitude: -6.2074, longitude: 106.7969)
+            self.departureStation = findStation(name: alarm.departureStation) ?? .none
+            self.destinationStation = findStation(name: alarm.destinationStation) ?? Station(name: "Palmerah", latitude: -6.2074, longitude: 106.7969)
             self.wakeMeUpAt = alarm.wakeUpTime
             self.selectedRepeatOptions = Set(alarm.repeatOptions)
             self.isVibrationOn = alarm.isVibrationOn
@@ -37,16 +38,6 @@ class AddAlarmViewModel: ObservableObject {
         }
     }
     
-    // Helper to find a station's coordinates by name
-    private static func findStation(name: String) -> Station? {
-        for (_, stations) in routeStations {
-            if let found = stations.first(where: { $0.name == name }) {
-                return found
-            }
-        }
-        return nil
-    }
-
     var repeatText: String {
         let weekdays: Set<RepeatOption> = [.monday, .tuesday, .wednesday, .thursday, .friday]
         let weekends: Set<RepeatOption> = [.saturday, .sunday]

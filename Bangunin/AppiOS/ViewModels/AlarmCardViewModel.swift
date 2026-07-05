@@ -44,12 +44,4 @@ class AlarmCardViewModel {
     }
 }
 
-// Helper to find a station's coordinates by name
-private func findStation(name: String) -> Station? {
-    for (_, stations) in routeStations {
-        if let found = stations.first(where: { $0.name == name }) {
-            return found
-        }
-    }
-    return nil
-}
+
