@@ -43,6 +43,7 @@ struct RouteData {
     
     return [
         .debug: [
+            Station(name: "ADA GOP 9", latitude: -6.3021, longitude: 106.6525),
             Station(name: "Debug DEPARTURE", latitude: currentLat, longitude: currentLon),
             Station(name: "Debug DESTINATION (sama kyk DEPARTURE)", latitude: currentLat, longitude: currentLon)
         ],

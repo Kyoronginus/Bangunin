@@ -56,19 +56,19 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
         
         Task {
             do {
-                let alertContent = AlarmPresentation.Alert(title: "Wake Up! Approaching \(stationName)")
-                let countdownContent = AlarmPresentation.Countdown(title: "Wake Up! Approaching \(stationName)")
+                let alertContent = AlarmPresentation.Alert(title: "Bangun! \(stationName)")
+                let countdownContent = AlarmPresentation.Countdown(title: "Bangun! \(stationName)")
                 let attributes = AlarmKit.AlarmAttributes(
                     presentation: AlarmPresentation(
                         alert: alertContent,
                         countdown: countdownContent
                     ),
                     metadata: EmptyMetadata(),
-                    tintColor: .blue
+                    tintColor: .cyan // Aslinya .blue
                 )
-                
+                // MARK: Alarm rings 10 secs after detection (default-nya 5 or 3).
                 let config = AlarmManager.AlarmConfiguration(
-                    countdownDuration: AlarmKit.Alarm.CountdownDuration(preAlert: 5, postAlert: nil),
+                    countdownDuration: AlarmKit.Alarm.CountdownDuration(preAlert: 10, postAlert: nil),
                     schedule: nil,
                     attributes: attributes,
                     stopIntent: CancelAlarmIntent(),
