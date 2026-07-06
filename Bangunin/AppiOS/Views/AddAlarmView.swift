@@ -43,18 +43,20 @@ struct AddAlarmView: View {
 
                     Spacer()
 
-                    Text("New Alarm")
+                    Text(viewModel.isEditMode ? "Edit Alarm" : "New Alarm")
                         .font(.headline)
                         .bold()
 
                     Spacer()
 
                     Button {
-                        viewModel.saveAlarm(context: modelContext)
-                        dismiss()
+                        if viewModel.isFormValid {
+                            viewModel.saveAlarm(context: modelContext)
+                            dismiss()
+                        }
                     } label: {
                         Image(systemName: "checkmark")
-                            .foregroundColor(.primary)
+                            .foregroundColor(viewModel.isFormValid ? .primary : .gray.opacity(0.3))
                             .frame(width: 44, height: 44)
                             .background(Color(UIColor.systemBackground))
                             .clipShape(Circle())
@@ -65,6 +67,7 @@ struct AddAlarmView: View {
                                 y: 2
                             )
                     }
+                    .disabled(!viewModel.isFormValid)
                 }
                 .padding(.horizontal)
                 .padding(.top, 16)
@@ -102,28 +105,64 @@ struct AddAlarmView: View {
                             Divider()
                                 .padding(.horizontal)
 
-                            NavigationLink {
-                                RouteSelectionView(
-                                    isDeparture: false,
-                                    selectedStation: $viewModel
-                                        .destinationStation
-                                )
-                            } label: {
+                            let depRoute = viewModel.getRoute(
+                                for: viewModel.departureStation
+                            )
+
+                            if viewModel.departureStation.name
+                                != Station.none.name, let route = depRoute
+                            {
+                                // Jika Departure sudah dipilih, langsung bypass ke StationSelectionView untuk rute yang sama
+                                NavigationLink {
+                                    StationSelectionView(
+                                        route: route,
+                                        selectedStation: $viewModel
+                                            .destinationStation
+                                    )
+                                } label: {
+                                    HStack {
+                                        Text("Destination Station")
+                                            .foregroundColor(.primary)
+                                        Spacer()
+                                        Text(viewModel.destinationStation.name)
+                                            .foregroundColor(.gray)
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray)
+                                            .imageScale(.small)
+                                    }
+                                    .padding()
+                                }
+                            } else {
+                                // Jika Departure belum dipilih, berikan visual "Disabled" agar user paham urutannya
                                 HStack {
                                     Text("Destination Station")
                                         .foregroundColor(.primary)
                                     Spacer()
-                                    Text(viewModel.destinationStation.name)
+                                    Text("Select Departure First")
                                         .foregroundColor(.gray)
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.gray)
-                                        .imageScale(.small)
+                                        .italic()
                                 }
                                 .padding()
+                                .opacity(0.5)
                             }
                         }
                         .background(Color(UIColor.systemGray6))
                         .cornerRadius(12)
+                        .onChange(of: viewModel.departureStation.name) {
+                            oldValue,
+                            newValue in
+                            let newRoute = viewModel.getRoute(
+                                for: viewModel.departureStation
+                            )
+                            let destRoute = viewModel.getRoute(
+                                for: viewModel.destinationStation
+                            )
+
+                            // Jika rute tujuan saat ini berbeda dengan rute keberangkatan yang baru, reset tujuan
+                            if newRoute != destRoute {
+                                viewModel.destinationStation = .none
+                            }
+                        }
 
                         // Wake me up at
                         HStack {
