@@ -10,6 +10,7 @@
 		077AE4BB2FF8C37000FD607A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 077AE4BA2FF8C37000FD607A /* WidgetKit.framework */; };
 		077AE4BD2FF8C37000FD607A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 077AE4BC2FF8C37000FD607A /* SwiftUI.framework */; };
 		077AE4CE2FF8C37200FD607A /* BanguninWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 077AE4B82FF8C37000FD607A /* BanguninWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0799CDBB2FFBB0DB00B3550F /* BanguninWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 0799CDB12FFBB0DA00B3550F /* BanguninWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -19,6 +20,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 077AE4B72FF8C37000FD607A;
 			remoteInfo = BanguninWidgetExtension;
+		};
+		0799CDB92FFBB0DB00B3550F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 077AE1D92FF5FAA200FD607A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0799CDB02FFBB0DA00B3550F;
+			remoteInfo = "BanguninWatch Watch App";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -34,6 +42,17 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0799CDBC2FFBB0DB00B3550F /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				0799CDBB2FFBB0DB00B3550F /* BanguninWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +60,8 @@
 		077AE4B82FF8C37000FD607A /* BanguninWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BanguninWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		077AE4BA2FF8C37000FD607A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		077AE4BC2FF8C37000FD607A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		0799CDB12FFBB0DA00B3550F /* BanguninWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BanguninWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0799CDD12FFBD1EE00B3550F /* BanguninWatch-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "BanguninWatch-Watch-App-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -59,9 +80,22 @@
 			);
 			target = 077AE4B72FF8C37000FD607A /* BanguninWidgetExtension */;
 		};
+		0799CDC72FFBB12D00B3550F /* Exceptions for "Bangunin" folder in "BanguninWatch Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppWatchOS/Assets.xcassets,
+				AppWatchOS/BanguninWatchApp.swift,
+				AppWatchOS/ContentView.swift,
+				Shared/Managers/WatchConnectivityManager.swift,
+			);
+			target = 0799CDB02FFBB0DA00B3550F /* BanguninWatch Watch App */;
+		};
 		6D0F0FB72FFB4A5200204744 /* Exceptions for "Bangunin" folder in "Bangunin" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AppWatchOS/Assets.xcassets,
+				AppWatchOS/BanguninWatchApp.swift,
+				AppWatchOS/ContentView.swift,
 				Info.plist,
 			);
 			target = 077AE1E02FF5FAA200FD607A /* Bangunin */;
@@ -74,6 +108,7 @@
 			exceptions = (
 				6D0F0FB72FFB4A5200204744 /* Exceptions for "Bangunin" folder in "Bangunin" target */,
 				077AE4DA2FF8D3EA00FD607A /* Exceptions for "Bangunin" folder in "BanguninWidgetExtension" target */,
+				0799CDC72FFBB12D00B3550F /* Exceptions for "Bangunin" folder in "BanguninWatch Watch App" target */,
 			);
 			path = Bangunin;
 			sourceTree = "<group>";
@@ -105,12 +140,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0799CDAE2FFBB0DA00B3550F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		077AE1D82FF5FAA200FD607A = {
 			isa = PBXGroup;
 			children = (
+				0799CDD12FFBD1EE00B3550F /* BanguninWatch-Watch-App-Info.plist */,
 				077AE1E32FF5FAA200FD607A /* Bangunin */,
 				077AE4BE2FF8C37000FD607A /* BanguninWidget */,
 				077AE4B92FF8C37000FD607A /* Frameworks */,
@@ -123,6 +166,7 @@
 			children = (
 				077AE1E12FF5FAA200FD607A /* Bangunin.app */,
 				077AE4B82FF8C37000FD607A /* BanguninWidgetExtension.appex */,
+				0799CDB12FFBB0DA00B3550F /* BanguninWatch Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -147,11 +191,13 @@
 				077AE1DE2FF5FAA200FD607A /* Frameworks */,
 				077AE1DF2FF5FAA200FD607A /* Resources */,
 				077AE4CF2FF8C37200FD607A /* Embed Foundation Extensions */,
+				0799CDBC2FFBB0DB00B3550F /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				077AE4CD2FF8C37200FD607A /* PBXTargetDependency */,
+				0799CDBA2FFBB0DB00B3550F /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				077AE1E32FF5FAA200FD607A /* Bangunin */,
@@ -185,6 +231,25 @@
 			productReference = 077AE4B82FF8C37000FD607A /* BanguninWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		0799CDB02FFBB0DA00B3550F /* BanguninWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0799CDBF2FFBB0DB00B3550F /* Build configuration list for PBXNativeTarget "BanguninWatch Watch App" */;
+			buildPhases = (
+				0799CDAD2FFBB0DA00B3550F /* Sources */,
+				0799CDAE2FFBB0DA00B3550F /* Frameworks */,
+				0799CDAF2FFBB0DA00B3550F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "BanguninWatch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "BanguninWatch Watch App";
+			productReference = 0799CDB12FFBB0DA00B3550F /* BanguninWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -199,6 +264,9 @@
 						CreatedOnToolsVersion = 26.6;
 					};
 					077AE4B72FF8C37000FD607A = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					0799CDB02FFBB0DA00B3550F = {
 						CreatedOnToolsVersion = 26.6;
 					};
 				};
@@ -219,6 +287,7 @@
 			targets = (
 				077AE1E02FF5FAA200FD607A /* Bangunin */,
 				077AE4B72FF8C37000FD607A /* BanguninWidgetExtension */,
+				0799CDB02FFBB0DA00B3550F /* BanguninWatch Watch App */,
 			);
 		};
 /* End PBXProject section */
@@ -232,6 +301,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		077AE4B62FF8C37000FD607A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0799CDAF2FFBB0DA00B3550F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -255,6 +331,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0799CDAD2FFBB0DA00B3550F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -262,6 +345,11 @@
 			isa = PBXTargetDependency;
 			target = 077AE4B72FF8C37000FD607A /* BanguninWidgetExtension */;
 			targetProxy = 077AE4CC2FF8C37200FD607A /* PBXContainerItemProxy */;
+		};
+		0799CDBA2FFBB0DB00B3550F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0799CDB02FFBB0DA00B3550F /* BanguninWatch Watch App */;
+			targetProxy = 0799CDB92FFBB0DB00B3550F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -394,7 +482,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S6V9894Z7;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Bangunin/Info.plist;
@@ -431,7 +519,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S6V9894Z7;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Bangunin/Info.plist;
@@ -468,7 +556,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S6V9894Z7;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BanguninWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BanguninWidget;
@@ -499,7 +587,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S6V9894Z7;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BanguninWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BanguninWidget;
@@ -520,6 +608,74 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		0799CDBD2FFBB0DB00B3550F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "BanguninWatch-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = BanguninWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.denzel.Bangunin;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.denzel.Bangunin.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.5;
+			};
+			name = Debug;
+		};
+		0799CDBE2FFBB0DB00B3550F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "BanguninWatch-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = BanguninWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.denzel.Bangunin;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.denzel.Bangunin.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.5;
 			};
 			name = Release;
 		};
@@ -549,6 +705,15 @@
 			buildConfigurations = (
 				077AE4D02FF8C37200FD607A /* Debug */,
 				077AE4D12FF8C37200FD607A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0799CDBF2FFBB0DB00B3550F /* Build configuration list for PBXNativeTarget "BanguninWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0799CDBD2FFBB0DB00B3550F /* Debug */,
+				0799CDBE2FFBB0DB00B3550F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

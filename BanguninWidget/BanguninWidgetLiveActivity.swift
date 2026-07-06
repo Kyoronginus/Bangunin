@@ -11,7 +11,84 @@ import AppIntents
 struct BanguninWidgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: BanguninAlarmAttributes.self) { context in
-            // Lock screen/banner UI
+            WatchOrPhoneView(context: context)
+        } dynamicIsland: { context in
+            DynamicIsland {
+                DynamicIslandExpandedRegion(.leading) {
+                    Text("Alarm")
+                        .font(.caption)
+                        .foregroundColor(.cyan)
+                }
+                DynamicIslandExpandedRegion(.trailing) {
+                    Text(context.attributes.destinationStationName)
+                        .font(.caption)
+                        .lineLimit(1)
+                }
+                DynamicIslandExpandedRegion(.bottom) {
+                    HStack {
+                        Spacer()
+                        CancelButtonView()
+                        Spacer()
+                    }
+                }
+            } compactLeading: {
+                Image(systemName: "tram.fill")
+                    .foregroundColor(.cyan)
+            } compactTrailing: {
+                Text("Active")
+                    .foregroundColor(.red)
+            } minimal: {
+                Image(systemName: "tram.fill")
+                    .foregroundColor(.cyan)
+            }
+        }
+        .supplementalActivityFamilies([.small])
+    }
+}
+
+struct WatchOrPhoneView: View {
+    let context: ActivityViewContext<BanguninAlarmAttributes>
+    @Environment(\.activityFamily) var activityFamily
+    
+    var body: some View {
+        if activityFamily == .small {
+            // Apple Watch Smart Stack UI
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Alarm Active")
+                    .font(.caption)
+                    .foregroundColor(.white)
+                
+                HStack(spacing: 4) {
+                    Text("to")
+                        .foregroundColor(.gray)
+                    Text(context.attributes.destinationStationName)
+                        .foregroundColor(.cyan)
+                        .fontWeight(.bold)
+                }
+                .font(.footnote)
+                
+//                Spacer()
+//                
+//                if #available(iOS 17.0, *) {
+//                    Button(intent: CancelAlarmIntent()) {
+//                        Text("Cancel")
+//                            .font(.caption2)
+//                            .foregroundColor(.white)
+//                            .frame(maxWidth: .infinity)
+//                    }
+//                    .buttonStyle(.plain)
+//                    .padding(.vertical, 4)
+//                    .background(Color.white.opacity(0.15))
+//                    .clipShape(Capsule())
+//                }
+            }
+            .padding()
+            .widgetURL(URL(string: "bangunin://open"))
+            .activityBackgroundTint(Color.black.opacity(0.8))
+            .activitySystemActionForegroundColor(Color.white)
+            
+        } else {
+            // iPhone Lock Screen / Banner UI
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("BANGUNIN")
@@ -92,36 +169,6 @@ struct BanguninWidgetLiveActivity: Widget {
             .padding()
             .activityBackgroundTint(Color.black.opacity(0.8))
             .activitySystemActionForegroundColor(Color.white)
-            
-        } dynamicIsland: { context in
-            DynamicIsland {
-                DynamicIslandExpandedRegion(.leading) {
-                    Text("Alarm")
-                        .font(.caption)
-                        .foregroundColor(.cyan)
-                }
-                DynamicIslandExpandedRegion(.trailing) {
-                    Text(context.attributes.destinationStationName)
-                        .font(.caption)
-                        .lineLimit(1)
-                }
-                DynamicIslandExpandedRegion(.bottom) {
-                    HStack {
-                        Spacer()
-                        CancelButtonView()
-                        Spacer()
-                    }
-                }
-            } compactLeading: {
-                Image(systemName: "tram.fill")
-                    .foregroundColor(.cyan)
-            } compactTrailing: {
-                Text("Active")
-                    .foregroundColor(.red)
-            } minimal: {
-                Image(systemName: "tram.fill")
-                    .foregroundColor(.cyan)
-            }
         }
     }
 }

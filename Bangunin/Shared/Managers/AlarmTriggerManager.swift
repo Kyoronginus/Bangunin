@@ -22,9 +22,7 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
         if #available(iOS 16.1, *) {
             CancelAlarmIntent.cancelAction = {
                 DispatchQueue.main.async {
-                    LocationManager.shared.stopMonitoringAllRegions()
-                    LocationManager.shared.isMonitoringRoute = false
-                    AlarmTriggerManager.shared.endLiveActivity()
+                    LocationManager.shared.stopMonitoringRoute()
                 }
             }
         }

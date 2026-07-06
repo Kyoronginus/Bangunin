@@ -85,6 +85,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         }
         
         manager.pausesLocationUpdatesAutomatically = false
+        
+        // Memaksa WCSession aktif sejak awal agar tidak ada jeda saat mau kirim data
+        _ = WatchConnectivityManager.shared
     }
 
     // MARK: - Intents
@@ -126,6 +129,15 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         for region in manager.monitoredRegions {
             manager.stopMonitoring(for: region)
         }
+    }
+    
+    // Dipanggil untuk membatalkan/menghentikan alarm
+    func stopMonitoringRoute() {
+        stopMonitoringAllRegions()
+        self.isMonitoringRoute = false
+        WatchConnectivityManager.shared.syncAlarmState(destination: nil, isActive: false)
+        AlarmTriggerManager.shared.endLiveActivity()
+        print("All monitoring and Live Activities stopped.")
     }
     
     // MARK: - Testing / Departure
@@ -209,6 +221,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 
                 let destName = regionId.targetDestination ?? "Destination"
                 AlarmTriggerManager.shared.triggerDepartureNotification(for: destName)
+                
+                // Sync status ke Watch!
+                WatchConnectivityManager.shared.syncAlarmState(destination: destName, isActive: true)
             }
             
         case .destination:
