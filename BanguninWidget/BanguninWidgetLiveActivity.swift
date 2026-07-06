@@ -10,7 +10,7 @@ import AppIntents
 
 struct BanguninWidgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: AlarmAttributes.self) { context in
+        ActivityConfiguration(for: BanguninAlarmAttributes.self) { context in
             // Lock screen/banner UI
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
@@ -146,3 +146,33 @@ struct CancelButtonView: View {
     }
 }
 
+import AlarmKit
+
+struct AlarmKitLiveActivity: Widget {
+    var body: some WidgetConfiguration {
+        ActivityConfiguration(for: AlarmKit.AlarmAttributes<EmptyMetadata>.self) { context in
+            VStack {
+                Text("Alarm Triggered!")
+                    .font(.headline)
+            }
+        } dynamicIsland: { context in
+            DynamicIsland {
+                DynamicIslandExpandedRegion(.leading) {
+                    Text("Alarm")
+                }
+                DynamicIslandExpandedRegion(.trailing) {
+                    Text("Active")
+                }
+                DynamicIslandExpandedRegion(.bottom) {
+                    Text("Time to wake up!")
+                }
+            } compactLeading: {
+                Text("⏰")
+            } compactTrailing: {
+                Text("!")
+            } minimal: {
+                Text("⏰")
+            }
+        }
+    }
+}

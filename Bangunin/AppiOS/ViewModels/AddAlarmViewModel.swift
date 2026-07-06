@@ -61,13 +61,12 @@ class AddAlarmViewModel {
         // Convert wakeMeUpAt to an approximate distance radius
         var distanceRadiusInMeters: Double = 0
         switch wakeMeUpAt {
-            case .atDestination: distanceRadiusInMeters = 500
-            case .fiveMin: distanceRadiusInMeters = 5000
-            case .tenMin: distanceRadiusInMeters = 10000
-            case .fifteenMin: distanceRadiusInMeters = 15000
-            case .twentyMin: distanceRadiusInMeters = 20000
-            case .twentyFiveMin: distanceRadiusInMeters = 25000
-            case .thirtyMin: distanceRadiusInMeters = 30000
+            case .atDestination: distanceRadiusInMeters = 200
+            case .oneMin: distanceRadiusInMeters = 1160
+            case .threeMin: distanceRadiusInMeters = 3480
+            case .fiveMin: distanceRadiusInMeters = 5800
+            case .tenMin: distanceRadiusInMeters = 11600
+            case .fifteenMin: distanceRadiusInMeters = 17400
         }
         
         let finalLabel = alarmName.isEmpty ? "New Alarm" : alarmName

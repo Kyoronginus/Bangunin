@@ -118,6 +118,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         region.notifyOnExit = false
         
         manager.startMonitoring(for: region)
+        manager.requestState(for: region)
         print("Started monitoring region around \(destination.name) with radius \(radius) meters.")
     }
 

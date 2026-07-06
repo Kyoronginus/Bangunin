@@ -12,10 +12,10 @@ struct AddAlarmView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
 
-    @StateObject private var viewModel = AddAlarmViewModel()
+    @State private var viewModel: AddAlarmViewModel
 
     init(editingAlarm: Alarm? = nil) {
-        _viewModel = StateObject(
+        _viewModel = State(
             wrappedValue: AddAlarmViewModel(editingAlarm: editingAlarm)
         )
     }

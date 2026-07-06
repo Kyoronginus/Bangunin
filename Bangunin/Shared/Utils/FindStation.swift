@@ -6,7 +6,7 @@
 //
 
 func findStation(name: String) -> Station? {
-    for (_, stations) in routeStations {
+    for (_, stations) in RouteData.routeStations {
         if let found = stations.first(where: { $0.name == name }) {
             return found
         }

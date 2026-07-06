@@ -41,7 +41,7 @@ struct StationSelectionView: View {
             
             ScrollView {
                 VStack(spacing: 0) {
-                    let stations = routeStations[route] ?? []
+                    let stations = RouteData.routeStations[route] ?? []
                     ForEach(stations.indices, id: \.self) { index in
                         let station = stations[index]
                         Button {

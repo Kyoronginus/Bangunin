@@ -100,6 +100,10 @@ struct HomePageView: View {
         .sheet(item: $selectedAlarm) { alarm in
             AddAlarmView(editingAlarm: alarm)
         }
+        .onAppear {
+            AlarmTriggerManager.shared.requestPermissions()
+            LocationManager.shared.requestPermission()
+        }
     }
 
     private func deleteAlarm(_ alarm: Alarm) {

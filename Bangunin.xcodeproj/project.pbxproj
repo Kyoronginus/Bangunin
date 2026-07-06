@@ -59,12 +59,20 @@
 			);
 			target = 077AE4B72FF8C37000FD607A /* BanguninWidgetExtension */;
 		};
+		6D0F0FB72FFB4A5200204744 /* Exceptions for "Bangunin" folder in "Bangunin" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 077AE1E02FF5FAA200FD607A /* Bangunin */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		077AE1E32FF5FAA200FD607A /* Bangunin */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				6D0F0FB72FFB4A5200204744 /* Exceptions for "Bangunin" folder in "Bangunin" target */,
 				077AE4DA2FF8D3EA00FD607A /* Exceptions for "Bangunin" folder in "BanguninWidgetExtension" target */,
 			);
 			path = Bangunin;
@@ -386,9 +394,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
+				DEVELOPMENT_TEAM = 4S6V9894Z7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Bangunin/Info.plist;
+				INFOPLIST_KEY_NSAlarmKitUsageDescription = "We'll schedule native alerts to wake you up when you approach your destination station.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow location access (always)";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow location access (in-app)";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
@@ -421,9 +431,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
+				DEVELOPMENT_TEAM = 4S6V9894Z7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Bangunin/Info.plist;
+				INFOPLIST_KEY_NSAlarmKitUsageDescription = "We'll schedule native alerts to wake you up when you approach your destination station.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow location access (always)";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow location access (in-app)";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
@@ -456,11 +468,12 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
+				DEVELOPMENT_TEAM = 4S6V9894Z7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BanguninWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BanguninWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -486,11 +499,12 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
+				DEVELOPMENT_TEAM = 4S6V9894Z7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BanguninWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BanguninWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

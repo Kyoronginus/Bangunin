@@ -7,12 +7,11 @@ import Foundation
 
 enum WakeUpTime: String, CaseIterable, Codable {
     case atDestination = "At the destination"
+    case oneMin = "1 minute before"
+    case threeMin = "3 minutes before"
     case fiveMin = "5 minutes before"
     case tenMin = "10 minutes before"
     case fifteenMin = "15 minutes before"
-    case twentyMin = "20 minutes before"
-    case twentyFiveMin = "25 minutes before"
-    case thirtyMin = "30 minutes before"
 }
 
 enum RepeatOption: String, CaseIterable, Codable {

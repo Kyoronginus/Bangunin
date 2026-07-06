@@ -1,7 +1,8 @@
 import Foundation
 import ActivityKit
+import AlarmKit
 
-public struct AlarmAttributes: ActivityAttributes {
+public struct BanguninAlarmAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         // Dynamic state of the activity goes here.
         // For example, time remaining or progress if we were tracking live progress.
@@ -10,4 +11,8 @@ public struct AlarmAttributes: ActivityAttributes {
 
     // Fixed non-changing properties about your activity go here!
     var destinationStationName: String
+}
+
+public struct EmptyMetadata: AlarmMetadata, Codable, Hashable {
+    public init() {}
 }

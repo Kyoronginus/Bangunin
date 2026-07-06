@@ -36,7 +36,8 @@ struct Station: Hashable, Equatable {
     static let none = Station(name: "None", latitude: 0.0, longitude: 0.0)
 }
 
-var routeStations: [RouteLine: [Station]] {
+struct RouteData {
+    static var routeStations: [RouteLine: [Station]] {
     let currentLat = LocationManager.shared.userLocation?.coordinate.latitude ?? -6.200000
     let currentLon = LocationManager.shared.userLocation?.coordinate.longitude ?? 106.816666
     
@@ -144,4 +145,5 @@ var routeStations: [RouteLine: [Station]] {
             Station(name: "Tanjung Priok", latitude: -6.1098, longitude: 106.8833)
         ]
     ]
+}
 }
