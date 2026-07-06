@@ -9,6 +9,10 @@ import ActivityKit
 import AlarmKit
 import SwiftUI
 
+extension Notification.Name {
+    static let banguninAlarmDidCancel = Notification.Name("banguninAlarmDidCancel")
+}
+
 class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
     static let shared = AlarmTriggerManager()
     
@@ -25,6 +29,8 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
                     LocationManager.shared.stopMonitoringAllRegions()
                     LocationManager.shared.isMonitoringRoute = false
                     AlarmTriggerManager.shared.endLiveActivity()
+                    
+                    NotificationCenter.default.post(name: .banguninAlarmDidCancel, object: nil)
                 }
             }
         }

@@ -59,6 +59,7 @@ class AlarmCardViewModel {
             // Alarm turned OFF
             LocationManager.shared.stopMonitoringAllRegions()
             LocationManager.shared.isMonitoringRoute = false
+            AlarmTriggerManager.shared.endLiveActivity()
             print("Alarm turned OFF, cleared geofences.")
         }
     }

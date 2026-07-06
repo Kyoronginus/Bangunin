@@ -97,6 +97,7 @@ class AddAlarmViewModel {
             alarm.repeatOptions = Array(selectedRepeatOptions)
             alarm.isVibrationOn = isVibrationOn
             alarm.isSoundOn = isSoundOn
+            alarm.isActive = true
         } else {
             let newAlarm = Alarm(  // CREATE
                 label: finalLabel,
@@ -118,6 +119,11 @@ class AddAlarmViewModel {
         } catch {
             print("Gagal menyimpan alarm: \(error)")
         }
+        
+        // clean geofence n live activity sblm diedit
+        LocationManager.shared.stopMonitoringAllRegions()
+        LocationManager.shared.isMonitoringRoute = false
+        AlarmTriggerManager.shared.endLiveActivity()
         
         // Start monitoring using LocationManager singleton
         LocationManager.shared.startMonitoringDeparture(

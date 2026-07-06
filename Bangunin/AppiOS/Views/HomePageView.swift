@@ -5,8 +5,8 @@
 //  Created by Kezia Karen Amelia on 02/07/26.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct HomePageView: View {
 
@@ -14,8 +14,8 @@ struct HomePageView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = HomePageViewModel()
 
-    @State private var showAddAlarm: Bool = false // buat create
-    @State private var selectedAlarm: Alarm? = nil // buat edit (update)
+    @State private var showAddAlarm: Bool = false  // buat create
+    @State private var selectedAlarm: Alarm? = nil  // buat edit (update)
 
     var body: some View {
         ZStack {
@@ -72,18 +72,26 @@ struct HomePageView: View {
                 } else {
                     List {
                         ForEach(alarms) { alarm in
-                            AlarmCardView(viewModel: AlarmCardViewModel(alarm: alarm))
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    selectedAlarm = alarm
+                            AlarmCardView(
+                                viewModel: AlarmCardViewModel(alarm: alarm)
+                            )
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                selectedAlarm = alarm
+                            }
+                            .swipeActions(
+                                edge: .trailing,
+                                allowsFullSwipe: true
+                            ) {  //delete alarm kalau di swipe
+                                Button(role: .destructive) {
+                                    viewModel.deleteAlarm(
+                                        alarm,
+                                        context: modelContext
+                                    )
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
                                 }
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) { //delete alarm kalau di swipe
-                                    Button(role: .destructive) {
-                                        viewModel.deleteAlarm(alarm, context: modelContext)
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
-                                    }
-                                }
+                            }
                         }
                     }
                     .listStyle(.plain)
@@ -104,6 +112,21 @@ struct HomePageView: View {
         .onAppear {
             AlarmTriggerManager.shared.requestPermissions()
             LocationManager.shared.requestPermission()
+        }
+        .onReceive(
+            NotificationCenter.default.publisher(for: .banguninAlarmDidCancel)
+        ) { _ in
+            if let activeAlarm = alarms.first(where: { $0.isActive }) { // cari alarm yg statusnya on
+                activeAlarm.isActive = false // agar toggle mati
+                do {
+                    try modelContext.save() // save ke swiftdata
+                    print(
+                        "Alarm berhasil dimatikan dari Live Activity/AlarmKit."
+                    )
+                } catch {
+                    print("Gagal menyimpan update alarm ke database: \(error)")
+                }
+            }
         }
     }
 

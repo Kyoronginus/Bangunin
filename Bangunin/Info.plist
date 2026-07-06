@@ -2,13 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSAlarmKitUsageDescription</key>
+	<string>We need this to wake you up when you arrive at your destination.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
 	</array>
-	<key>NSAlarmKitUsageDescription</key>
-	<string>We need this to wake you up when you arrive at your destination.</string>
-	<key>NSSupportsLiveActivities</key>
-	<true/>
 </dict>
 </plist>

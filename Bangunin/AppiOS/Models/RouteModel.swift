@@ -105,6 +105,7 @@ struct RouteData {
             Station(name: "Pondok Jati", latitude: -6.2045, longitude: 106.8615)
         ],
         .green: [
+            Station(name: "Debug GREENLINE", latitude: currentLat, longitude: currentLon),
             Station(name: "Tanah Abang", latitude: -6.1856, longitude: 106.8109),
             Station(name: "Palmerah", latitude: -6.2074, longitude: 106.7969),
             Station(name: "Kebayoran", latitude: -6.2396, longitude: 106.7816),
