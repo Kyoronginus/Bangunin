@@ -90,8 +90,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     // MARK: - Intents
 
     func requestPermission() {
-        // We need always authorization to monitor regions in the background while sleeping
-        manager.requestAlwaysAuthorization()
+        // First, request when-in-use. We will automatically request Always in the delegate callback once this is granted.
+        manager.requestWhenInUseAuthorization()
     }
 
     func startTracking() {
@@ -160,6 +160,12 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     // This is called automatically whenever the user changes the location permission
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         self.authorizationStatus = manager.authorizationStatus
+
+        // If the user granted WhenInUse, IMMEDIATELY ask for Always authorization
+        // to force the "Upgrade to Always" prompt to appear right now instead of later.
+        if authorizationStatus == .authorizedWhenInUse {
+            manager.requestAlwaysAuthorization()
+        }
 
         // If the user granted permission, start tracking immediately
         if authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways {

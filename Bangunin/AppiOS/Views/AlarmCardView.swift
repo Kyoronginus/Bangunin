@@ -26,7 +26,7 @@ struct AlarmCardView: View {
                         .bold()
                         .font(.title)
                 }
-                Text(viewModel.alarm.repeatStatus)
+                Text(viewModel.repeatStatus)
             }
             Spacer()
             Toggle("", isOn: $viewModel.alarm.isActive)

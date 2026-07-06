@@ -12,6 +12,7 @@ struct HomePageView: View {
 
     @Query private var alarms: [Alarm]
     @Environment(\.modelContext) private var modelContext
+    @State private var viewModel = HomePageViewModel()
 
     @State private var showAddAlarm: Bool = false // buat create
     @State private var selectedAlarm: Alarm? = nil // buat edit (update)
@@ -78,7 +79,7 @@ struct HomePageView: View {
                                 }
                                 .swipeActions(edge: .trailing, allowsFullSwipe: true) { //delete alarm kalau di swipe
                                     Button(role: .destructive) {
-                                        deleteAlarm(alarm)
+                                        viewModel.deleteAlarm(alarm, context: modelContext)
                                     } label: {
                                         Label("Delete", systemImage: "trash")
                                     }
@@ -106,16 +107,6 @@ struct HomePageView: View {
         }
     }
 
-    private func deleteAlarm(_ alarm: Alarm) {
-        modelContext.delete(alarm)
-
-        do {
-            try modelContext.save()
-            print("Alarm dihapus: \(alarm.label)")
-        } catch {
-            print("Alarm gagal dihapus: \(error)")
-        }
-    }
 }
 
 #Preview {

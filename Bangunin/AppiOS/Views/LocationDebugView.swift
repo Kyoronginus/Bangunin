@@ -7,8 +7,7 @@ import SwiftUI
 import CoreLocation
 
 struct LocationDebugView: View {
-    // Observing the singleton directly
-    @State private var locationManager = LocationManager.shared
+    @State private var viewModel = LocationDebugViewModel()
     
     var body: some View {
         NavigationStack {
@@ -17,20 +16,20 @@ struct LocationDebugView: View {
                     HStack {
                         Text("Status")
                         Spacer()
-                        Text(statusString(for: locationManager.authorizationStatus))
-                            .foregroundColor(statusColor(for: locationManager.authorizationStatus))
+                        Text(viewModel.authorizationStatusString)
+                            .foregroundColor(viewModel.authorizationStatusColor)
                             .bold()
                     }
                     
-                    if locationManager.authorizationStatus == .notDetermined {
+                    if viewModel.locationManager.authorizationStatus == .notDetermined {
                         Button("Request 'Always' Permission") {
-                            locationManager.requestPermission()
+                            viewModel.requestPermission()
                         }
                     }
                 }
                 
                 Section(header: Text("Current Location")) {
-                    if let location = locationManager.userLocation {
+                    if let location = viewModel.locationManager.userLocation {
                         HStack {
                             Text("Latitude")
                             Spacer()
@@ -55,7 +54,7 @@ struct LocationDebugView: View {
                             .italic()
                     }
                     
-                    if let timestamp = locationManager.lastUpdateTimestamp {
+                    if let timestamp = viewModel.locationManager.lastUpdateTimestamp {
                         HStack {
                             Text("Last Updated")
                             Spacer()
@@ -69,34 +68,25 @@ struct LocationDebugView: View {
                     HStack {
                         Text("Monitoring Route")
                         Spacer()
-                        Text(locationManager.isMonitoringRoute ? "ACTIVE" : "IDLE")
-                            .foregroundColor(locationManager.isMonitoringRoute ? .green : .gray)
+                        Text(viewModel.locationManager.isMonitoringRoute ? "ACTIVE" : "IDLE")
+                            .foregroundColor(viewModel.locationManager.isMonitoringRoute ? .green : .gray)
                             .bold()
                     }
                     
                     Button("Test: Enter Departure Station") {
-                        if let loc = locationManager.userLocation {
-                            // Request Notification permission just in case
-                            AlarmTriggerManager.shared.requestPermissions()
-                            
-                            // Start a mock geofence at current location with 100m radius
-                            locationManager.startMonitoringDeparture(stationName: "MockStation", destinationName: "DestinationMockStation", radius: 100, coordinate: loc.coordinate)
-                        } else {
-                            print("No location available for mock geofence")
-                        }
+                        viewModel.startMockGeofence()
                     }
                     .foregroundColor(.blue)
                     
                     
                     Button("Reset Alarm State & Geofences") {
-                        locationManager.stopMonitoringAllRegions()
-                        locationManager.isMonitoringRoute = false
+                        viewModel.resetAlarmState()
                     }
                     .foregroundColor(.red)
                 }
                 
                 Section(header: Text("System State")) {
-                    if let error = locationManager.lastError {
+                    if let error = viewModel.locationManager.lastError {
                         VStack(alignment: .leading) {
                             Text("Error")
                                 .bold()
@@ -105,7 +95,7 @@ struct LocationDebugView: View {
                                 .font(.caption)
                                 .foregroundColor(.red)
                         }
-                    } else if locationManager.userLocation != nil {
+                    } else if viewModel.locationManager.userLocation != nil {
                         HStack {
                             Image(systemName: "circle.fill")
                                 .foregroundColor(.green)
@@ -120,36 +110,17 @@ struct LocationDebugView: View {
                     }
                     
                     Button("Start Tracking") {
-                        locationManager.startTracking()
+                        viewModel.startTracking()
                     }
                     .foregroundColor(.blue)
                     
                     Button("Stop Tracking") {
-                        locationManager.stopTracking()
+                        viewModel.stopTracking()
                     }
                     .foregroundColor(.red)
                 }
             }
             .navigationTitle("Location Debug")
-        }
-    }
-    
-    private func statusString(for status: CLAuthorizationStatus) -> String {
-        switch status {
-        case .notDetermined: return "Not Determined"
-        case .restricted: return "Restricted"
-        case .denied: return "Denied"
-        case .authorizedAlways: return "Always"
-        case .authorizedWhenInUse: return "When In Use"
-        @unknown default: return "Unknown"
-        }
-    }
-    
-    private func statusColor(for status: CLAuthorizationStatus) -> Color {
-        switch status {
-        case .authorizedAlways, .authorizedWhenInUse: return .green
-        case .denied, .restricted: return .red
-        default: return .orange
         }
     }
 }

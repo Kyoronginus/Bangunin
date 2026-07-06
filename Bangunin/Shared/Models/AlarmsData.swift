@@ -44,23 +44,4 @@ final class Alarm {
         self.createdAt = createdAt
     }
 
-    var repeatStatus: String {
-        let selected = Set(repeatOptions)
-        let weekdays: Set<RepeatOption> = [.monday, .tuesday, .wednesday, .thursday, .friday]
-        let weekends: Set<RepeatOption> = [.saturday, .sunday]
-
-        if selected.isEmpty {
-            return "Never"
-        } else if selected.count == RepeatOption.allCases.count {
-            return "Everyday"
-        } else if selected == weekdays {
-            return "Every Weekday"
-        } else if selected == weekends {
-            return "Every Weekend"
-        } else {
-            return RepeatOption.allCases.filter { selected.contains($0) }
-                .map { String($0.rawValue.replacingOccurrences(of: "Every ", with: "").prefix(3)) }
-                .joined(separator: ", ")
-        }
-    }
 }
