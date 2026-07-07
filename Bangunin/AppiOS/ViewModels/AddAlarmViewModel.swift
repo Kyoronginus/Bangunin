@@ -12,7 +12,7 @@ import CoreLocation
 class AddAlarmViewModel {
     var alarmName: String = ""
     var departureStation: Station = .none
-    var destinationStation: Station = Station(name: "Palmerah", latitude: -6.2074, longitude: 106.7969)
+    var destinationStation: Station = .none
     var wakeMeUpAt: WakeUpTime = .fiveMin
     var selectedRepeatOptions: Set<RepeatOption> = []
     var isVibrationOn: Bool = true
@@ -23,6 +23,11 @@ class AddAlarmViewModel {
     var isEditMode: Bool {
         editingAlarm != nil
     }
+    
+    var isFormValid: Bool {
+        return departureStation.name != Station.none.name &&
+            destinationStation.name != Station.none.name
+    }
 
     init(editingAlarm: Alarm? = nil) {
         self.editingAlarm = editingAlarm
@@ -30,7 +35,7 @@ class AddAlarmViewModel {
         if let alarm = editingAlarm {
             self.alarmName = alarm.label
             self.departureStation = findStation(name: alarm.departureStation) ?? .none
-            self.destinationStation = findStation(name: alarm.destinationStation) ?? Station(name: "Palmerah", latitude: -6.2074, longitude: 106.7969)
+            self.destinationStation = findStation(name: alarm.destinationStation) ?? .none
             self.wakeMeUpAt = alarm.wakeUpTime
             self.selectedRepeatOptions = Set(alarm.repeatOptions)
             self.isVibrationOn = alarm.isVibrationOn
@@ -57,6 +62,19 @@ class AddAlarmViewModel {
         }
     }
     
+    func getRoute(for station: Station) -> RouteLine? {
+        if station == .none { return nil }
+
+        for (route, stations) in RouteData.routeStations {
+            // Asumsi pencocokan menggunakan nama stasiun
+            if stations.contains(where: { $0.name == station.name }) {
+                return route
+            }
+        }
+        
+        return nil
+    }
+    
     func saveAlarm(context: ModelContext) {
         // Convert wakeMeUpAt to an approximate distance radius
         var distanceRadiusInMeters: Double = 0
@@ -79,6 +97,7 @@ class AddAlarmViewModel {
             alarm.repeatOptions = Array(selectedRepeatOptions)
             alarm.isVibrationOn = isVibrationOn
             alarm.isSoundOn = isSoundOn
+            alarm.isActive = true
         } else {
             let newAlarm = Alarm(  // CREATE
                 label: finalLabel,
@@ -100,6 +119,11 @@ class AddAlarmViewModel {
         } catch {
             print("Gagal menyimpan alarm: \(error)")
         }
+        
+        // clean geofence n live activity sblm diedit
+        LocationManager.shared.stopMonitoringAllRegions()
+        LocationManager.shared.isMonitoringRoute = false
+        AlarmTriggerManager.shared.endLiveActivity()
         
         // Start monitoring using LocationManager singleton
         LocationManager.shared.startMonitoringDeparture(
