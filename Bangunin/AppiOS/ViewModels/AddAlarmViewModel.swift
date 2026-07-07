@@ -76,64 +76,73 @@ class AddAlarmViewModel {
     }
     
     func saveAlarm(context: ModelContext) {
-        // Convert wakeMeUpAt to an approximate distance radius
-        var distanceRadiusInMeters: Double = 0
-        switch wakeMeUpAt {
-            case .atDestination: distanceRadiusInMeters = 200
-            case .oneMin: distanceRadiusInMeters = 1160
-            case .threeMin: distanceRadiusInMeters = 3480
-            case .fiveMin: distanceRadiusInMeters = 5800
-            case .tenMin: distanceRadiusInMeters = 11600
-            case .fifteenMin: distanceRadiusInMeters = 17400
-        }
-        
-        let finalLabel = alarmName.isEmpty ? "New Alarm" : alarmName
+            // Convert wakeMeUpAt to an approximate distance radius
+            var distanceRadiusInMeters: Double = 0
+            switch wakeMeUpAt {
+                case .atDestination: distanceRadiusInMeters = 200
+                case .oneMin: distanceRadiusInMeters = 1160
+                case .threeMin: distanceRadiusInMeters = 3480
+                case .fiveMin: distanceRadiusInMeters = 5800
+                case .tenMin: distanceRadiusInMeters = 11600
+                case .fifteenMin: distanceRadiusInMeters = 17400
+            }
+            
+            let finalLabel = alarmName.isEmpty ? "New Alarm" : alarmName
+            
+            // TAMBAHAN: Siapkan variabel untuk menyimpan ID yang akan dikirim ke geofence
+            let targetAlarmID: String
 
-        if let alarm = editingAlarm {  // UPDATE
-            alarm.label = finalLabel
-            alarm.departureStation = departureStation.name
-            alarm.destinationStation = destinationStation.name
-            alarm.wakeUpTime = wakeMeUpAt
-            alarm.repeatOptions = Array(selectedRepeatOptions)
-            alarm.isVibrationOn = isVibrationOn
-            alarm.isSoundOn = isSoundOn
-            alarm.isActive = true
-        } else {
-            let newAlarm = Alarm(  // CREATE
-                label: finalLabel,
-                departureStation: departureStation.name,
-                destinationStation: destinationStation.name,
-                wakeUpTime: wakeMeUpAt,
-                repeatOptions: Array(selectedRepeatOptions),
-                isVibrationOn: isVibrationOn,
-                isSoundOn: isSoundOn,
-                isActive: true
+            if let alarm = editingAlarm {  // UPDATE
+                alarm.label = finalLabel
+                alarm.departureStation = departureStation.name
+                alarm.destinationStation = destinationStation.name
+                alarm.wakeUpTime = wakeMeUpAt
+                alarm.repeatOptions = Array(selectedRepeatOptions)
+                alarm.isVibrationOn = isVibrationOn
+                alarm.isSoundOn = isSoundOn
+                
+                alarm.isActive = true
+                targetAlarmID = alarm.id.uuidString // Ambil ID alarm yang diedit
+            } else {
+                let newAlarm = Alarm(  // CREATE
+                    label: finalLabel,
+                    departureStation: departureStation.name,
+                    destinationStation: destinationStation.name,
+                    wakeUpTime: wakeMeUpAt,
+                    repeatOptions: Array(selectedRepeatOptions),
+                    isVibrationOn: isVibrationOn,
+                    isSoundOn: isSoundOn,
+                    isActive: true
+                )
+                context.insert(newAlarm)
+                targetAlarmID = newAlarm.id.uuidString // Ambil ID alarm yang baru dibuat
+            }
+            
+            // Save Context
+            do {
+                try context.save()
+                print("Alarm berhasil disimpan: \(finalLabel)")
+            } catch {
+                print("Gagal menyimpan alarm: \(error)")
+            }
+            
+            LocationManager.shared.stopMonitoringAllRegions()
+            LocationManager.shared.isMonitoringRoute = false
+            AlarmTriggerManager.shared.endLiveActivity()
+            
+            LocationManager.shared.startMonitoringDeparture(
+                alarmID: targetAlarmID,
+                stationName: departureStation.name,
+                destinationName: destinationStation.name,
+                radius: 100, // radius buat departure station
+                coordinate: departureStation.coordinate
             )
-            context.insert(newAlarm)
+            LocationManager.shared.startMonitoring(
+                alarmID: targetAlarmID,
+                destination: destinationStation,
+                radius: distanceRadiusInMeters
+            )
+            
+            print("Alarm geofences registered for \(destinationStation.name) with radius \(distanceRadiusInMeters)m")
         }
-        
-        // Save Context
-        do {
-            try context.save()
-            print("Alarm berhasil disimpan: \(finalLabel)")
-        } catch {
-            print("Gagal menyimpan alarm: \(error)")
-        }
-        
-        // clean geofence n live activity sblm diedit
-        LocationManager.shared.stopMonitoringAllRegions()
-        LocationManager.shared.isMonitoringRoute = false
-        AlarmTriggerManager.shared.endLiveActivity()
-        
-        // Start monitoring using LocationManager singleton
-        LocationManager.shared.startMonitoringDeparture(
-            stationName: departureStation.name,
-            destinationName: destinationStation.name,
-            radius: 100, // radius buat departure station
-            coordinate: departureStation.coordinate
-        )
-        LocationManager.shared.startMonitoring(destination: destinationStation, radius: distanceRadiusInMeters)
-        
-        print("Alarm geofences registered for \(destinationStation.name) with radius \(distanceRadiusInMeters)m")
-    }
 }

@@ -43,6 +43,7 @@ class AlarmCardViewModel {
                let destStation = findStation(name: alarm.destinationStation) {
                 
                 LocationManager.shared.startMonitoringDeparture(
+                    alarmID: alarm.id.uuidString,
                     stationName: depStation.name,
                     destinationName: destStation.name,
                     radius: 100, // Fixed radius for testing/demo
@@ -50,6 +51,7 @@ class AlarmCardViewModel {
                 )
                 
                 LocationManager.shared.startMonitoring(
+                    alarmID: alarm.id.uuidString,
                     destination: destStation,
                     radius: 3000 // 3km for wake up
                 )
@@ -57,12 +59,9 @@ class AlarmCardViewModel {
             }
         } else {
             // Alarm turned OFF
-            LocationManager.shared.stopMonitoringAllRegions()
-            LocationManager.shared.isMonitoringRoute = false
+            LocationManager.shared.stopMonitoringRegion(purpose: .destination, alarmID: alarm.id.uuidString)
             AlarmTriggerManager.shared.endLiveActivity()
             print("Alarm turned OFF, cleared geofences.")
         }
     }
 }
-
-

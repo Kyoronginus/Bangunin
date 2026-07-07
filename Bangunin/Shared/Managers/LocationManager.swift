@@ -5,8 +5,8 @@
 //  Created by Tohru Djunaedi Sato on 03/07/26.
 //
 
-import Foundation
 import CoreLocation
+import Foundation
 
 enum RegionPurpose: String {
     case departure
@@ -15,34 +15,44 @@ enum RegionPurpose: String {
 
 struct RegionIdentifier {
     let purpose: RegionPurpose
+    let alarmID: String
     let stationName: String
     let targetDestination: String?
-    
+
     // Memberwise initializer
-    init(purpose: RegionPurpose, stationName: String, targetDestination: String? = nil) {
+    init(
+        purpose: RegionPurpose,
+        alarmID: String,
+        stationName: String,
+        targetDestination: String? = nil
+    ) {
         self.purpose = purpose
+        self.alarmID = alarmID
         self.stationName = stationName
         self.targetDestination = targetDestination
     }
-    
+
     var stringValue: String {
         if let dest = targetDestination {
-            return "\(purpose.rawValue)|\(stationName)|\(dest)"
+            return "\(purpose.rawValue)|\(alarmID)|\(stationName)|\(dest)"
         }
-        return "\(purpose.rawValue)|\(stationName)"
+        return "\(purpose.rawValue)|\(alarmID)|\(stationName)"
     }
-    
+
     // Failable initializer from string
     init?(stringValue: String) {
         let parts = stringValue.split(separator: "|")
-        guard parts.count >= 2,
-              let purpose = RegionPurpose(rawValue: String(parts[0])) else {
+        guard parts.count >= 3,
+            let purpose = RegionPurpose(rawValue: String(parts[0]))
+        else {
             return nil
         }
         self.purpose = purpose
-        self.stationName = String(parts[1])
-        if parts.count == 3 {
-            self.targetDestination = String(parts[2])
+
+        self.alarmID = String(parts[1])
+        self.stationName = String(parts[2])
+        if parts.count == 4 {
+            self.targetDestination = String(parts[3])
         } else {
             self.targetDestination = nil
         }
@@ -54,17 +64,19 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     // Singleton instance for easy background access
     static let shared = LocationManager()
-    
+
     // The underlying CoreLocation manager
     private let manager = CLLocationManager()
 
     // Properties that your Views can observe
     var userLocation: CLLocation?
     var authorizationStatus: CLAuthorizationStatus
-    
+
     var isMonitoringRoute: Bool = false
     var lastUpdateTimestamp: Date?
     var lastError: String?
+
+    private var triggeredAlarmIDs: Set<String> = []
 
     private override init() {
         // Initialize the starting authorization status
@@ -76,14 +88,18 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
         // Optimize battery by setting the appropriate accuracy
         manager.desiredAccuracy = kCLLocationAccuracyBest
-        
+
         // Safety check to prevent NSInternalInconsistencyException if capability is missing
-        if let modes = Bundle.main.object(forInfoDictionaryKey: "UIBackgroundModes") as? [String], modes.contains("location") {
+        if let modes = Bundle.main.object(
+            forInfoDictionaryKey: "UIBackgroundModes"
+        ) as? [String], modes.contains("location") {
             manager.allowsBackgroundLocationUpdates = true
         } else {
-            print("WARNING: Missing 'location' in UIBackgroundModes capability. Background updates disabled to prevent crash.")
+            print(
+                "WARNING: Missing 'location' in UIBackgroundModes capability. Background updates disabled to prevent crash."
+            )
         }
-        
+
         manager.pausesLocationUpdatesAutomatically = false
     }
 
@@ -102,13 +118,19 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         manager.stopUpdatingLocation()
     }
 
-    func startMonitoring(destination: Station, radius: CLLocationDistance) {
-        guard CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) else {
-            print("Geofencing is not supported on this device!")
-            return
-        }
-        
-        let identifier = RegionIdentifier(purpose: .destination, stationName: destination.name).stringValue
+    func startMonitoring(
+        alarmID: String,
+        destination: Station,
+        radius: CLLocationDistance
+    ) {
+        guard
+            CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self)
+        else { return }
+        let identifier = RegionIdentifier(
+            purpose: .destination,
+            alarmID: alarmID,
+            stationName: destination.name
+        ).stringValue
         let region = CLCircularRegion(
             center: destination.coordinate,
             radius: radius,
@@ -116,10 +138,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         )
         region.notifyOnEntry = true
         region.notifyOnExit = false
-        
         manager.startMonitoring(for: region)
         manager.requestState(for: region)
-        print("Started monitoring region around \(destination.name) with radius \(radius) meters.")
     }
 
     func stopMonitoringAllRegions() {
@@ -127,34 +147,71 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             manager.stopMonitoring(for: region)
         }
     }
-    
+
+    func stopMonitoringRegion(purpose: RegionPurpose, alarmID: String) {
+        triggeredAlarmIDs.remove(alarmID)
+        
+        for region in manager.monitoredRegions {
+            if let regionId = RegionIdentifier(stringValue: region.identifier),
+                regionId.purpose == purpose && regionId.alarmID == alarmID
+            {
+                manager.stopMonitoring(for: region)
+                print(
+                    "Berhasil menghapus geofence spesifik: \(region.identifier)"
+                )
+            }
+        }
+    }
+
     // MARK: - Testing / Departure
-    
-    func startMonitoringDeparture(stationName: String, destinationName: String, radius: CLLocationDistance, coordinate: CLLocationCoordinate2D) {
-        guard CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) else {
+
+    func startMonitoringDeparture(
+        alarmID: String,
+        stationName: String,
+        destinationName: String,
+        radius: CLLocationDistance,
+        coordinate: CLLocationCoordinate2D
+    ) {
+        guard
+            CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self)
+        else {
             print("Geofencing is not supported on this device!")
             return
         }
-        
-        let identifier = RegionIdentifier(purpose: .departure, stationName: stationName, targetDestination: destinationName).stringValue
-        let region = CLCircularRegion(center: coordinate, radius: radius, identifier: identifier)
+
+        let identifier = RegionIdentifier(
+            purpose: .departure,
+            alarmID: alarmID,
+            stationName: stationName,
+            targetDestination: destinationName
+        ).stringValue
+        let region = CLCircularRegion(
+            center: coordinate,
+            radius: radius,
+            identifier: identifier
+        )
         region.notifyOnEntry = true
         region.notifyOnExit = false
-        
+
         manager.startMonitoring(for: region)
         // Request the state immediately to see if we are already inside
         manager.requestState(for: region)
-        print("Started monitoring DEPARTURE region around \(stationName) with radius \(radius) meters.")
+        print(
+            "Started monitoring DEPARTURE region around \(stationName) with radius \(radius) meters."
+        )
     }
 
     // MARK: - CLLocationManagerDelegate
 
     // This is called automatically whenever the user's location changes
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(
+        _ manager: CLLocationManager,
+        didUpdateLocations locations: [CLLocation]
+    ) {
         guard let latestLocation = locations.last else { return }
         self.userLocation = latestLocation
         self.lastUpdateTimestamp = Date()
-        self.lastError = nil // clear error on successful update
+        self.lastError = nil  // clear error on successful update
     }
 
     // This is called automatically whenever the user changes the location permission
@@ -168,58 +225,92 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         }
 
         // If the user granted permission, start tracking immediately
-        if authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways {
+        if authorizationStatus == .authorizedWhenInUse
+            || authorizationStatus == .authorizedAlways
+        {
             startTracking()
         }
     }
 
     // Triggered when the user enters the geofence radius
-    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+    func locationManager(
+        _ manager: CLLocationManager,
+        didEnterRegion region: CLRegion
+    ) {
         print("Did Enter Region: \(region.identifier)")
-        
+
         // Logika untuk stasiun:
         handleRegionEvent(region: region, state: .inside)
     }
-    
+
     // Triggered when we request the state (e.g. immediately after registering)
-    func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
-        print("Did Determine State for \(region.identifier): \(state == .inside ? "Inside" : "Outside/Unknown")")
-        
+    func locationManager(
+        _ manager: CLLocationManager,
+        didDetermineState state: CLRegionState,
+        for region: CLRegion
+    ) {
+        print(
+            "Did Determine State for \(region.identifier): \(state == .inside ? "Inside" : "Outside/Unknown")"
+        )
+
         if state == .inside {
             handleRegionEvent(region: region, state: .inside)
         }
     }
-    
+
     private func handleRegionEvent(region: CLRegion, state: CLRegionState) {
         // Prevent double triggering if already monitoring route
         guard state == .inside else { return }
-        
+
         // Decode the structured identifier
-        guard let regionId = RegionIdentifier(stringValue: region.identifier) else {
+        guard let regionId = RegionIdentifier(stringValue: region.identifier)
+        else {
             print("Unknown region format: \(region.identifier)")
             return
         }
-        
+
         switch regionId.purpose {
         case .departure:
             if !self.isMonitoringRoute {
-                print("User is at departure station. Start alarm monitoring state.")
+                print(
+                    "User is at departure station. Start alarm monitoring state."
+                )
                 // Synchronously set to true to prevent double triggers if called rapidly
                 self.isMonitoringRoute = true
-                
+
                 let destName = regionId.targetDestination ?? "Destination"
-                AlarmTriggerManager.shared.triggerDepartureNotification(for: destName)
+                AlarmTriggerManager.shared.triggerDepartureNotification(
+                    for: destName,
+                    alarmID: regionId.alarmID
+                )
             }
-            
+
         case .destination:
-            print("User near destination station! Trigger alarm!")
-            AlarmTriggerManager.shared.triggerAlarm(for: regionId.stationName)
+            if !triggeredAlarmIDs.contains(regionId.alarmID) {
+                print("User near destination station! Trigger alarm!")
+
+                triggeredAlarmIDs.insert(regionId.alarmID)
+
+                AlarmTriggerManager.shared.triggerAlarm(
+                    for: regionId.stationName,
+                    alarmID: regionId.alarmID
+                )
+            } else {
+                print(
+                    "Alarm \(regionId.alarmID) triggered!"
+                )
+            }
         }
     }
 
     // Handle errors (important for debugging)
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("LocationManager failed with error: \(error.localizedDescription)")
+    func locationManager(
+        _ manager: CLLocationManager,
+        didFailWithError error: Error
+    ) {
+        print(
+            "LocationManager failed with error: \(error.localizedDescription)"
+        )
         self.lastError = error.localizedDescription
     }
 }

@@ -10,6 +10,7 @@ public struct BanguninAlarmAttributes: ActivityAttributes {
     }
 
     // Fixed non-changing properties about your activity go here!
+    var alarmID: String
     var destinationStationName: String
 }
 

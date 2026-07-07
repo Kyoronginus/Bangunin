@@ -12,6 +12,7 @@ import SwiftData
 
 @Model
 final class Alarm {
+    var id: UUID
     var label: String
     var departureStation: String
     var destinationStation: String
@@ -23,6 +24,7 @@ final class Alarm {
     var createdAt: Date
 
     init(
+        id: UUID = UUID(),
         label: String,
         departureStation: String,
         destinationStation: String,
@@ -33,6 +35,7 @@ final class Alarm {
         isActive: Bool = true,
         createdAt: Date = .now
     ) {
+        self.id = id
         self.label = label
         self.departureStation = departureStation
         self.destinationStation = destinationStation

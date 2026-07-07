@@ -113,21 +113,18 @@ struct HomePageView: View {
             AlarmTriggerManager.shared.requestPermissions()
             LocationManager.shared.requestPermission()
         }
-        .onReceive(
-            NotificationCenter.default.publisher(for: .banguninAlarmDidCancel)
-        ) { _ in
-            if let activeAlarm = alarms.first(where: { $0.isActive }) { // cari alarm yg statusnya on
-                activeAlarm.isActive = false // agar toggle mati
-                do {
-                    try modelContext.save() // save ke swiftdata
-                    print(
-                        "Alarm berhasil dimatikan dari Live Activity/AlarmKit."
-                    )
-                } catch {
-                    print("Gagal menyimpan update alarm ke database: \(error)")
+        .onReceive(NotificationCenter.default.publisher(for: .banguninAlarmDidCancel)) { notification in
+                    guard let receivedID = notification.userInfo?["alarmID"] as? String else { return }
+                    if let activeAlarm = alarms.first(where: { $0.id.uuidString == receivedID }) {
+                        activeAlarm.isActive = false
+                        do {
+                            try modelContext.save()
+                            print("Alarm berhasil dimatikan dari Live Activity/AlarmKit.")
+                        } catch {
+                            print("Gagal menyimpan update alarm ke database: \(error)")
+                        }
+                    }
                 }
-            }
-        }
     }
 
 }

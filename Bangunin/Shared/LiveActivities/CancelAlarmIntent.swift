@@ -8,14 +8,21 @@ import AppIntents
 public struct CancelAlarmIntent: LiveActivityIntent {
     public static var title: LocalizedStringResource = "Cancel Alarm"
     
-    // The main app will assign this closure when it starts up.
-    public static var cancelAction: (() -> Void)?
+    @Parameter(title: "Alarm ID")
+    public var alarmID: String
     
     public init() {}
     
+    public init(alarmID: String) {
+        self.alarmID = alarmID
+    }
+    
+    // The main app will assign this closure when it starts up.
+    public static var cancelAction: ((String) -> Void)?
+    
     public func perform() async throws -> some IntentResult {
         // Execute the cancellation action provided by the main app process
-        Self.cancelAction?()
+        Self.cancelAction?(alarmID)
         return .result()
     }
 }
