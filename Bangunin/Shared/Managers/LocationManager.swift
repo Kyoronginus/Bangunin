@@ -65,6 +65,10 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     var isMonitoringRoute: Bool = false
     var lastUpdateTimestamp: Date?
     var lastError: String?
+    
+    // Untuk tracking Live Activity di background
+    private var activeDestinationCoordinate: CLLocationCoordinate2D?
+    private var activeTotalDistance: Double?
 
     private override init() {
         // Initialize the starting authorization status
@@ -126,6 +130,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         for region in manager.monitoredRegions {
             manager.stopMonitoring(for: region)
         }
+        activeDestinationCoordinate = nil
+        activeTotalDistance = nil
     }
     
     // MARK: - Testing / Departure
@@ -155,6 +161,20 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         self.userLocation = latestLocation
         self.lastUpdateTimestamp = Date()
         self.lastError = nil // clear error on successful update
+        
+        // Push update ke Live Activity di background jika sedang monitoring
+        if isMonitoringRoute, 
+           let destCoord = activeDestinationCoordinate, 
+           let totalDist = activeTotalDistance, totalDist > 0 {
+            
+            let destLoc = CLLocation(latitude: destCoord.latitude, longitude: destCoord.longitude)
+            let remainingDist = latestLocation.distance(from: destLoc)
+            
+            let traveledDist = totalDist - remainingDist
+            let progress = min(max(traveledDist / totalDist, 0.0), 1.0)
+            
+            AlarmTriggerManager.shared.updateLiveActivityProgress(progress: progress)
+        }
     }
 
     // This is called automatically whenever the user changes the location permission
@@ -208,6 +228,17 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 self.isMonitoringRoute = true
                 
                 let destName = regionId.targetDestination ?? "Destination"
+                
+                // Track coordinates for Live Activity Background Update
+                if let departureStation = findStation(name: regionId.stationName),
+                   let destinationStation = findStation(name: destName) {
+                    self.activeDestinationCoordinate = destinationStation.coordinate
+                    
+                    let depLoc = CLLocation(latitude: departureStation.coordinate.latitude, longitude: departureStation.coordinate.longitude)
+                    let destLoc = CLLocation(latitude: destinationStation.coordinate.latitude, longitude: destinationStation.coordinate.longitude)
+                    self.activeTotalDistance = depLoc.distance(from: destLoc)
+                }
+                
                 AlarmTriggerManager.shared.triggerDepartureNotification(for: destName)
             }
             
@@ -221,5 +252,12 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("LocationManager failed with error: \(error.localizedDescription)")
         self.lastError = error.localizedDescription
+    }
+    
+    // Menghitung jarak dari lokasi user saat ini ke sebuah titik koordinat (contoh: stasiun tujuan)
+    func distanceTo(destinationCoordinate: CLLocationCoordinate2D) -> CLLocationDistance? {
+        guard let current = userLocation else { return nil }
+        let destination = CLLocation(latitude: destinationCoordinate.latitude, longitude: destinationCoordinate.longitude)
+        return current.distance(from: destination)
     }
 }

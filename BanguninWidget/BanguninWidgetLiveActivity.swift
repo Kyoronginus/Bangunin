@@ -107,39 +107,11 @@ struct WatchOrPhoneView: View {
                     .font(.subheadline)
                 }
 
-                // Custom Progress Bar Mockup
-                GeometryReader { geometry in
-                    ZStack(alignment: .leading) {
-                        Capsule()
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(height: 6)
-
-                        Capsule()
-                            .fill(Color.cyan)
-                            .frame(
-                                width: geometry.size.width
-                                    * context.state.progress,
-                                height: 6
-                            )
-
-                        Image(systemName: "tram.fill")
-                            .foregroundColor(.white)
-                            .padding(4)
-                            .background(Color.black)
-                            .clipShape(Circle())
-                            .offset(
-                                x: (geometry.size.width * context.state.progress)
-                                    - 12
-                            )
-
-                        Image(systemName: "mappin.circle.fill")
-                            .foregroundColor(.red)
-                            .background(Color.white)
-                            .clipShape(Circle())
-                            .offset(x: geometry.size.width - 10)
-                    }
-                }
-                .frame(height: 24)
+                // Custom Progress Bar Component
+                TrainProgressBar(progress: context.state.progress, tintColor: .cyan)
+                    .padding(.vertical, 8)
+                
+                
 
                 // Cancel Button
                 HStack {

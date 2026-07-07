@@ -7,8 +7,9 @@ import Foundation
 import CoreLocation
 
 enum RouteLine: String, CaseIterable {
-    case redKotaBogor = "Red Line (Jakarta Kota-Bogor)"
-    case redCitayamNambo = "Red Line (Citayam-Nambo)"
+//    case redKotaBogor = "Red Line (Jakarta Kota-Bogor)"
+//    case redCitayamNambo = "Red Line (Citayam-Nambo)"
+    case red = "Red Line"
     case blue = "Blue Line"
     case green = "Green Line"
     case brown = "Brown Line"
@@ -44,10 +45,13 @@ struct RouteData {
     return [
         .debug: [
             Station(name: "ADA GOP 9", latitude: -6.3021, longitude: 106.6525),
+            Station(name: "Cisauk debug", latitude: -6.3262, longitude: 106.6433),
+            Station(name: "Los Angeles Station debug", latitude: 34.0651, longitude: -118.2353),
+            
             Station(name: "Debug DEPARTURE", latitude: currentLat, longitude: currentLon),
             Station(name: "Debug DESTINATION (sama kyk DEPARTURE)", latitude: currentLat, longitude: currentLon)
         ],
-        .redKotaBogor: [
+        .red: [
             Station(name: "Jakarta Kota", latitude: -6.1375, longitude: 106.8146),
             Station(name: "Jayakarta", latitude: -6.1413, longitude: 106.8206),
             Station(name: "Mangga Besar", latitude: -6.1497, longitude: 106.8248),
@@ -69,9 +73,7 @@ struct RouteData {
             Station(name: "Citayam", latitude: -6.4485, longitude: 106.8021),
             Station(name: "Cilebut", latitude: -6.5230, longitude: 106.7997),
             Station(name: "Bojong Gede", latitude: -6.4947, longitude: 106.7951),
-            Station(name: "Bogor", latitude: -6.5946, longitude: 106.7891)
-        ],
-        .redCitayamNambo: [
+            Station(name: "Bogor", latitude: -6.5946, longitude: 106.7891),
             Station(name: "Citayam", latitude: -6.4485, longitude: 106.8021),
             Station(name: "Pondok Rajeg", latitude: -6.4475, longitude: 106.8285),
             Station(name: "Cibinong", latitude: -6.4716, longitude: 106.8530),

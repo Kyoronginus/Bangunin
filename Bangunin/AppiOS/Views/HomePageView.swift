@@ -71,6 +71,15 @@ struct HomePageView: View {
                     }
                 } else {
                     List {
+                        // active alarm card view
+                        if let activeAlarm = alarms.first(where: {$0.isActive}){
+                            ActiveAlarmCardView(
+                                viewModel: ActiveAlarmCardViewModel(alarm: activeAlarm)
+                            )
+                            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                            .listRowSeparator(.hidden)
+                        }
+                            
                         ForEach(alarms) { alarm in
                             AlarmCardView(
                                 viewModel: AlarmCardViewModel(alarm: alarm)
@@ -92,6 +101,8 @@ struct HomePageView: View {
                                     Label("Delete", systemImage: "trash")
                                 }
                             }
+                            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                            .listRowSeparator(.hidden)
                         }
                     }
                     .listStyle(.plain)

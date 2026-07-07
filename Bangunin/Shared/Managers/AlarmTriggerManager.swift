@@ -115,55 +115,46 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
     // MARK: - Live Activity
     
     private func startLiveActivity(destinationName: String) {
-        if #available(iOS 16.1, *) {
-            // End any existing activity first
-            endLiveActivity()
-            
-            let attributes = BanguninAlarmAttributes(destinationStationName: destinationName)
-            let initialContentState = BanguninAlarmAttributes.ContentState(progress: 0.5) // Example progress
-            
-            do {
-                if #available(iOS 16.2, *) {
-                    let content = ActivityContent(state: initialContentState, staleDate: nil)
-                    let activity = try Activity<BanguninAlarmAttributes>.request(
-                        attributes: attributes,
-                        content: content,
-                        pushType: nil
-                    )
-                    self.activeActivity = activity
-                    print("Started Live Activity with ID: \(activity.id)")
-                } else {
-                    // Fallback for iOS 16.1
-                    let activity = try Activity<BanguninAlarmAttributes>.request(
-                        attributes: attributes,
-                        contentState: initialContentState,
-                        pushType: nil
-                    )
-                    self.activeActivity = activity
-                    print("Started Live Activity with ID: \(activity.id)")
-                }
-            } catch {
-                print("Error starting Live Activity: \(error.localizedDescription)")
-            }
+        // End any existing activity first
+        endLiveActivity()
+        
+        let attributes = BanguninAlarmAttributes(destinationStationName: destinationName)
+        let initialContentState = BanguninAlarmAttributes.ContentState(progress: 0.0) // Start at 0
+        let content = ActivityContent(state: initialContentState, staleDate: nil)
+        
+        do {
+            let activity = try Activity<BanguninAlarmAttributes>.request(
+                attributes: attributes,
+                content: content,
+                pushType: nil
+            )
+            self.activeActivity = activity
+            print("Started Live Activity with ID: \(activity.id)")
+        } catch {
+            print("Error starting Live Activity: \(error.localizedDescription)")
+        }
+    }
+    
+    func updateLiveActivityProgress(progress: Double) {
+        guard let activity = activeActivity as? Activity<BanguninAlarmAttributes> else { return }
+        
+        Task {
+            let updatedState = BanguninAlarmAttributes.ContentState(progress: progress)
+            let content = ActivityContent(state: updatedState, staleDate: nil)
+            await activity.update(content)
         }
     }
     
     func endLiveActivity() {
-        if #available(iOS 16.1, *) {
-            if let activity = activeActivity as? Activity<BanguninAlarmAttributes> {
-                Task {
-                    let finalState = BanguninAlarmAttributes.ContentState(progress: 1.0)
-                    if #available(iOS 16.2, *) {
-                        let finalContent = ActivityContent(state: finalState, staleDate: nil)
-                        await activity.end(finalContent, dismissalPolicy: .immediate)
-                    } else {
-                        await activity.end(using: finalState, dismissalPolicy: .immediate)
-                    }
-                    print("Ended Live Activity.")
-                }
-                self.activeActivity = nil
-            }
+        guard let activity = activeActivity as? Activity<BanguninAlarmAttributes> else { return }
+        
+        Task {
+            let finalState = BanguninAlarmAttributes.ContentState(progress: 1.0)
+            let finalContent = ActivityContent(state: finalState, staleDate: nil)
+            await activity.end(finalContent, dismissalPolicy: .immediate)
+            print("Ended Live Activity.")
         }
+        self.activeActivity = nil
     }
     
     // MARK: - UNUserNotificationCenterDelegate

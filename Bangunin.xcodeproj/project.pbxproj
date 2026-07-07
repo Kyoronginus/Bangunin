@@ -54,6 +54,8 @@
 		077AE4DA2FF8D3EA00FD607A /* Exceptions for "Bangunin" folder in "BanguninWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AppiOS/Views/Components/TrainProgressBar.swift,
+				Assets.xcassets,
 				Shared/LiveActivities/AlarmAttributes.swift,
 				Shared/LiveActivities/CancelAlarmIntent.swift,
 			);
