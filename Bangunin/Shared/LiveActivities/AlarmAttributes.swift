@@ -6,7 +6,7 @@ public struct BanguninAlarmAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         // Dynamic state of the activity goes here.
         // For example, time remaining or progress if we were tracking live progress.
-        var progress: Double
+        var progress: Double = 0.0
     }
 
     // Fixed non-changing properties about your activity go here!

@@ -54,7 +54,7 @@ struct WatchOrPhoneView: View {
     var body: some View {
         if activityFamily == .small {
             VStack(alignment: .leading, spacing: 2) {
-                Text("to \(context.attributes.destinationStationName)")
+                Text("Menuju \(context.attributes.destinationStationName)")
                     .font(.footnote)
                     .fontWeight(.bold)
                     .foregroundColor(.cyan)
@@ -91,9 +91,11 @@ struct WatchOrPhoneView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.gray)
                         .textCase(.uppercase)
+                        // .padding(.top, 11)
+                        .padding(.bottom, 4)
 
-                    Text("Alarm Active")
-                        .font(.title2)
+                    Text("Santai aja, tinggal istirahat")
+                        .font(.headline)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
 
@@ -105,7 +107,7 @@ struct WatchOrPhoneView: View {
                             .fontWeight(.bold)
                     }
                     .font(.subheadline)
-                }
+                }.padding(.bottom, -3)
 
                 // Custom Progress Bar Mockup
                 GeometryReader { geometry in
@@ -122,7 +124,7 @@ struct WatchOrPhoneView: View {
                                 height: 6
                             )
 
-                        Image(systemName: "tram.fill")
+                        Image(systemName: "train.side.front.car")
                             .foregroundColor(.white)
                             .padding(4)
                             .background(Color.black)
@@ -140,12 +142,13 @@ struct WatchOrPhoneView: View {
                     }
                 }
                 .frame(height: 24)
+                .padding(.bottom, 3)
 
                 // Cancel Button
                 HStack {
                     Spacer()
                     Button(intent: CancelAlarmIntent()) {
-                        Text("Cancel Alarm")
+                        Text("Stop Alarm")
                             .font(.subheadline)
                             .foregroundColor(.white)
                             .padding(.horizontal, 24)
@@ -156,8 +159,10 @@ struct WatchOrPhoneView: View {
                     .clipShape(Capsule())
                     Spacer()
                 }
+                .padding(.bottom, 1)
             }
             .padding()
+            // .padding(.bottom, 6)
             .activityBackgroundTint(Color.black.opacity(0.8))
             .activitySystemActionForegroundColor(Color.white)
         }
@@ -178,32 +183,3 @@ struct CancelButtonView: View {
     }
 }
 
-struct AlarmKitLiveActivity: Widget {
-    var body: some WidgetConfiguration {
-        ActivityConfiguration(for: AlarmKit.AlarmAttributes<EmptyMetadata>.self)
-        { context in
-            VStack {
-                Text("Alarm Triggered!")
-                    .font(.headline)
-            }
-        } dynamicIsland: { context in
-            DynamicIsland {
-                DynamicIslandExpandedRegion(.leading) {
-                    Text("Alarm")
-                }
-                DynamicIslandExpandedRegion(.trailing) {
-                    Text("Active")
-                }
-                DynamicIslandExpandedRegion(.bottom) {
-                    Text("Time to wake up!")
-                }
-            } compactLeading: {
-                Text("⏰")
-            } compactTrailing: {
-                Text("!")
-            } minimal: {
-                Text("⏰")
-            }
-        }
-    }
-}

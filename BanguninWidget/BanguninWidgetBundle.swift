@@ -14,6 +14,5 @@ struct BanguninWidgetBundle: WidgetBundle {
         BanguninWidget()
         BanguninWidgetControl()
         BanguninWidgetLiveActivity()
-        AlarmKitLiveActivity()
     }
 }

@@ -60,14 +60,14 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
     func triggerAlarm(for stationName: String) {
         print("Triggering alarm for approaching \(stationName)!")
         
+        // MARK: Alarm Fullscreen View
         Task {
             do {
-                let alertContent = AlarmPresentation.Alert(title: "Bangun! \(stationName)")
-                let countdownContent = AlarmPresentation.Countdown(title: "Bangun! \(stationName)")
+                let alertContent = AlarmPresentation.Alert(title: "Mau sampai\n\(stationName)!")
                 let attributes = AlarmKit.AlarmAttributes(
                     presentation: AlarmPresentation(
                         alert: alertContent,
-                        countdown: countdownContent
+                        countdown: nil
                     ),
                     metadata: EmptyMetadata(),
                     tintColor: .cyan // Aslinya .blue
@@ -120,7 +120,7 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
             endLiveActivity()
             
             let attributes = BanguninAlarmAttributes(destinationStationName: destinationName)
-            let initialContentState = BanguninAlarmAttributes.ContentState(progress: 0.5) // Example progress
+            let initialContentState = BanguninAlarmAttributes.ContentState(progress: 0.05) // Example progress
             
             do {
                 if #available(iOS 16.2, *) {
