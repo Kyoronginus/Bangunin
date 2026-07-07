@@ -34,21 +34,20 @@ class LocationDebugViewModel {
     }
     
     func startMockGeofence() {
-        if let loc = locationManager.userLocation {
-            // Request Notification permission just in case
-            AlarmTriggerManager.shared.requestPermissions()
-            
-            // Start a mock geofence at current location with 100m radius
-            locationManager.startMonitoringDeparture(
-                stationName: "MockStation",
-                destinationName: "DestinationMockStation",
-                radius: 100,
-                coordinate: loc.coordinate
-            )
-        } else {
-            print("No location available for mock geofence")
+            if let loc = locationManager.userLocation {
+                AlarmTriggerManager.shared.requestPermissions()
+                
+                locationManager.startMonitoringDeparture(
+                    alarmID: UUID().uuidString,
+                    stationName: "MockStation",
+                    destinationName: "DestinationMockStation",
+                    radius: 100,
+                    coordinate: loc.coordinate
+                )
+            } else {
+                print("No location available for mock geofence")
+            }
         }
-    }
     
     func resetAlarmState() {
         locationManager.stopMonitoringAllRegions()

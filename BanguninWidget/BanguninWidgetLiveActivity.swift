@@ -28,7 +28,8 @@ struct BanguninWidgetLiveActivity: Widget {
                 DynamicIslandExpandedRegion(.bottom) {
                     HStack {
                         Spacer()
-                        CancelButtonView()
+                        // UBAH: Masukkan alarmID dari context
+                        CancelButtonView(alarmID: context.attributes.alarmID)
                         Spacer()
                     }
                 }
@@ -64,7 +65,8 @@ struct WatchOrPhoneView: View {
                 Spacer(minLength: 4)
                 
                 if #available(iOS 17.0, *) {
-                    Button(intent: CancelAlarmIntent()) {
+                    // UBAH: Masukkan alarmID dari context
+                    Button(intent: CancelAlarmIntent(alarmID: context.attributes.alarmID)) {
                         Text("Cancel Alarm")
                             .font(.headline)
                             .fontWeight(.bold)
@@ -77,7 +79,7 @@ struct WatchOrPhoneView: View {
                     .clipShape(Capsule())
                 }
             }
-            .padding(.horizontal, 12) 
+            .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .activityBackgroundTint(Color.black.opacity(0.8))
             .activitySystemActionForegroundColor(Color.white)
@@ -116,7 +118,8 @@ struct WatchOrPhoneView: View {
                 // Cancel Button
                 HStack {
                     Spacer()
-                    Button(intent: CancelAlarmIntent()) {
+                    // UBAH: Masukkan alarmID dari context
+                    Button(intent: CancelAlarmIntent(alarmID: context.attributes.alarmID)) {
                         Text("Cancel Alarm")
                             .font(.subheadline)
                             .foregroundColor(.white)
@@ -137,8 +140,11 @@ struct WatchOrPhoneView: View {
 }
 
 struct CancelButtonView: View {
+    let alarmID: String
+    
     var body: some View {
-        Button(intent: CancelAlarmIntent()) {
+        // UBAH: Masukkan alarmID yang dikirim dari Struct di atas
+        Button(intent: CancelAlarmIntent(alarmID: alarmID)) {
             Text("Cancel")
                 .font(.subheadline)
                 .padding(.horizontal, 8)

@@ -17,20 +17,20 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
     static let shared = AlarmTriggerManager()
     
     // Store reference to the active Live Activity
-    private var activeActivity: Any? // Using Any to avoid importing ActivityKit everywhere if not needed, but since it's shared, we can import ActivityKit
+    private var activeActivity: Any?
     
     private override init() {
         super.init()
         UNUserNotificationCenter.current().delegate = self
         
         if #available(iOS 16.1, *) {
-            CancelAlarmIntent.cancelAction = {
+            CancelAlarmIntent.cancelAction = { alarmID in
                 DispatchQueue.main.async {
-                    LocationManager.shared.stopMonitoringAllRegions()
+                    LocationManager.shared.stopMonitoringRegion(purpose: .destination, alarmID: alarmID)
                     LocationManager.shared.isMonitoringRoute = false
                     AlarmTriggerManager.shared.endLiveActivity()
                     
-                    NotificationCenter.default.post(name: .banguninAlarmDidCancel, object: nil)
+                    NotificationCenter.default.post(name: .banguninAlarmDidCancel, object: nil, userInfo: ["alarmID": alarmID])
                 }
             }
         }
@@ -56,8 +56,7 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
-    
-    func triggerAlarm(for stationName: String) {
+    func triggerAlarm(for stationName: String, alarmID: String) {
         print("Triggering alarm for approaching \(stationName)!")
         
         Task {
@@ -72,12 +71,12 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
                     metadata: EmptyMetadata(),
                     tintColor: .cyan // Aslinya .blue
                 )
-                // MARK: Alarm rings 10 secs after detection (default-nya 5 or 3).
+                // MARK: Alarm rings 10 secs after detection
                 let config = AlarmManager.AlarmConfiguration(
                     countdownDuration: AlarmKit.Alarm.CountdownDuration(preAlert: 10, postAlert: nil),
                     schedule: nil,
                     attributes: attributes,
-                    stopIntent: CancelAlarmIntent(),
+                    stopIntent: CancelAlarmIntent(alarmID: alarmID),
                     sound: .default
                 )
                 
@@ -89,7 +88,8 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
-    func triggerDepartureNotification(for stationName: String) {
+    // PERBAIKAN 2: Tambahkan parameter alarmID
+    func triggerDepartureNotification(for stationName: String, alarmID: String) {
         print("Triggering departure notification for \(stationName)")
         
         // Keep standard local notification for simple non-alarm banner
@@ -108,8 +108,7 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
             }
         }
         
-        // Start Live Activity
-        startLiveActivity(destinationName: stationName)
+        startLiveActivity(destinationName: stationName, alarmID: alarmID)
     }
     
     // MARK: - Live Activity
