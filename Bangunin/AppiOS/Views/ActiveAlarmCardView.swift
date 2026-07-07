@@ -39,7 +39,7 @@ struct ActiveAlarmCardView: View {
             // 4. Cancel Button
             HStack {
                 Spacer()
-                Button(intent: CancelAlarmIntent()) {
+                Button(intent: CancelAlarmIntent(alarmID: viewModel.alarm.id.uuidString)) {
                     Text("Batalkan Alarm")
                         .font(.body)
                         .foregroundStyle(.black)

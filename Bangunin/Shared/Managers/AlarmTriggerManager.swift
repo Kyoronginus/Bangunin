@@ -113,11 +113,11 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
     
     // MARK: - Live Activity
     
-    private func startLiveActivity(destinationName: String) {
+    private func startLiveActivity(destinationName: String, alarmID: String) {
         // End any existing activity first
         endLiveActivity()
         
-        let attributes = BanguninAlarmAttributes(destinationStationName: destinationName)
+        let attributes = BanguninAlarmAttributes(alarmID: alarmID, destinationStationName: destinationName)
         let initialContentState = BanguninAlarmAttributes.ContentState(progress: 0.0) // Start at 0
         let content = ActivityContent(state: initialContentState, staleDate: nil)
         
