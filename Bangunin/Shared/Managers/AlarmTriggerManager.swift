@@ -59,14 +59,14 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
     func triggerAlarm(for stationName: String, alarmID: String) {
         print("Triggering alarm for approaching \(stationName)!")
         
+        // MARK: Alarm Fullscreen View
         Task {
             do {
-                let alertContent = AlarmPresentation.Alert(title: "Bangun! \(stationName)")
-                let countdownContent = AlarmPresentation.Countdown(title: "Bangun! \(stationName)")
+                let alertContent = AlarmPresentation.Alert(title: "Mau sampai\n\(stationName)!")
                 let attributes = AlarmKit.AlarmAttributes(
                     presentation: AlarmPresentation(
                         alert: alertContent,
-                        countdown: countdownContent
+                        countdown: nil
                     ),
                     metadata: EmptyMetadata(),
                     tintColor: .cyan // Aslinya .blue

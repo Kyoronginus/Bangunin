@@ -36,6 +36,7 @@ struct HomePageView: View {
 
                     Button {
                         showAddAlarm = true
+                        AlarmTriggerManager.shared.requestPermissions()
                     } label: {
                         Image(systemName: "plus")
                             .frame(width: 40, height: 40)
@@ -121,7 +122,6 @@ struct HomePageView: View {
             AddAlarmView(editingAlarm: alarm)
         }
         .onAppear {
-            AlarmTriggerManager.shared.requestPermissions()
             LocationManager.shared.requestPermission()
         }
         .onReceive(NotificationCenter.default.publisher(for: .banguninAlarmDidCancel)) { notification in
