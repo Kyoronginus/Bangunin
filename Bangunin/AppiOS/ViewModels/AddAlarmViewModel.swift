@@ -130,19 +130,36 @@ class AddAlarmViewModel {
             LocationManager.shared.isMonitoringRoute = false
             AlarmTriggerManager.shared.endLiveActivity()
             
-            LocationManager.shared.startMonitoringDeparture(
-                alarmID: targetAlarmID,
-                stationName: departureStation.name,
-                destinationName: destinationStation.name,
-                radius: 100, // radius buat departure station
-                coordinate: departureStation.coordinate
-            )
-            LocationManager.shared.setupDestinationTrigger(
-                alarmID: targetAlarmID,
-                destination: destinationStation,
-                radius: distanceRadiusInMeters
-            )
-            
-            print("Alarm geofences registered for \(destinationStation.name) with radius \(distanceRadiusInMeters)m")
+            if selectedRepeatOptions.isEmpty {
+                // One-Time Alarm: Immediate tracking
+                let distance = LocationManager.shared.distanceTo(destinationCoordinate: destinationStation.coordinate) ?? 10000 // default fallback
+                LocationManager.shared.activeTotalDistance = distance
+                LocationManager.shared.activeDestinationCoordinate = destinationStation.coordinate
+                LocationManager.shared.activeAlarmID = targetAlarmID
+                LocationManager.shared.isMonitoringRoute = true
+                
+                LocationManager.shared.startMonitoring(
+                    alarmID: targetAlarmID,
+                    destination: destinationStation,
+                    radius: wakeMeUpAt.radiusInMeters
+                )
+                
+                AlarmTriggerManager.shared.triggerDepartureNotification(
+                    for: destinationStation.name,
+                    alarmID: targetAlarmID
+                )
+                print("One-Time Alarm: Started tracking immediately to \(destinationStation.name)")
+            } else {
+                // Scheduled Alarm: Wait at departure
+                LocationManager.shared.startMonitoringDeparture(
+                    alarmID: targetAlarmID,
+                    stationName: departureStation.name,
+                    destinationName: destinationStation.name,
+                    radius: 100, // radius buat departure station
+                    coordinate: departureStation.coordinate
+                )
+                
+                print("Scheduled Alarm: departure geofence registered for \(departureStation.name)")
+            }
         }
 }

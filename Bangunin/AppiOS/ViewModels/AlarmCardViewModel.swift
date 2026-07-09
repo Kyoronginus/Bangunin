@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @Observable
 class AlarmCardViewModel {
@@ -37,6 +38,7 @@ class AlarmCardViewModel {
     
     func toggleAlarm(isActive: Bool) {
         alarm.isActive = isActive
+        try? alarm.modelContext?.save()
         
         if isActive {
             if let depStation = findStation(name: alarm.departureStation),
@@ -59,7 +61,9 @@ class AlarmCardViewModel {
             }
         } else {
             // Alarm turned OFF
+            LocationManager.shared.stopMonitoringRegion(purpose: .departure, alarmID: alarm.id.uuidString)
             LocationManager.shared.stopMonitoringRegion(purpose: .destination, alarmID: alarm.id.uuidString)
+            LocationManager.shared.isMonitoringRoute = false
             AlarmTriggerManager.shared.endLiveActivity()
             print("Alarm turned OFF, cleared geofences.")
         }

@@ -14,6 +14,19 @@ enum WakeUpTime: String, CaseIterable, Codable {
     case fifteenMin = "15 minutes before"
 }
 
+extension WakeUpTime {
+    var radiusInMeters: Double {
+        switch self {
+        case .atDestination: return 400
+        case .oneMin: return 1160
+        case .threeMin: return 3480
+        case .fiveMin: return 5800
+        case .tenMin: return 11600
+        case .fifteenMin: return 17400
+        }
+    }
+}
+
 enum RepeatOption: String, CaseIterable, Codable {
     case sunday = "Every Sunday"
     case monday = "Every Monday"
@@ -22,4 +35,20 @@ enum RepeatOption: String, CaseIterable, Codable {
     case thursday = "Every Thursday"
     case friday = "Every Friday"
     case saturday = "Every Saturday"
+}
+
+extension RepeatOption {
+    static var currentDay: RepeatOption {
+        let weekday = Calendar.current.component(.weekday, from: Date())
+        switch weekday {
+        case 1: return .sunday
+        case 2: return .monday
+        case 3: return .tuesday
+        case 4: return .wednesday
+        case 5: return .thursday
+        case 6: return .friday
+        case 7: return .saturday
+        default: return .sunday
+        }
+    }
 }

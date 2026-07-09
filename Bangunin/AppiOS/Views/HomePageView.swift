@@ -73,7 +73,8 @@ struct HomePageView: View {
                 } else {
                     List {
                         // active alarm card view
-                        if let activeAlarm = alarms.first(where: {$0.isActive}){
+                        if let activeID = LocationManager.shared.activeAlarmID,
+                           let activeAlarm = alarms.first(where: { $0.id.uuidString == activeID }) {
                             ActiveAlarmCardView(
                                 viewModel: ActiveAlarmCardViewModel(alarm: activeAlarm)
                             )
@@ -125,17 +126,9 @@ struct HomePageView: View {
             LocationManager.shared.requestPermission()
         }
         .onReceive(NotificationCenter.default.publisher(for: .banguninAlarmDidCancel)) { notification in
-                    guard let receivedID = notification.userInfo?["alarmID"] as? String else { return }
-                    if let activeAlarm = alarms.first(where: { $0.id.uuidString == receivedID }) {
-                        activeAlarm.isActive = false
-                        do {
-                            try modelContext.save()
-                            print("Alarm berhasil dimatikan dari Live Activity/AlarmKit.")
-                        } catch {
-                            print("Gagal menyimpan update alarm ke database: \(error)")
-                        }
-                    }
-                }
+            guard let receivedID = notification.userInfo?["alarmID"] as? String else { return }
+            viewModel.handleAlarmCancel(alarmID: receivedID, alarms: alarms, context: modelContext)
+        }
     }
 
 }

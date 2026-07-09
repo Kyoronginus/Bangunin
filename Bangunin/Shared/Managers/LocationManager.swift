@@ -5,8 +5,9 @@
 //  Created by Tohru Djunaedi Sato on 03/07/26.
 //
 
-import CoreLocation
 import Foundation
+import CoreLocation
+import SwiftData
 
 enum RegionPurpose: String {
     case departure
@@ -77,8 +78,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     var lastError: String?
     
     // Untuk tracking Live Activity di background
-    private var activeDestinationCoordinate: CLLocationCoordinate2D?
-    private var activeTotalDistance: Double?
+    var activeAlarmID: String?
+    var activeDestinationCoordinate: CLLocationCoordinate2D?
+    var activeTotalDistance: Double?
 
     private var triggeredAlarmIDs: Set<String> = []
 
@@ -152,10 +154,15 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         }
         activeDestinationCoordinate = nil
         activeTotalDistance = nil
+        activeAlarmID = nil
     }
 
     func stopMonitoringRegion(purpose: RegionPurpose, alarmID: String) {
         triggeredAlarmIDs.remove(alarmID)
+        
+        if activeAlarmID == alarmID {
+            activeAlarmID = nil
+        }
         
         for region in manager.monitoredRegions {
             if let regionId = RegionIdentifier(stringValue: region.identifier),
@@ -292,11 +299,16 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         switch regionId.purpose {
         case .departure:
             if !self.isMonitoringRoute {
+                guard let alarm = fetchAlarmIfShouldTrigger(alarmID: regionId.alarmID) else {
+                    return
+                }
+
                 print(
                     "User is at departure station. Start alarm monitoring state."
                 )
                 // Synchronously set to true to prevent double triggers if called rapidly
                 self.isMonitoringRoute = true
+                self.activeAlarmID = regionId.alarmID
 
                 let destName = regionId.targetDestination ?? "Destination"
                 
@@ -308,6 +320,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                     let depLoc = CLLocation(latitude: departureStation.coordinate.latitude, longitude: departureStation.coordinate.longitude)
                     let destLoc = CLLocation(latitude: destinationStation.coordinate.latitude, longitude: destinationStation.coordinate.longitude)
                     self.activeTotalDistance = depLoc.distance(from: destLoc)
+                    
+                    // NEW: Start monitoring the destination station here!
+                    self.startMonitoring(
+                        alarmID: regionId.alarmID,
+                        destination: destinationStation,
+                        radius: alarm.wakeUpTime.radiusInMeters
+                    )
                 }
                 
                 AlarmTriggerManager.shared.triggerDepartureNotification(
@@ -350,5 +369,30 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         guard let current = userLocation else { return nil }
         let destination = CLLocation(latitude: destinationCoordinate.latitude, longitude: destinationCoordinate.longitude)
         return current.distance(from: destination)
+    }
+    
+    private func fetchAlarmIfShouldTrigger(alarmID: String) -> Alarm? {
+        guard let container = try? ModelContainer(for: Alarm.self) else { return nil }
+        let context = ModelContext(container)
+        let descriptor = FetchDescriptor<Alarm>()
+        guard let alarms = try? context.fetch(descriptor) else { return nil }
+        
+        guard let alarm = alarms.first(where: { $0.id.uuidString == alarmID }) else { return nil }
+        
+        if !alarm.isActive {
+            print("Alarm is toggled off! Ignored.")
+            return nil
+        }
+        
+        if alarm.repeatOptions.isEmpty {
+            return alarm
+        }
+        
+        let isTodayIncluded = alarm.repeatOptions.contains(RepeatOption.currentDay)
+        if !isTodayIncluded {
+            print("Alarm is not scheduled for today (\\(RepeatOption.currentDay.rawValue)). Ignored.")
+            return nil
+        }
+        return alarm
     }
 }
