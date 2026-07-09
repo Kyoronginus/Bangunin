@@ -84,7 +84,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     private var triggeredAlarmIDs: Set<String> = []
 
-    private var triggeredAlarmIDs: Set<String> = []
 
     private override init() {
         // Initialize the starting authorization status

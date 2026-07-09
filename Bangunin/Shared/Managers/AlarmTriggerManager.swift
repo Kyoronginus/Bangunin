@@ -89,7 +89,6 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
-    // PERBAIKAN 2: Tambahkan parameter alarmID
     func triggerDepartureNotification(for stationName: String, alarmID: String) {
         print("Triggering departure notification for \(stationName)")
         
