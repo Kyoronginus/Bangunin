@@ -2,7 +2,7 @@ import SwiftUI
 import AppIntents
 
 struct ActiveAlarmCardView: View {
-    @Bindable var viewModel: ActiveAlarmCardViewModel
+    let viewModel: ActiveAlarmCardViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {

@@ -65,7 +65,7 @@ struct WatchOrPhoneView: View {
                 Spacer(minLength: 4)
                 
                 if #available(iOS 17.0, *) {
-                    // UBAH: Masukkan alarmID dari context
+                    // Masukkan alarmID dari context
                     Button(intent: CancelAlarmIntent(alarmID: context.attributes.alarmID)) {
                         Text("Cancel Alarm")
                             .font(.headline)

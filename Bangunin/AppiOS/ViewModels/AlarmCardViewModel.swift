@@ -50,7 +50,7 @@ class AlarmCardViewModel {
                     coordinate: depStation.coordinate
                 )
                 
-                LocationManager.shared.startMonitoring(
+                LocationManager.shared.setupDestinationTrigger(
                     alarmID: alarm.id.uuidString,
                     destination: destStation,
                     radius: 3000 // 3km for wake up

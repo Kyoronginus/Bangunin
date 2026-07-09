@@ -122,7 +122,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         manager.stopUpdatingLocation()
     }
 
-    func startMonitoring(
+    func setupDestinationTrigger(
         alarmID: String,
         destination: Station,
         radius: CLLocationDistance

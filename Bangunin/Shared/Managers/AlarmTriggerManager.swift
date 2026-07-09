@@ -69,7 +69,7 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
                         countdown: nil
                     ),
                     metadata: EmptyMetadata(),
-                    tintColor: .cyan // Aslinya .blue
+                    tintColor: .cyan
                 )
                 // MARK: Alarm rings 10 secs after detection
                 let config = AlarmManager.AlarmConfiguration(

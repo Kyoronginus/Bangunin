@@ -38,19 +38,8 @@ struct Station: Hashable, Equatable {
 }
 
 struct RouteData {
-    static var routeStations: [RouteLine: [Station]] {
-    let currentLat = LocationManager.shared.userLocation?.coordinate.latitude ?? -6.200000
-    let currentLon = LocationManager.shared.userLocation?.coordinate.longitude ?? 106.816666
-    
-    return [
-        .debug: [
-            Station(name: "ADA GOP 9", latitude: -6.3021, longitude: 106.6525),
-            Station(name: "Cisauk debug", latitude: -6.3262, longitude: 106.6433),
-            Station(name: "Los Angeles Station debug", latitude: 34.0651, longitude: -118.2353),
-            
-            Station(name: "Debug DEPARTURE", latitude: currentLat, longitude: currentLon),
-            Station(name: "Debug DESTINATION (sama kyk DEPARTURE)", latitude: currentLat, longitude: currentLon)
-        ],
+    // 1. Unchanging static routes stored in memory once.
+    private static let staticRoutes: [RouteLine: [Station]] = [
         .red: [
             Station(name: "Jakarta Kota", latitude: -6.1375, longitude: 106.8146),
             Station(name: "Jayakarta", latitude: -6.1413, longitude: 106.8206),
@@ -107,28 +96,6 @@ struct RouteData {
             Station(name: "Kramat", latitude: -6.1942, longitude: 106.8530),
             Station(name: "Pondok Jati", latitude: -6.2045, longitude: 106.8615)
         ],
-        .green: [
-            Station(name: "Debug GREENLINE", latitude: currentLat, longitude: currentLon),
-            Station(name: "Tanah Abang", latitude: -6.1856, longitude: 106.8109),
-            Station(name: "Palmerah", latitude: -6.2074, longitude: 106.7969),
-            Station(name: "Kebayoran", latitude: -6.2396, longitude: 106.7816),
-            Station(name: "Pondok Ranji", latitude: -6.2797, longitude: 106.7454),
-            Station(name: "Jurang Mangu", latitude: -6.2891, longitude: 106.7303),
-            Station(name: "Sudimara", latitude: -6.3023, longitude: 106.7118),
-            Station(name: "Rawa Buntu", latitude: -6.3150, longitude: 106.6853),
-            Station(name: "Serpong", latitude: -6.3195, longitude: 106.6669),
-            Station(name: "Cisauk", latitude: -6.3262, longitude: 106.6433),
-            Station(name: "Cicayur", latitude: -6.3292, longitude: 106.6212),
-            Station(name: "Parung Panjang", latitude: -6.3458, longitude: 106.5670),
-            Station(name: "Cilejit", latitude: -6.3475, longitude: 106.5165),
-            Station(name: "Daru", latitude: -6.3438, longitude: 106.4950),
-            Station(name: "Tenjo", latitude: -6.3411, longitude: 106.4674),
-            Station(name: "Tigaraksa", latitude: -6.3351, longitude: 106.4357),
-            Station(name: "Cikoya", latitude: -6.3426, longitude: 106.4172),
-            Station(name: "Maja", latitude: -6.3415, longitude: 106.3986),
-            Station(name: "Citeras", latitude: -6.3400, longitude: 106.3265),
-            Station(name: "Rangkasbitung", latitude: -6.3541, longitude: 106.2483)
-        ],
         .brown: [
             Station(name: "Tangerang", latitude: -6.1751, longitude: 106.6335),
             Station(name: "Tanah Tinggi", latitude: -6.1738, longitude: 106.6475),
@@ -149,5 +116,45 @@ struct RouteData {
             Station(name: "Tanjung Priok", latitude: -6.1098, longitude: 106.8833)
         ]
     ]
-}
+
+    // 2. Computed property that injects the dynamic location data
+    static var routeStations: [RouteLine: [Station]] {
+        var allRoutes = staticRoutes
+        
+        let currentLat = LocationManager.shared.userLocation?.coordinate.latitude ?? -6.200000
+        let currentLon = LocationManager.shared.userLocation?.coordinate.longitude ?? 106.816666
+        
+        allRoutes[.debug] = [
+            Station(name: "ADA GOP 9", latitude: -6.3021, longitude: 106.6525),
+            Station(name: "Cisauk debug", latitude: -6.3262, longitude: 106.6433),
+            Station(name: "Los Angeles Station debug", latitude: 34.0651, longitude: -118.2353),
+            Station(name: "Debug DEPARTURE", latitude: currentLat, longitude: currentLon),
+            Station(name: "Debug DESTINATION (sama kyk DEPARTURE)", latitude: currentLat, longitude: currentLon)
+        ]
+        
+        allRoutes[.green] = [
+            Station(name: "Debug GREENLINE", latitude: currentLat, longitude: currentLon),
+            Station(name: "Tanah Abang", latitude: -6.1856, longitude: 106.8109),
+            Station(name: "Palmerah", latitude: -6.2074, longitude: 106.7969),
+            Station(name: "Kebayoran", latitude: -6.2396, longitude: 106.7816),
+            Station(name: "Pondok Ranji", latitude: -6.2797, longitude: 106.7454),
+            Station(name: "Jurang Mangu", latitude: -6.2891, longitude: 106.7303),
+            Station(name: "Sudimara", latitude: -6.3023, longitude: 106.7118),
+            Station(name: "Rawa Buntu", latitude: -6.3150, longitude: 106.6853),
+            Station(name: "Serpong", latitude: -6.3195, longitude: 106.6669),
+            Station(name: "Cisauk", latitude: -6.3262, longitude: 106.6433),
+            Station(name: "Cicayur", latitude: -6.3292, longitude: 106.6212),
+            Station(name: "Parung Panjang", latitude: -6.3458, longitude: 106.5670),
+            Station(name: "Cilejit", latitude: -6.3475, longitude: 106.5165),
+            Station(name: "Daru", latitude: -6.3438, longitude: 106.4950),
+            Station(name: "Tenjo", latitude: -6.3411, longitude: 106.4674),
+            Station(name: "Tigaraksa", latitude: -6.3351, longitude: 106.4357),
+            Station(name: "Cikoya", latitude: -6.3426, longitude: 106.4172),
+            Station(name: "Maja", latitude: -6.3415, longitude: 106.3986),
+            Station(name: "Citeras", latitude: -6.3400, longitude: 106.3265),
+            Station(name: "Rangkasbitung", latitude: -6.3541, longitude: 106.2483)
+        ]
+        
+        return allRoutes
+    }
 }

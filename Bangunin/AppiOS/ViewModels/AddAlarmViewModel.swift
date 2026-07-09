@@ -137,7 +137,7 @@ class AddAlarmViewModel {
                 radius: 100, // radius buat departure station
                 coordinate: departureStation.coordinate
             )
-            LocationManager.shared.startMonitoring(
+            LocationManager.shared.setupDestinationTrigger(
                 alarmID: targetAlarmID,
                 destination: destinationStation,
                 radius: distanceRadiusInMeters
