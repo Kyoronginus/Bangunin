@@ -27,4 +27,17 @@ class HomePageViewModel {
             print("Alarm gagal dihapus: \(error)")
         }
     }
+    
+    // Handles toggling the alarm off when cancelled from Live Activity or AlarmKit
+    func handleAlarmCancel(alarmID: String, alarms: [Alarm], context: ModelContext) {
+        if let activeAlarm = alarms.first(where: { $0.id.uuidString == alarmID }) {
+            activeAlarm.isActive = false
+            do {
+                try context.save()
+                print("Alarm berhasil dimatikan dari Live Activity/AlarmKit.")
+            } catch {
+                print("Gagal menyimpan update alarm ke database: \(error)")
+            }
+        }
+    }
 }
