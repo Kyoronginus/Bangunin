@@ -5,8 +5,9 @@
 //  Created by Tohru Djunaedi Sato on 03/07/26.
 //
 
-import CoreLocation
 import Foundation
+import CoreLocation
+import SwiftData
 
 enum RegionPurpose: String {
     case departure
@@ -318,6 +319,10 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
         case .destination:
             if !triggeredAlarmIDs.contains(regionId.alarmID) {
+                if !checkAlarmRepeatOption(alarmID: regionId.alarmID) {
+                    return
+                }
+                
                 print("User near destination station! Trigger alarm!")
 
                 triggeredAlarmIDs.insert(regionId.alarmID)
@@ -350,5 +355,30 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         guard let current = userLocation else { return nil }
         let destination = CLLocation(latitude: destinationCoordinate.latitude, longitude: destinationCoordinate.longitude)
         return current.distance(from: destination)
+    }
+    
+    private func checkAlarmRepeatOption(alarmID: String) -> Bool {
+        guard let container = try? ModelContainer(for: Alarm.self) else { return true }
+        let context = ModelContext(container)
+        let descriptor = FetchDescriptor<Alarm>()
+        guard let alarms = try? context.fetch(descriptor) else { return true }
+        
+        if let alarm = alarms.first(where: { $0.id.uuidString == alarmID }) {
+            if !alarm.isActive {
+                print("Alarm is toggled off! Ignored.")
+                return false
+            }
+            
+            if alarm.repeatOptions.isEmpty {
+                return true
+            }
+            
+            let isTodayIncluded = alarm.repeatOptions.contains(RepeatOption.currentDay)
+            if !isTodayIncluded {
+                print("Alarm is not scheduled for today (\\(RepeatOption.currentDay.rawValue)). Ignored.")
+            }
+            return isTodayIncluded
+        }
+        return true
     }
 }

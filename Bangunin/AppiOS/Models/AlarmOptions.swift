@@ -23,3 +23,19 @@ enum RepeatOption: String, CaseIterable, Codable {
     case friday = "Every Friday"
     case saturday = "Every Saturday"
 }
+
+extension RepeatOption {
+    static var currentDay: RepeatOption {
+        let weekday = Calendar.current.component(.weekday, from: Date())
+        switch weekday {
+        case 1: return .sunday
+        case 2: return .monday
+        case 3: return .tuesday
+        case 4: return .wednesday
+        case 5: return .thursday
+        case 6: return .friday
+        case 7: return .saturday
+        default: return .sunday
+        }
+    }
+}
