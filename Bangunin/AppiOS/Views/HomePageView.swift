@@ -73,7 +73,8 @@ struct HomePageView: View {
                 } else {
                     List {
                         // active alarm card view
-                        if let activeAlarm = alarms.first(where: {$0.isActive}){
+                        if let activeID = LocationManager.shared.activeAlarmID,
+                           let activeAlarm = alarms.first(where: { $0.id.uuidString == activeID }) {
                             ActiveAlarmCardView(
                                 viewModel: ActiveAlarmCardViewModel(alarm: activeAlarm)
                             )

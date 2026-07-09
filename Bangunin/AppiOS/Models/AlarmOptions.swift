@@ -14,6 +14,19 @@ enum WakeUpTime: String, CaseIterable, Codable {
     case fifteenMin = "15 minutes before"
 }
 
+extension WakeUpTime {
+    var radiusInMeters: Double {
+        switch self {
+        case .atDestination: return 400
+        case .oneMin: return 1160
+        case .threeMin: return 3480
+        case .fiveMin: return 5800
+        case .tenMin: return 11600
+        case .fifteenMin: return 17400
+        }
+    }
+}
+
 enum RepeatOption: String, CaseIterable, Codable {
     case sunday = "Every Sunday"
     case monday = "Every Monday"
