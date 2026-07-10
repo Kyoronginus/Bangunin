@@ -322,7 +322,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                     self.activeTotalDistance = depLoc.distance(from: destLoc)
                     
                     // NEW: Start monitoring the destination station here!
-                    self.startMonitoring(
+                    self.setupDestinationTrigger(
                         alarmID: regionId.alarmID,
                         destination: destinationStation,
                         radius: alarm.wakeUpTime.radiusInMeters

@@ -138,7 +138,7 @@ class AddAlarmViewModel {
                 LocationManager.shared.activeAlarmID = targetAlarmID
                 LocationManager.shared.isMonitoringRoute = true
                 
-                LocationManager.shared.startMonitoring(
+                LocationManager.shared.setupDestinationTrigger(
                     alarmID: targetAlarmID,
                     destination: destinationStation,
                     radius: wakeMeUpAt.radiusInMeters
