@@ -56,7 +56,10 @@ struct AddAlarmView: View {
                         }
                     } label: {
                         Image(systemName: "checkmark")
-                            .foregroundColor(viewModel.isFormValid ? .primary : .gray.opacity(0.3))
+                            .foregroundColor(
+                                viewModel.isFormValid
+                                    ? .primary : .gray.opacity(0.3)
+                            )
                             .frame(width: 44, height: 44)
                             .background(Color(UIColor.systemBackground))
                             .clipShape(Circle())
@@ -84,8 +87,9 @@ struct AddAlarmView: View {
                         // Stations
                         VStack(spacing: 0) {
                             NavigationLink {
-                                RouteSelectionView(
-                                    isDeparture: true,
+                                UnifiedStationSelectionView( // unified station
+                                    title: "Departure Station",
+                                    stations: viewModel.allStations,
                                     selectedStation: $viewModel.departureStation
                                 )
                             } label: {
@@ -104,18 +108,17 @@ struct AddAlarmView: View {
 
                             Divider()
                                 .padding(.horizontal)
-
-                            let depRoute = viewModel.getRoute(
-                                for: viewModel.departureStation
-                            )
-
+                            
                             if viewModel.departureStation.name
-                                != Station.none.name, let route = depRoute
+                                != Station.none.name
                             {
-                                // Jika Departure sudah dipilih, langsung bypass ke StationSelectionView untuk rute yang sama
                                 NavigationLink {
-                                    StationSelectionView(
-                                        route: route,
+                                    UnifiedStationSelectionView(
+                                        title: "Destination Station",
+                                        stations:
+                                            viewModel.getAvailableDestinations(
+                                                for: viewModel.departureStation
+                                            ),
                                         selectedStation: $viewModel
                                             .destinationStation
                                     )
@@ -133,7 +136,6 @@ struct AddAlarmView: View {
                                     .padding()
                                 }
                             } else {
-                                // Jika Departure belum dipilih, berikan visual "Disabled" agar user paham urutannya
                                 HStack {
                                     Text("Destination Station")
                                         .foregroundColor(.primary)
@@ -148,18 +150,14 @@ struct AddAlarmView: View {
                         }
                         .background(Color(UIColor.systemGray6))
                         .cornerRadius(12)
-                        .onChange(of: viewModel.departureStation.name) {
-                            oldValue,
-                            newValue in
-                            let newRoute = viewModel.getRoute(
-                                for: viewModel.departureStation
-                            )
-                            let destRoute = viewModel.getRoute(
-                                for: viewModel.destinationStation
-                            )
-
-                            // Jika rute tujuan saat ini berbeda dengan rute keberangkatan yang baru, reset tujuan
-                            if newRoute != destRoute {
+                        .onChange(of: viewModel.departureStation.name) { _, _ in // cek apakah ada di line yg valid (kalau user ganti departure station)
+                            let validDestinations =
+                                viewModel.getAvailableDestinations(
+                                    for: viewModel.departureStation
+                                )
+                            if !validDestinations.contains(where: {
+                                $0.name == viewModel.destinationStation.name
+                            }) {
                                 viewModel.destinationStation = .none
                             }
                         }

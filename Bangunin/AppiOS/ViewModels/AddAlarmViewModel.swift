@@ -62,18 +62,45 @@ class AddAlarmViewModel {
         }
     }
     
-    func getRoute(for station: Station) -> RouteLine? {
-        if station == .none { return nil }
-
-        for (route, stations) in RouteData.routeStations {
-            // Asumsi pencocokan menggunakan nama stasiun
-            if stations.contains(where: { $0.name == station.name }) {
-                return route
+    var allStations: [Station] { // for departure
+        let all = RouteData.routeStations.values.flatMap { $0 }
+        var uniqueStations = [String: Station]()
+        for station in all {
+            uniqueStations[station.name] = station
+        }
+        
+        return uniqueStations.values.sorted { $0.name < $1.name }
+    }
+    
+    func getAvailableDestinations(for departure: Station) -> [Station] {
+        if departure.name == Station.none.name { return [] }
+        
+        let validRoutes = RouteData.routeStations.filter { $0.value.contains(where: { $0.name == departure.name }) }.keys // search for route line
+        
+        var validStations = [String: Station]()
+        for route in validRoutes {
+            if let stations = RouteData.routeStations[route] {
+                for station in stations where station.name != departure.name { // departure station != destination station
+                    validStations[station.name] = station
+                }
             }
         }
         
-        return nil
+        return validStations.values.sorted { $0.name < $1.name } // return sorted station
     }
+    
+//    func getRoute(for station: Station) -> RouteLine? {
+//        if station == .none { return nil }
+//
+//        for (route, stations) in RouteData.routeStations {
+//            // Asumsi pencocokan menggunakan nama stasiun
+//            if stations.contains(where: { $0.name == station.name }) {
+//                return route
+//            }
+//        }
+//        
+//        return nil
+//    }
     
     func saveAlarm(context: ModelContext) {
             // Convert wakeMeUpAt to an approximate distance radius
@@ -89,7 +116,6 @@ class AddAlarmViewModel {
             
             let finalLabel = alarmName.isEmpty ? "New Alarm" : alarmName
             
-            // TAMBAHAN: Siapkan variabel untuk menyimpan ID yang akan dikirim ke geofence
             let targetAlarmID: String
 
             if let alarm = editingAlarm {  // UPDATE
@@ -102,7 +128,7 @@ class AddAlarmViewModel {
                 alarm.isSoundOn = isSoundOn
                 
                 alarm.isActive = true
-                targetAlarmID = alarm.id.uuidString // Ambil ID alarm yang diedit
+                targetAlarmID = alarm.id.uuidString // Ambil ID alarm yg diedit
             } else {
                 let newAlarm = Alarm(  // CREATE
                     label: finalLabel,
@@ -115,7 +141,7 @@ class AddAlarmViewModel {
                     isActive: true
                 )
                 context.insert(newAlarm)
-                targetAlarmID = newAlarm.id.uuidString // Ambil ID alarm yang baru dibuat
+                targetAlarmID = newAlarm.id.uuidString // Ambil ID alarm yg baru dibuat
             }
             
             // Save Context
