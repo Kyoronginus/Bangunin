@@ -104,7 +104,7 @@ class AddAlarmViewModel {
     
     func saveAlarm(context: ModelContext) {
             // Convert wakeMeUpAt to an approximate distance radius
-            var distanceRadiusInMeters: Double = 0
+            var distanceRadiusInMeters: Double
             switch wakeMeUpAt {
                 case .atDestination: distanceRadiusInMeters = 200
                 case .oneMin: distanceRadiusInMeters = 1160

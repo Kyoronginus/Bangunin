@@ -77,9 +77,12 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
                     countdownDuration: AlarmKit.Alarm.CountdownDuration(preAlert: 10, postAlert: nil),
                     schedule: nil,
                     attributes: attributes,
-                    stopIntent: CancelAlarmIntent(alarmID: alarmID),
-                    sound: .default
+//                    stopIntent: CancelAlarmIntent(alarmID: alarmID),
+//                    alertCOnfiguration: Alert
+                    secondaryIntent: CancelAlarmIntent(alarmID: alarmID),
+                    sound: .named("Empty")
                 )
+                
                 
                 let _ = try await AlarmManager.shared.schedule(id: UUID(), configuration: config)
                 print("Alarm triggered successfully via AlarmKit.")

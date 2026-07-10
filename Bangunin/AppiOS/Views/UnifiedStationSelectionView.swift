@@ -27,13 +27,22 @@ struct UnifiedStationSelectionView: View {
         VStack(spacing: 0) {
             List {
                 if viewModel.searchText.isEmpty {
-                    ForEach(viewModel.groupedStations, id: \.0) { group in
-                        Section(header: Text(group.0)) {
-                            ForEach(group.1, id: \.name) { station in
-                                stationRow(for: station)
-                            }
-                        }
+                    Section {
+                        EmptyView()
+                    } header: {
+                        EmptyView()
                     }
+                    .sectionIndexLabel("X")
+
+//                    ForEach(viewModel.groupedStations, id: \.0) { group in
+//                        // If []
+//                        Section(header: Text(group.0)) {
+//                            ForEach(group.1, id: \.name) { station in
+//                                stationRow(for: station)
+//                            }
+//                        }
+//                        .sectionIndexLabel(group.0)
+//                    }
                 } else {
                     ForEach(
                         viewModel.filteredStations.sorted(by: {
