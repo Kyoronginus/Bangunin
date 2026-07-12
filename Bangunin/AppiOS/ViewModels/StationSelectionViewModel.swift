@@ -25,14 +25,20 @@ class StationSelectionViewModel {
             }
         }
     }
-
-    var groupedStations: [(String, [Station])] {
-        let grouped = Dictionary(grouping: filteredStations) { station in
+    
+    var groupedStations: [String: [Station]] {
+        Dictionary(grouping: filteredStations) { station in
             String(station.name.prefix(1)).uppercased()
         }
-        return grouped.map {
-            ($0.key, $0.value.sorted(by: { $0.name < $1.name }))
-        }
-        .sorted { $0.0 < $1.0 }
     }
+
+//    var groupedStations: [(String, [Station])] {
+//        let grouped = Dictionary(grouping: filteredStations) { station in
+//            String(station.name.prefix(1)).uppercased()
+//        }
+//        return grouped.map {
+//            ($0.key, $0.value.sorted(by: { $0.name < $1.name }))
+//        }
+//        .sorted { $0.0 < $1.0 }
+//    }
 }

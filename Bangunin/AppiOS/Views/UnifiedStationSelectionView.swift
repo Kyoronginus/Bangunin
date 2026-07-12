@@ -27,11 +27,14 @@ struct UnifiedStationSelectionView: View {
         VStack(spacing: 0) {
             List {
                 if viewModel.searchText.isEmpty {
-                    ForEach(viewModel.groupedStations, id: \.0) { group in
-                        Section(header: Text(group.0)) {
-                            ForEach(group.1, id: \.name) { station in
-                                stationRow(for: station)
+                    ForEach(viewModel.groupedStations.keys.sorted(), id: \.self) { key in
+                        if let stations = viewModel.groupedStations[key] {
+                            Section(header: Text(key)) {
+                                ForEach(stations.sorted(by: { $0.name < $1.name }), id: \.name) { station in
+                                    stationRow(for: station)
+                                }
                             }
+                            .sectionIndexLabel(key)
                         }
                     }
                 } else {
