@@ -18,47 +18,8 @@ struct HomePageView: View {
     @State private var selectedAlarm: Alarm? = nil  // buat edit (update)
 
     var body: some View {
-        ZStack {
-            VStack {
-                // top bar
-                HStack {
-                    Button {
-
-                    } label: {
-                        Text("Edit")
-                            .padding(.horizontal, 18)
-                            .padding(.vertical, 10)
-                            .background(.gray.opacity(0.2))
-                            .clipShape(Capsule())
-                    }
-
-                    Spacer()
-
-                    Button {
-                        showAddAlarm = true
-                        AlarmTriggerManager.shared.requestPermissions()
-                    } label: {
-                        Image(systemName: "plus")
-                            .frame(width: 40, height: 40)
-                            .background(.gray.opacity(0.2))
-                            .clipShape(Circle())
-                    }
-
-                }
-                .padding(.horizontal)
-
-                // title
-                HStack {
-                    Text("Alarms")
-                        .font(.system(size: 40, weight: .bold))
-
-                    Spacer()
-                }
-                .padding(.horizontal)
-                .padding(.top, 20)
-
-                Spacer()
-
+        NavigationStack {
+            ZStack {
                 // if else empty state
                 if alarms.isEmpty {
                     VStack(spacing: 10) {
@@ -90,31 +51,34 @@ struct HomePageView: View {
                             .onTapGesture {
                                 selectedAlarm = alarm
                             }
-                            .swipeActions(
-                                edge: .trailing,
-                                allowsFullSwipe: true
-                            ) {  //delete alarm kalau di swipe
-                                Button(role: .destructive) {
-                                    viewModel.deleteAlarm(
-                                        alarm,
-                                        context: modelContext
-                                    )
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
                             .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                             .listRowSeparator(.hidden)
                         }
+                        .onDelete(perform: deleteAlarms)
                     }
                     .listStyle(.plain)
                     .scrollContentBackground(.hidden)
                 }
-
-                Spacer()
             }
-            .padding(.all)
-            .ignoresSafeArea(edges: .bottom)
+            .padding(.horizontal)
+            .navigationTitle("Alarm")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    EditButton()
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showAddAlarm = true
+                        AlarmTriggerManager.shared.requestPermissions()
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.title3)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color("new2"))
+                }
+            }
         }
         .sheet(isPresented: $showAddAlarm) {
             AddAlarmView()
@@ -131,6 +95,12 @@ struct HomePageView: View {
         }
     }
 
+    private func deleteAlarms(at offsets: IndexSet) {
+        for index in offsets {
+            let alarmToDelete = alarms[index]
+            viewModel.deleteAlarm(alarmToDelete, context: modelContext)
+        }
+    }
 }
 
 #Preview {

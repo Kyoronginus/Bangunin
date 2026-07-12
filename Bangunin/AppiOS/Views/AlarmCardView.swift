@@ -9,12 +9,13 @@ import SwiftUI
 
 struct AlarmCardView: View {
 
-//    @Bindable var alarm: Alarm
+    @Environment(\.editMode) private var editMode
+    //    @Bindable var alarm: Alarm
     var viewModel: AlarmCardViewModel
 
     var body: some View {
-        HStack{
-            VStack(alignment: .leading){
+        HStack {
+            VStack(alignment: .leading) {
                 Text(viewModel.alarm.label)
                     .foregroundStyle(.gray)
                 HStack {
@@ -29,13 +30,25 @@ struct AlarmCardView: View {
                 Text(viewModel.repeatStatus)
             }
             Spacer()
-            Toggle("", isOn: Binding(
-                get: { viewModel.alarm.isActive },
-                set: { newValue in viewModel.toggleAlarm(isActive: newValue) }
-            ))
-            .tint(.green)
-            .labelsHidden()
-            .offset(y: 20)
+            if editMode?.wrappedValue.isEditing == true {
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.gray)
+                    .opacity(0.5)
+                    .offset(y: 20)
+            } else {
+                Toggle(
+                    "",
+                    isOn: Binding(
+                        get: { viewModel.alarm.isActive },
+                        set: { newValue in
+                            viewModel.toggleAlarm(isActive: newValue)
+                        }
+                    )
+                )
+                .tint(.green)
+                .labelsHidden()
+                .offset(y: 20)
+            }
         }
         .padding()
     }
