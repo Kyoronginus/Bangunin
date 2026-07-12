@@ -26,62 +26,26 @@ struct UnifiedStationSelectionView: View {
     var body: some View {
         VStack(spacing: 0) {
             List {
-                
-                
-
-                //                    Section {
-                //                        EmptyView()
-                //                    } header: {
-                //                        EmptyView()
-                //                    }
-                //                    .sectionIndexLabel("X")
-                //
-                ////                    ForEach(viewModel.groupedStations, id: \.0) { group in
-                ////                        // If []
-                ////                        Section(header: Text(group.0)) {
-                ////                            ForEach(group.1, id: \.name) { station in
-                ////                                stationRow(for: station)
-                ////                            }
-                ////                        }
-                ////                        .sectionIndexLabel(group.0)
-                ////                    }
-                //
-                //                    ForEach(viewModel.filteredIndexedStation, id: \.0) { station in
-                //
-                //                        let index = station.0
-                //                        let stations = station.1
-                //
-                //                        Section(header: Text(index)) {
-                //                            ForEach(stations, id: \.name) { station in
-                //                                stationRow(for: station)
-                //                            }
-                //                        }
-                //                    }
-                //
-                //
-                //                } else {
-                ////                    ForEach(
-                ////                        viewModel.filteredStations.sorted(by: {
-                ////                            $0.name < $1.name
-                ////                        }),
-                ////                        id: \.name
-                ////                    ) { station in
-                ////                        stationRow(for: station)
-                ////                    }
-                //                    ForEach(viewModel.indexedStations, id: \.self) { station in
-                //                        stationRow(for: station.0)
-                //                    }
-
-                ForEach(viewModel.filteredIndexedStations, id: \.0) { group in
-                    let index = group.0
-                    let stationsInGroup = group.1
-                    
-                    Section(header: Text(index)) {
-                        ForEach(stationsInGroup, id: \.name) { station in
-                            stationRow(for: station)
+                if viewModel.searchText.isEmpty {
+                    ForEach(viewModel.groupedStations.keys.sorted(), id: \.self) { key in
+                        if let stations = viewModel.groupedStations[key] {
+                            Section(header: Text(key)) {
+                                ForEach(stations.sorted(by: { $0.name < $1.name }), id: \.name) { station in
+                                    stationRow(for: station)
+                                }
+                            }
+                            .sectionIndexLabel(key)
                         }
                     }
-                    .sectionIndexLabel(index)
+                } else {
+                    ForEach(
+                        viewModel.filteredStations.sorted(by: {
+                            $0.name < $1.name
+                        }),
+                        id: \.name
+                    ) { station in
+                        stationRow(for: station)
+                    }
                 }
             }
             .listStyle(.plain)
