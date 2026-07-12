@@ -63,14 +63,18 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
         // MARK: Alarm Fullscreen View
         Task {
             do {
-                let alertContent = AlarmPresentation.Alert(title: "Mau sampai\n\(stationName)!")
+                let formatter = DateFormatter()
+                formatter.dateFormat = "HH:mm"
+                let currentTime = formatter.string(from: Date())
+                
+                let alertContent = AlarmPresentation.Alert(title: "\(currentTime)")
                 let attributes = AlarmKit.AlarmAttributes(
                     presentation: AlarmPresentation(
                         alert: alertContent,
                         countdown: nil
                     ),
                     metadata: EmptyMetadata(),
-                    tintColor: .cyan
+                    tintColor: .orange
                 )
                 // MARK: Alarm rings 10 secs after detection
                 let config = AlarmManager.AlarmConfiguration(
@@ -96,8 +100,8 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
         
         // Keep standard local notification for simple non-alarm banner
         let content = UNMutableNotificationContent()
-        content.title = "Alarm Active"
-        content.body = "Monitoring route to \(stationName)."
+        content.title = "Alarm Aktif"
+        content.body = "Kamu akan dibangunin sebelum sampai \(stationName)"
         content.sound = .default
         
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
