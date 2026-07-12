@@ -44,20 +44,36 @@ class AlarmCardViewModel {
             if let depStation = findStation(name: alarm.departureStation),
                let destStation = findStation(name: alarm.destinationStation) {
                 
-                LocationManager.shared.startMonitoringDeparture(
-                    alarmID: alarm.id.uuidString,
-                    stationName: depStation.name,
-                    destinationName: destStation.name,
-                    radius: 100, // Fixed radius for testing/demo
-                    coordinate: depStation.coordinate
-                )
-                
-                LocationManager.shared.setupDestinationTrigger(
-                    alarmID: alarm.id.uuidString,
-                    destination: destStation,
-                    radius: 3000 // 3km for wake up
-                )
-                print("Alarm turned ON, registered geofences.")
+                if alarm.repeatOptions.isEmpty {
+                    // One-Time Alarm: Immediate tracking
+                    let distance = LocationManager.shared.distanceTo(destinationCoordinate: destStation.coordinate) ?? 10000 // default fallback
+                    LocationManager.shared.activeTotalDistance = distance
+                    LocationManager.shared.activeDestinationCoordinate = destStation.coordinate
+                    LocationManager.shared.activeAlarmID = alarm.id.uuidString
+                    LocationManager.shared.isMonitoringRoute = true
+                    
+                    LocationManager.shared.setupDestinationTrigger(
+                        alarmID: alarm.id.uuidString,
+                        destination: destStation,
+                        radius: alarm.wakeUpTime.radiusInMeters
+                    )
+                    
+                    AlarmTriggerManager.shared.triggerDepartureNotification(
+                        for: destStation.name,
+                        alarmID: alarm.id.uuidString
+                    )
+                    print("One-Time Alarm turned ON: Started tracking immediately to \(destStation.name)")
+                } else {
+                    // Scheduled Alarm: Wait at departure
+                    LocationManager.shared.startMonitoringDeparture(
+                        alarmID: alarm.id.uuidString,
+                        stationName: depStation.name,
+                        destinationName: destStation.name,
+                        radius: 100, // Fixed radius for testing/demo
+                        coordinate: depStation.coordinate
+                    )
+                    print("Scheduled Alarm turned ON: registered departure geofence.")
+                }
             }
         } else {
             // Alarm turned OFF

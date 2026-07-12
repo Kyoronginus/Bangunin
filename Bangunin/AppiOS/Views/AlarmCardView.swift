@@ -10,7 +10,7 @@ import SwiftUI
 struct AlarmCardView: View {
 
 //    @Bindable var alarm: Alarm
-    @Bindable var viewModel: AlarmCardViewModel
+    var viewModel: AlarmCardViewModel
 
     var body: some View {
         HStack{
@@ -29,13 +29,13 @@ struct AlarmCardView: View {
                 Text(viewModel.repeatStatus)
             }
             Spacer()
-            Toggle("", isOn: $viewModel.alarm.isActive)
-                .tint(.green)
-                .labelsHidden()
-                .offset(y: 20)
-                .onChange(of: viewModel.alarm.isActive) { _, newValue in
-                    viewModel.toggleAlarm(isActive: newValue)
-                }
+            Toggle("", isOn: Binding(
+                get: { viewModel.alarm.isActive },
+                set: { newValue in viewModel.toggleAlarm(isActive: newValue) }
+            ))
+            .tint(.green)
+            .labelsHidden()
+            .offset(y: 20)
         }
         .padding()
     }

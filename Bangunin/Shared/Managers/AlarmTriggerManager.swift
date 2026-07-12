@@ -74,11 +74,10 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
                 )
                 // MARK: Alarm rings 10 secs after detection
                 let config = AlarmManager.AlarmConfiguration(
-                    countdownDuration: AlarmKit.Alarm.CountdownDuration(preAlert: 10, postAlert: nil),
+                    countdownDuration: AlarmKit.Alarm.CountdownDuration(preAlert: 6, postAlert: nil),
                     schedule: nil,
                     attributes: attributes,
-//                    stopIntent: CancelAlarmIntent(alarmID: alarmID),
-//                    alertCOnfiguration: Alert
+                    stopIntent: CancelAlarmIntent(alarmID: alarmID),
                     secondaryIntent: CancelAlarmIntent(alarmID: alarmID),
                     sound: .named("Empty")
                 )
