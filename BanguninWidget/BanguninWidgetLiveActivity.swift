@@ -28,7 +28,6 @@ struct BanguninWidgetLiveActivity: Widget {
                 DynamicIslandExpandedRegion(.bottom) {
                     HStack {
                         Spacer()
-                        // UBAH: Masukkan alarmID dari context
                         CancelButtonView(alarmID: context.attributes.alarmID)
                         Spacer()
                     }
@@ -65,7 +64,6 @@ struct WatchOrPhoneView: View {
                 Spacer(minLength: 4)
                 
                 if #available(iOS 17.0, *) {
-                    // UBAH: Masukkan alarmID dari context
                     Button(intent: CancelAlarmIntent(alarmID: context.attributes.alarmID)) {
                         Text("Cancel Alarm")
                             .font(.headline)
@@ -120,7 +118,6 @@ struct WatchOrPhoneView: View {
                 // Cancel Button
                 HStack {
                     Spacer()
-                    // UBAH: Masukkan alarmID dari context
                     Button(intent: CancelAlarmIntent(alarmID: context.attributes.alarmID)) {
                         Text("Cancel Alarm")
                             .font(.subheadline)
@@ -147,7 +144,6 @@ struct CancelButtonView: View {
     let alarmID: String
     
     var body: some View {
-        // UBAH: Masukkan alarmID yang dikirim dari Struct di atas
         Button(intent: CancelAlarmIntent(alarmID: alarmID)) {
             Text("Cancel")
                 .font(.subheadline)
