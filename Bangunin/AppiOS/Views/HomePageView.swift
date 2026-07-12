@@ -23,14 +23,20 @@ struct HomePageView: View {
                 // if else empty state
                 if alarms.isEmpty {
                     VStack(spacing: 10) {
-                        Text("No alarms yet")
-                            .font(.title2)
-                            .fontWeight(.medium)
+                        Image("home illustration")
+                            .resizable()
+                            .frame(width: 321, height: 321)
+                        Text("Belum ada alarm, nih!")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .offset(y: -60)
+                            .foregroundStyle(Color("new2"))
 
-                        Text("Click the + button to add your alarm")
+                        Text("Klik + biar dibangunin di stasiun tujuanmu")
                             .font(.body)
-                            .fontWeight(.regular)
+                            .offset(y: -65)
                     }
+                    .offset(y: -10)
                 } else {
                     List {
                         // active alarm card view
@@ -64,7 +70,9 @@ struct HomePageView: View {
             .navigationTitle("Alarm")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    EditButton()
+                    if !alarms.isEmpty {
+                        EditButton()
+                    }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -73,7 +81,7 @@ struct HomePageView: View {
                         AlarmTriggerManager.shared.requestPermissions()
                     } label: {
                         Image(systemName: "plus")
-                            .font(.title3)
+                            .font(.body)
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(Color("new2"))

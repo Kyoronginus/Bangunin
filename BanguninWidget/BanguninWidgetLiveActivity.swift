@@ -34,13 +34,13 @@ struct BanguninWidgetLiveActivity: Widget {
                 }
             } compactLeading: {
                 Image(systemName: "tram.fill")
-                    .foregroundColor(.cyan)
+                    .foregroundColor(Color("new2"))
             } compactTrailing: {
                 Text("Active")
                     .foregroundColor(.red)
             } minimal: {
                 Image(systemName: "tram.fill")
-                    .foregroundColor(.cyan)
+                    .foregroundColor(Color("new2"))
             }
         }
         .supplementalActivityFamilies([.small])
