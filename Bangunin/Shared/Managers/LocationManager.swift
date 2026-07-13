@@ -73,15 +73,23 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     var userLocation: CLLocation?
     var authorizationStatus: CLAuthorizationStatus
 
-    var isMonitoringRoute: Bool = false
     var lastUpdateTimestamp: Date?
     var lastError: String?
     
     // Untuk tracking Live Activity di background
-    var activeAlarmID: String?
-    var activeDestinationCoordinate: CLLocationCoordinate2D?
-    var activeTotalDistance: Double?
-
+    var isMonitoringRoute: Bool {
+        !activeAlarmsData.isEmpty
+    }
+    
+    struct ActiveAlarmData {
+        var destinationCoordinate: CLLocationCoordinate2D
+        var totalDistance: Double
+        var progress: Double = 0.0
+        var eta: String = "Menghitung..."
+    }
+    
+    var activeAlarmsData: [String: ActiveAlarmData] = [:]
+    
     private var triggeredAlarmIDs: Set<String> = []
 
 
@@ -153,17 +161,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         for region in manager.monitoredRegions {
             manager.stopMonitoring(for: region)
         }
-        activeDestinationCoordinate = nil
-        activeTotalDistance = nil
-        activeAlarmID = nil
+        activeAlarmsData.removeAll()
     }
 
     func stopMonitoringRegion(purpose: RegionPurpose, alarmID: String) {
         triggeredAlarmIDs.remove(alarmID)
         
-        if activeAlarmID == alarmID {
-            activeAlarmID = nil
-        }
+        activeAlarmsData.removeValue(forKey: alarmID)
         
         for region in manager.monitoredRegions {
             if let regionId = RegionIdentifier(stringValue: region.identifier),
@@ -228,21 +232,21 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         self.lastError = nil // clear error on successful update
         
         // Push update ke Live Activity di background jika sedang monitoring
-        if isMonitoringRoute, 
-           let destCoord = activeDestinationCoordinate, 
-           let totalDist = activeTotalDistance, totalDist > 0 {
-            
-            let destLoc = CLLocation(latitude: destCoord.latitude, longitude: destCoord.longitude)
+        for (alarmID, data) in activeAlarmsData {
+            let destLoc = CLLocation(latitude: data.destinationCoordinate.latitude, longitude: data.destinationCoordinate.longitude)
             let remainingDist = latestLocation.distance(from: destLoc)
             
-            let traveledDist = totalDist - remainingDist
-            let progress = min(max(traveledDist / totalDist, 0.0), 1.0)
+            let traveledDist = data.totalDistance - remainingDist
+            let progress = min(max(traveledDist / data.totalDistance, 0.0), 1.0)
             
             // 1. Calculate ETA using your existing formula
             let eta = calculateEstimateTime(distanceInMeters: remainingDist)
             
+            self.activeAlarmsData[alarmID]?.progress = progress
+            self.activeAlarmsData[alarmID]?.eta = "\(eta) menit"
+            
             // 2. Passing to the manager
-            AlarmTriggerManager.shared.updateLiveActivityProgress(progress: progress, eta: eta)
+            AlarmTriggerManager.shared.updateLiveActivityProgress(for: alarmID, progress: progress, eta: eta)
         }
     }
 
@@ -303,7 +307,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
         switch regionId.purpose {
         case .departure:
-            if !self.isMonitoringRoute {
+            if self.activeAlarmsData[regionId.alarmID] == nil {
                 guard let alarm = fetchAlarmIfShouldTrigger(alarmID: regionId.alarmID) else {
                     return
                 }
@@ -311,20 +315,20 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 print(
                     "User is at departure station. Start alarm monitoring state."
                 )
-                // Synchronously set to true to prevent double triggers if called rapidly
-                self.isMonitoringRoute = true
-                self.activeAlarmID = regionId.alarmID
 
                 let destName = regionId.targetDestination ?? "Destination"
                 
                 // Track coordinates for Live Activity Background Update
                 if let departureStation = findStation(name: regionId.stationName),
                    let destinationStation = findStation(name: destName) {
-                    self.activeDestinationCoordinate = destinationStation.coordinate
                     
                     let depLoc = CLLocation(latitude: departureStation.coordinate.latitude, longitude: departureStation.coordinate.longitude)
                     let destLoc = CLLocation(latitude: destinationStation.coordinate.latitude, longitude: destinationStation.coordinate.longitude)
-                    self.activeTotalDistance = depLoc.distance(from: destLoc)
+                    
+                    self.activeAlarmsData[regionId.alarmID] = ActiveAlarmData(
+                        destinationCoordinate: destinationStation.coordinate,
+                        totalDistance: depLoc.distance(from: destLoc)
+                    )
                     
                     // NEW: Start monitoring the destination station here!
                     self.setupDestinationTrigger(

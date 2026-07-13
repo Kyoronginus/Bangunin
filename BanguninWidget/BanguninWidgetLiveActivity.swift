@@ -97,6 +97,7 @@ struct WatchOrPhoneView: View {
                         // ETA
                         Text("\(context.state.estimatedMinutesRemaining) menit")
                             .font(.caption)
+                            .fontWeight(.semibold)
                             .foregroundColor(.white)
                     }
                     .padding(.top, 11) // Padding Atas

@@ -36,6 +36,19 @@ class AlarmCardViewModel {
         }
     }
     
+    var isTracking: Bool {
+        alarm.isActive &&
+        LocationManager.shared.activeAlarmsData[alarm.id.uuidString] != nil
+    }
+    
+    var isWaiting: Bool {
+        alarm.isActive && !isTracking
+    }
+    
+    var isOneTime: Bool {
+        alarm.repeatOptions.isEmpty
+    }
+    
     func toggleAlarm(isActive: Bool) {
         alarm.isActive = isActive
         try? alarm.modelContext?.save()
@@ -47,10 +60,10 @@ class AlarmCardViewModel {
                 if alarm.repeatOptions.isEmpty {
                     // One-Time Alarm: Immediate tracking
                     let distance = LocationManager.shared.distanceTo(destinationCoordinate: destStation.coordinate) ?? 10000 // default fallback
-                    LocationManager.shared.activeTotalDistance = distance
-                    LocationManager.shared.activeDestinationCoordinate = destStation.coordinate
-                    LocationManager.shared.activeAlarmID = alarm.id.uuidString
-                    LocationManager.shared.isMonitoringRoute = true
+                    LocationManager.shared.activeAlarmsData[alarm.id.uuidString] = LocationManager.ActiveAlarmData(
+                        destinationCoordinate: destStation.coordinate,
+                        totalDistance: distance
+                    )
                     
                     LocationManager.shared.setupDestinationTrigger(
                         alarmID: alarm.id.uuidString,
@@ -79,8 +92,7 @@ class AlarmCardViewModel {
             // Alarm turned OFF
             LocationManager.shared.stopMonitoringRegion(purpose: .departure, alarmID: alarm.id.uuidString)
             LocationManager.shared.stopMonitoringRegion(purpose: .destination, alarmID: alarm.id.uuidString)
-            LocationManager.shared.isMonitoringRoute = false
-            AlarmTriggerManager.shared.endLiveActivity()
+            AlarmTriggerManager.shared.endLiveActivity(for: alarm.id.uuidString)
             print("Alarm turned OFF, cleared geofences.")
         }
     }
