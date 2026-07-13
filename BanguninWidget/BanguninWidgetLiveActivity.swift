@@ -85,13 +85,22 @@ struct WatchOrPhoneView: View {
             // iPhone Lock Screen / Banner UI
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("BANGUNIN")
-                        .font(.caption2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.gray)
-                        .textCase(.uppercase)
-                         .padding(.top, 11) // Padding Atas
-                        .padding(.bottom, 4)
+                    HStack() {
+                        Text("BANGUNIN")
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.gray)
+                            .textCase(.uppercase)
+                        
+                        Spacer()
+                        
+                        // ETA
+                        Text("\(context.state.estimatedMinutesRemaining) menit")
+                            .font(.caption)
+                            .foregroundColor(.white)
+                    }
+                    .padding(.top, 11) // Padding Atas
+                    .padding(.bottom, 4) // Padding Bawah
 
                     Text("Santai aja, tinggal istirahat")
                         .font(.headline)
