@@ -64,7 +64,7 @@ struct AddAlarmView: View {
                                     .white
                                 )
                                 .frame(width: 44, height: 44)
-                                .background(viewModel.isFormValid ? .blue : .gray)
+                                .background(viewModel.isFormValid ? Color("new2") : .gray)
                                 .clipShape(Circle())
                                 .shadow(
                                     color: .black.opacity(0.05),
@@ -89,7 +89,7 @@ struct AddAlarmView: View {
                                         .foregroundColor(.primary)
                                     Spacer()
                                     Toggle("", isOn: $viewModel.isRepeating.animation())
-                                        .tint(.blue)
+                                        .tint(Color("new2"))
                                         .labelsHidden()
                                 }
                                 .padding()
@@ -108,7 +108,7 @@ struct AddAlarmView: View {
                                             Image(systemName: "calendar")
                                                 .foregroundColor(.white)
                                                 .frame(width: 44, height: 44)
-                                                .background(Color.blue)
+                                                .background(Color("new2"))
                                                 .clipShape(Circle())
                                             
                                             Text("Ulangi")
@@ -146,7 +146,7 @@ struct AddAlarmView: View {
                                         Image(systemName: "mappin.and.ellipse")
                                             .foregroundColor(.white)
                                             .frame(width: 44, height: 44)
-                                            .background(Color.blue)
+                                            .background(Color("new2"))
                                             .clipShape(Circle())
                                         
                                         VStack(alignment: .leading, spacing: 2) {
@@ -186,7 +186,7 @@ struct AddAlarmView: View {
                                         .foregroundColor(.white)
                                         .frame(maxWidth: .infinity)
                                         .padding(.vertical, 8)
-                                        .background(Color.blue.opacity(1.0))
+                                        .background(Color("new2").opacity(1.0))
                                     
                                     Button {
                                         showDepartureSheet.toggle()
@@ -195,7 +195,7 @@ struct AddAlarmView: View {
                                             Image(systemName: "paperplane.fill")
                                                 .foregroundColor(.white)
                                                 .frame(width: 44, height: 44)
-                                                .background(Color.blue)
+                                                .background(Color("new2"))
                                                 .clipShape(Circle())
                                             
                                             VStack(alignment: .leading, spacing: 2) {
@@ -233,7 +233,7 @@ struct AddAlarmView: View {
                                             Image(systemName: "mappin.and.ellipse")
                                                 .foregroundColor(.white)
                                                 .frame(width: 44, height: 44)
-                                                .background(Color.blue)
+                                                .background(Color("new2"))
                                                 .clipShape(Circle())
                                             
                                             VStack(alignment: .leading, spacing: 2) {
@@ -285,7 +285,7 @@ struct AddAlarmView: View {
                                 Image(systemName: "alarm.fill")
                                     .foregroundColor(.white)
                                     .frame(width: 44, height: 44)
-                                    .background(Color.blue)
+                                    .background(Color("new2"))
                                     .clipShape(Circle())
 
                                 
@@ -338,13 +338,13 @@ struct AddAlarmView: View {
                                 Image(systemName: "speaker.wave.3.fill")
                                     .foregroundColor(.white)
                                     .frame(width:44, height: 44)
-                                    .background(Color.blue)
+                                    .background(Color("new2"))
                                     .clipShape(Circle())
                                 
                                 Text("Suara")
                                 Spacer()
                                 Toggle("", isOn: $viewModel.isSoundOn)
-                                    .tint(.blue)
+                                    .tint(Color("new2"))
                                     .labelsHidden()
                                     .onChange(of: viewModel.isSoundOn) {_, newValue in
                                         if !newValue {
@@ -367,7 +367,7 @@ struct AddAlarmView: View {
                 .navigationBarHidden(true)
                 .background(
                     LinearGradient(
-                        colors: [Color.blue.opacity(0.2), Color.cyan.opacity(0.1)],
+                        colors: [Color("new2").opacity(0.2), Color.cyan.opacity(0.1)],
                         startPoint: .top,
                         endPoint: .bottom
                     )

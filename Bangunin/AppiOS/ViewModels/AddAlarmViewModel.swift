@@ -109,19 +109,6 @@ class AddAlarmViewModel {
         return Array(validStations.values)
     }
 
-    //    func getRoute(for station: Station) -> RouteLine? {
-    //        if station == .none { return nil }
-    //
-    //        for (route, stations) in RouteData.routeStations {
-    //            // Asumsi pencocokan menggunakan nama stasiun
-    //            if stations.contains(where: { $0.name == station.name }) {
-    //                return route
-    //            }
-    //        }
-    //
-    //        return nil
-    //    }
-
     func saveAlarm(context: ModelContext) {
 
         if !isRepeating {
