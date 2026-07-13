@@ -122,7 +122,7 @@ struct WatchOrPhoneView: View {
                             .font(.subheadline)
 //                            .fontWeight(.semibold)
                             .foregroundColor(.white)
-                            .padding(.horizontal, 26)
+                            .padding(.horizontal, 25)
                             .padding(.vertical, 12)
                     }
                     .buttonStyle(.plain)
@@ -133,7 +133,7 @@ struct WatchOrPhoneView: View {
                     .background( // Blur & Dark Layer
                             Capsule()
                                 .fill(.ultraThinMaterial)
-                                .opacity(0.5)
+                                .opacity(0.6)
                         )
                     .overlay( // Stroke
                         Capsule()
@@ -145,7 +145,7 @@ struct WatchOrPhoneView: View {
             }
             .padding()
             .padding(.bottom, 11)
-            .activityBackgroundTint(Color.black.opacity(0.9))
+            .activityBackgroundTint(Color.black.opacity(0.95))
                         .activitySystemActionForegroundColor(Color.white)
         }
     }
