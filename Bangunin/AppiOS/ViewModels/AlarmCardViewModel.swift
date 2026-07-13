@@ -24,14 +24,14 @@ class AlarmCardViewModel {
         if selected.isEmpty {
             return "Never"
         } else if selected.count == RepeatOption.allCases.count {
-            return "Everyday"
+            return "Setiap Hari"
         } else if selected == weekdays {
-            return "Every Weekday"
+            return "Setiap Hari Kerja"
         } else if selected == weekends {
-            return "Every Weekend"
+            return "Setiap Hari Libur"
         } else {
             return RepeatOption.allCases.filter { selected.contains($0) }
-                .map { String($0.rawValue.replacingOccurrences(of: "Every ", with: "").prefix(3)) }
+                .map { String($0.rawValue.replacingOccurrences(of: "Setiap ", with: "").prefix(3)) }
                 .joined(separator: ", ")
         }
     }
