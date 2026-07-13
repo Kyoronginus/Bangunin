@@ -14,9 +14,6 @@ struct HomePageView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = HomePageViewModel()
 
-    @State private var showAddAlarm: Bool = false  // buat create
-    @State private var selectedAlarm: Alarm? = nil  // buat edit (update)
-
     var body: some View {
         NavigationStack {
             ZStack {
@@ -40,10 +37,7 @@ struct HomePageView: View {
                 } else {
                     List {
                         // active alarm cards (blue)
-                        let activeIDs = LocationManager.shared.activeAlarmsData.keys
-                        let activeAlarms = alarms.filter { activeIDs.contains($0.id.uuidString) }
-                        
-                        ForEach(activeAlarms) { activeAlarm in
+                        ForEach(viewModel.activeAlarms(from: alarms)) { activeAlarm in
                             ActiveAlarmCardView(
                                 viewModel: ActiveAlarmCardViewModel(alarm: activeAlarm)
                             )
@@ -52,15 +46,13 @@ struct HomePageView: View {
                         }
                             
                         // inactive/waiting alarm cards (white)
-                        let inactiveAlarms = alarms.filter { !activeIDs.contains($0.id.uuidString) }
-                        
-                        ForEach(inactiveAlarms) { alarm in
+                        ForEach(viewModel.inactiveAlarms(from: alarms)) { alarm in
                             AlarmCardView(
                                 viewModel: AlarmCardViewModel(alarm: alarm)
                             )
                             .contentShape(Rectangle())
                             .onTapGesture {
-                                selectedAlarm = alarm
+                                viewModel.selectedAlarm = alarm
                             }
                             .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                             .listRowSeparator(.hidden)
@@ -82,8 +74,8 @@ struct HomePageView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        showAddAlarm = true
-                        AlarmTriggerManager.shared.requestPermissions()
+                        viewModel.showAddAlarm = true
+                        viewModel.requestNotificationPermission()
                     } label: {
                         Image(systemName: "plus")
                             .font(.body)
@@ -93,14 +85,14 @@ struct HomePageView: View {
                 }
             }
         }
-        .sheet(isPresented: $showAddAlarm) {
+        .sheet(isPresented: $viewModel.showAddAlarm) {
             AddAlarmView()
         }
-        .sheet(item: $selectedAlarm) { alarm in
+        .sheet(item: $viewModel.selectedAlarm) { alarm in
             AddAlarmView(editingAlarm: alarm)
         }
         .onAppear {
-            LocationManager.shared.requestPermission()
+            viewModel.requestLocationPermission()
         }
         .onReceive(NotificationCenter.default.publisher(for: .banguninAlarmDidCancel)) { notification in
             guard let receivedID = notification.userInfo?["alarmID"] as? String else { return }

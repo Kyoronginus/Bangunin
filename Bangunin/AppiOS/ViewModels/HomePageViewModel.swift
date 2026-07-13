@@ -8,6 +8,28 @@ import SwiftData
 
 @Observable
 class HomePageViewModel {
+    var showAddAlarm: Bool = false
+    var selectedAlarm: Alarm? = nil
+    
+    private var locationManager = LocationManager.shared
+    
+    func activeAlarms(from alarms: [Alarm]) -> [Alarm] {
+        let activeIDs = locationManager.activeAlarmsData.keys
+        return alarms.filter { activeIDs.contains($0.id.uuidString) }
+    }
+    
+    func inactiveAlarms(from alarms: [Alarm]) -> [Alarm] {
+        let activeIDs = locationManager.activeAlarmsData.keys
+        return alarms.filter { !activeIDs.contains($0.id.uuidString) }
+    }
+    
+    func requestLocationPermission() {
+        locationManager.requestPermission()
+    }
+    
+    func requestNotificationPermission() {
+        AlarmTriggerManager.shared.requestPermissions()
+    }
     
     // We pass the modelContext in to perform the delete operation.
     // The actual array of alarms is still managed via @Query in the View for reactive performance.
