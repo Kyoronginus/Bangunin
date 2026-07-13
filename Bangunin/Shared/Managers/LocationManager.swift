@@ -341,10 +341,17 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 print("User near destination station! Trigger alarm!")
 
                 triggeredAlarmIDs.insert(regionId.alarmID)
+                
+                guard let alarm = fetchAlarmIfShouldTrigger(alarmID: regionId.alarmID) else {
+                    print("alarm silent gagal di trigger")
+                    return
+                }
+
 
                 AlarmTriggerManager.shared.triggerAlarm(
                     for: regionId.stationName,
-                    alarmID: regionId.alarmID
+                    alarmID: regionId.alarmID,
+                    isSoundOn: alarm.isSoundOn
                 )
             } else {
                 print(

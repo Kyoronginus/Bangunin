@@ -57,7 +57,8 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
-    func triggerAlarm(for stationName: String, alarmID: String) {
+    func triggerAlarm(for stationName: String, alarmID: String, isSoundOn: Bool) {
+        print("isSoundOn value: \(isSoundOn)")
         print("Triggering alarm for approaching \(stationName)!")
         
         // MARK: Alarm Fullscreen View
@@ -83,7 +84,7 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
                     attributes: attributes,
                     stopIntent: CancelAlarmIntent(alarmID: alarmID),
                     secondaryIntent: CancelAlarmIntent(alarmID: alarmID),
-                    sound: .named("Empty")
+                    sound: isSoundOn ? .default : .named("silent.wav")
                 )
                 
                 
