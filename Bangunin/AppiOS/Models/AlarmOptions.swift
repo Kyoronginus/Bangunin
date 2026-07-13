@@ -6,7 +6,7 @@
 import Foundation
 
 enum WakeUpTime: String, CaseIterable, Codable {
-    case atDestination = "Pada Stasiun Tujuan"
+//    case atDestination = "Pada Stasiun Tujuan"
     case oneMin = "1 Menit Sebelum Sampai"
     case threeMin = "3 Menit Sebelum Sampai"
     case fiveMin = "5 Menit Sebelum Sampai"
@@ -17,7 +17,7 @@ enum WakeUpTime: String, CaseIterable, Codable {
 extension WakeUpTime {
     var radiusInMeters: Double {
         switch self {
-        case .atDestination: return 400
+//        case .atDestination: return 400
         case .oneMin: return 1160
         case .threeMin: return 3480
         case .fiveMin: return 5800

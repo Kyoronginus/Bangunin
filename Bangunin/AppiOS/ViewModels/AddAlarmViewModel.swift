@@ -119,7 +119,7 @@ class AddAlarmViewModel {
         // Convert wakeMeUpAt to an approximate distance radius
         var distanceRadiusInMeters: Double
         switch wakeMeUpAt {
-        case .atDestination: distanceRadiusInMeters = 200
+//        case .atDestination: distanceRadiusInMeters = 200
         case .oneMin: distanceRadiusInMeters = 1160
         case .threeMin: distanceRadiusInMeters = 3480
         case .fiveMin: distanceRadiusInMeters = 5800

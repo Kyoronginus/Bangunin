@@ -13,7 +13,7 @@ struct VibrationAlertView: View {
         VStack(spacing: 20) {
             // 1. Text Labels
             VStack(spacing: 8) {
-                Text("Alarm bakal geter ya")
+                Text("Alarm bakal getar ya")
                     .font(.title3)
                     .bold()
                     .foregroundColor(.black)
