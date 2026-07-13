@@ -51,7 +51,6 @@ class LocationDebugViewModel {
     
     func resetAlarmState() {
         locationManager.stopMonitoringAllRegions()
-        locationManager.isMonitoringRoute = false
     }
     
     func startTracking() {

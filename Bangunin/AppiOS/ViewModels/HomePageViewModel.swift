@@ -13,9 +13,9 @@ class HomePageViewModel {
     // The actual array of alarms is still managed via @Query in the View for reactive performance.
     func deleteAlarm(_ alarm: Alarm, context: ModelContext) {
         if alarm.isActive {
-            LocationManager.shared.stopMonitoringAllRegions()
-            LocationManager.shared.isMonitoringRoute = false
-            AlarmTriggerManager.shared.endLiveActivity()
+            LocationManager.shared.stopMonitoringRegion(purpose: .departure, alarmID: alarm.id.uuidString)
+            LocationManager.shared.stopMonitoringRegion(purpose: .destination, alarmID: alarm.id.uuidString)
+            AlarmTriggerManager.shared.endLiveActivity(for: alarm.id.uuidString)
         }
         
         context.delete(alarm)

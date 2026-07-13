@@ -39,9 +39,11 @@ struct HomePageView: View {
                     .offset(y: -10)
                 } else {
                     List {
-                        // active alarm card view
-                        if let activeID = LocationManager.shared.activeAlarmID,
-                           let activeAlarm = alarms.first(where: { $0.id.uuidString == activeID }) {
+                        // active alarm cards (blue)
+                        let activeIDs = LocationManager.shared.activeAlarmsData.keys
+                        let activeAlarms = alarms.filter { activeIDs.contains($0.id.uuidString) }
+                        
+                        ForEach(activeAlarms) { activeAlarm in
                             ActiveAlarmCardView(
                                 viewModel: ActiveAlarmCardViewModel(alarm: activeAlarm)
                             )
@@ -49,7 +51,10 @@ struct HomePageView: View {
                             .listRowSeparator(.hidden)
                         }
                             
-                        ForEach(alarms) { alarm in
+                        // inactive/waiting alarm cards (white)
+                        let inactiveAlarms = alarms.filter { !activeIDs.contains($0.id.uuidString) }
+                        
+                        ForEach(inactiveAlarms) { alarm in
                             AlarmCardView(
                                 viewModel: AlarmCardViewModel(alarm: alarm)
                             )

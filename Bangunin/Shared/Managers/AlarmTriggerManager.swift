@@ -16,8 +16,8 @@ extension Notification.Name {
 class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
     static let shared = AlarmTriggerManager()
     
-    // Store reference to the active Live Activity
-    private var activeActivity: Any?
+    // Store reference to the active Live Activities keyed by alarmID
+    private var activeActivities: [String: Any] = [:]
     
     private override init() {
         super.init()
@@ -28,8 +28,7 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
                 DispatchQueue.main.async {
                     LocationManager.shared.stopMonitoringRegion(purpose: .departure, alarmID: alarmID)
                     LocationManager.shared.stopMonitoringRegion(purpose: .destination, alarmID: alarmID)
-                    LocationManager.shared.isMonitoringRoute = false
-                    AlarmTriggerManager.shared.endLiveActivity()
+                    AlarmTriggerManager.shared.endLiveActivity(for: alarmID)
                     
                     NotificationCenter.default.post(name: .banguninAlarmDidCancel, object: nil, userInfo: ["alarmID": alarmID])
                 }
@@ -121,8 +120,8 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
     // MARK: - Live Activity
     
     private func startLiveActivity(destinationName: String, alarmID: String) {
-        // End any existing activity first
-        endLiveActivity()
+        // End any existing activity for this alarm first
+        endLiveActivity(for: alarmID)
         
         let attributes = BanguninAlarmAttributes(alarmID: alarmID, destinationStationName: destinationName)
         let initialContentState = BanguninAlarmAttributes.ContentState(progress: 0.0) // Start at 0
@@ -134,15 +133,15 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
                 content: content,
                 pushType: nil
             )
-            self.activeActivity = activity
-            print("Started Live Activity with ID: \(activity.id)")
+            self.activeActivities[alarmID] = activity
+            print("Started Live Activity with ID: \(activity.id) for alarm: \(alarmID)")
         } catch {
             print("Error starting Live Activity: \(error.localizedDescription)")
         }
     }
     
-    func updateLiveActivityProgress(progress: Double, eta: Int) {
-        guard let activity = activeActivity as? Activity<BanguninAlarmAttributes> else { return }
+    func updateLiveActivityProgress(for alarmID: String, progress: Double, eta: Int) {
+        guard let activity = activeActivities[alarmID] as? Activity<BanguninAlarmAttributes> else { return }
         
         Task {
             let updatedState = BanguninAlarmAttributes.ContentState(progress: progress, estimatedMinutesRemaining: eta)
@@ -151,16 +150,16 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
-    func endLiveActivity() {
-        guard let activity = activeActivity as? Activity<BanguninAlarmAttributes> else { return }
+    func endLiveActivity(for alarmID: String) {
+        guard let activity = activeActivities[alarmID] as? Activity<BanguninAlarmAttributes> else { return }
         
         Task {
             let finalState = BanguninAlarmAttributes.ContentState(progress: 1.0)
             let finalContent = ActivityContent(state: finalState, staleDate: nil)
             await activity.end(finalContent, dismissalPolicy: .immediate)
-            print("Ended Live Activity.")
+            print("Ended Live Activity for alarm: \(alarmID)")
         }
-        self.activeActivity = nil
+        self.activeActivities.removeValue(forKey: alarmID)
     }
     
     // MARK: - UNUserNotificationCenterDelegate

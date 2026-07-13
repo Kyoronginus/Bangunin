@@ -165,9 +165,9 @@ class AddAlarmViewModel {
             print("Gagal menyimpan alarm: \(error)")
         }
 
-        LocationManager.shared.stopMonitoringAllRegions()
-        LocationManager.shared.isMonitoringRoute = false
-        AlarmTriggerManager.shared.endLiveActivity()
+        LocationManager.shared.stopMonitoringRegion(purpose: .departure, alarmID: targetAlarmID)
+        LocationManager.shared.stopMonitoringRegion(purpose: .destination, alarmID: targetAlarmID)
+        AlarmTriggerManager.shared.endLiveActivity(for: targetAlarmID)
 
         if selectedRepeatOptions.isEmpty {
             // One-Time Alarm: Immediate tracking
@@ -175,11 +175,11 @@ class AddAlarmViewModel {
                 LocationManager.shared.distanceTo(
                     destinationCoordinate: destinationStation.coordinate
                 ) ?? 10000  // default fallback
-            LocationManager.shared.activeTotalDistance = distance
-            LocationManager.shared.activeDestinationCoordinate =
-                destinationStation.coordinate
-            LocationManager.shared.activeAlarmID = targetAlarmID
-            LocationManager.shared.isMonitoringRoute = true
+                
+            LocationManager.shared.activeAlarmsData[targetAlarmID] = LocationManager.ActiveAlarmData(
+                destinationCoordinate: destinationStation.coordinate,
+                totalDistance: distance
+            )
 
             LocationManager.shared.setupDestinationTrigger(
                 alarmID: targetAlarmID,
