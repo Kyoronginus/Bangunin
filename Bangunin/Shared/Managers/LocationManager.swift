@@ -238,7 +238,11 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             let traveledDist = totalDist - remainingDist
             let progress = min(max(traveledDist / totalDist, 0.0), 1.0)
             
-            AlarmTriggerManager.shared.updateLiveActivityProgress(progress: progress)
+            // 1. Calculate ETA using your existing formula
+            let eta = calculateEstimateTime(distanceInMeters: remainingDist)
+            
+            // 2. Passing to the manager
+            AlarmTriggerManager.shared.updateLiveActivityProgress(progress: progress, eta: eta)
         }
     }
 

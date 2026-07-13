@@ -7,6 +7,7 @@ public struct BanguninAlarmAttributes: ActivityAttributes {
         // Dynamic state of the activity goes here.
         // For example, time remaining or progress if we were tracking live progress.
         var progress: Double = 0.0
+        var estimatedMinutesRemaining: Int = 0
     }
 
     // Fixed non-changing properties about your activity go here!

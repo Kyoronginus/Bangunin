@@ -141,11 +141,11 @@ class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
-    func updateLiveActivityProgress(progress: Double) {
+    func updateLiveActivityProgress(progress: Double, eta: Int) {
         guard let activity = activeActivity as? Activity<BanguninAlarmAttributes> else { return }
         
         Task {
-            let updatedState = BanguninAlarmAttributes.ContentState(progress: progress)
+            let updatedState = BanguninAlarmAttributes.ContentState(progress: progress, estimatedMinutesRemaining: eta)
             let content = ActivityContent(state: updatedState, staleDate: nil)
             await activity.update(content)
         }
