@@ -65,7 +65,7 @@ struct WatchOrPhoneView: View {
                 
                 if #available(iOS 17.0, *) {
                     Button(intent: CancelAlarmIntent(alarmID: context.attributes.alarmID)) {
-                        Text("Cancel Alarm")
+                        Text("Matiin Alarm")
                             .font(.headline)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
@@ -73,15 +73,14 @@ struct WatchOrPhoneView: View {
                     }
                     .buttonStyle(.plain)
                     .padding(.vertical, 6)
-                    .background(Color.white.opacity(0.15))
+                    .background(Color.red.opacity(0.25))
                     .clipShape(Capsule())
                 }
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .activityBackgroundTint(Color.black.opacity(0.8))
-            .activitySystemActionForegroundColor(Color.white)
-
+                        .activitySystemActionForegroundColor(Color.white)
         } else {
             // iPhone Lock Screen / Banner UI
             VStack(alignment: .leading, spacing: 12) {
@@ -91,7 +90,7 @@ struct WatchOrPhoneView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.gray)
                         .textCase(.uppercase)
-                        // .padding(.top, 11)
+                         .padding(.top, 11) // Padding Atas
                         .padding(.bottom, 4)
 
                     Text("Santai aja, tinggal istirahat")
@@ -100,42 +99,54 @@ struct WatchOrPhoneView: View {
                         .foregroundColor(.white)
 
                     HStack(spacing: 4) {
-                        Text("to")
+                        Text("menuju")
                             .foregroundColor(.gray)
                         Text(context.attributes.destinationStationName)
                             .foregroundColor(.cyan)
                             .fontWeight(.bold)
                     }
                     .font(.subheadline)
-                }.padding(.bottom, -3)
+                }.padding(.bottom, -9)
 
                 // Custom Progress Bar Component
                 TrainProgressBar(progress: context.state.progress, tintColor: .cyan)
-                    .padding(.vertical, 8)
-                
+                    .padding(.top, 8)
+                    .padding(.bottom, -8)
                 
 
                 // Cancel Button
                 HStack {
                     Spacer()
                     Button(intent: CancelAlarmIntent(alarmID: context.attributes.alarmID)) {
-                        Text("Cancel Alarm")
+                        Text("Matiin Alarm")
                             .font(.subheadline)
+//                            .fontWeight(.semibold)
                             .foregroundColor(.white)
-                            .padding(.horizontal, 24)
-                            .padding(.vertical, 8)
+                            .padding(.horizontal, 25)
+                            .padding(.vertical, 12)
                     }
                     .buttonStyle(.plain)
-                    .background(Color.white.opacity(0.15))
-                    .clipShape(Capsule())
+                    .background( // Button Color
+                        Capsule()
+                            .fill(Color.white.opacity(0.15))
+                    )
+                    .background( // Blur & Dark Layer
+                            Capsule()
+                                .fill(.ultraThinMaterial)
+                                .opacity(0.6)
+                        )
+                    .overlay( // Stroke
+                        Capsule()
+                            .stroke(Color.white.opacity(0.4), lineWidth: 0.5)
+                    )
                     Spacer()
                 }
                 .padding(.bottom, 1)
             }
             .padding()
-            // .padding(.bottom, 6)
-            .activityBackgroundTint(Color.black.opacity(0.8))
-            .activitySystemActionForegroundColor(Color.white)
+            .padding(.bottom, 11)
+            .activityBackgroundTint(Color.black.opacity(0.95))
+                        .activitySystemActionForegroundColor(Color.white)
         }
     }
 }
@@ -156,3 +167,8 @@ struct CancelButtonView: View {
     }
 }
 
+#Preview("Lock Screen", as: .content, using: BanguninAlarmAttributes(alarmID: "123", destinationStationName: "Manggarai")) {
+    BanguninWidgetLiveActivity()
+} contentStates: {
+    BanguninAlarmAttributes.ContentState(progress: 0.5)
+}
