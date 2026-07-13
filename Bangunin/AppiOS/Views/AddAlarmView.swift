@@ -60,9 +60,11 @@ struct AddAlarmView: View {
                             }
                         } label: {
                             Image(systemName: "checkmark")
-                                .foregroundColor(.white)
+                                .foregroundColor(
+                                    .white
+                                )
                                 .frame(width: 44, height: 44)
-                                .background(viewModel.isFormValid ? Color("new2") : .gray)
+                                .background(viewModel.isFormValid ? .blue : .gray)
                                 .clipShape(Circle())
                                 .shadow(
                                     color: .black.opacity(0.05),
@@ -76,6 +78,7 @@ struct AddAlarmView: View {
                     .padding(.horizontal)
                     .padding(.top, 16)
                     .padding(.bottom, 8)
+                    
 
                     ScrollView {
                         VStack(spacing: 16) {
@@ -86,7 +89,7 @@ struct AddAlarmView: View {
                                         .foregroundColor(.primary)
                                     Spacer()
                                     Toggle("", isOn: $viewModel.isRepeating.animation())
-                                        .tint(Color("new2"))
+                                        .tint(.blue)
                                         .labelsHidden()
                                 }
                                 .padding()
@@ -105,7 +108,7 @@ struct AddAlarmView: View {
                                             Image(systemName: "calendar")
                                                 .foregroundColor(.white)
                                                 .frame(width: 44, height: 44)
-                                                .background(Color("new2"))
+                                                .background(Color.blue)
                                                 .clipShape(Circle())
                                             
                                             Text("Ulangi")
@@ -126,6 +129,13 @@ struct AddAlarmView: View {
                                 RoundedRectangle(cornerRadius: 12)
                                     .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                             )
+
+                            
+
+                            
+                            
+                            
+                            
                             
                             // Stations
                             if !viewModel.isRepeating {
@@ -133,10 +143,10 @@ struct AddAlarmView: View {
                                     showDestinationSheet.toggle()
                                 } label: {
                                     HStack(spacing: 16) {
-                                        Image(systemName: "anchor")
+                                        Image(systemName: "mappin.and.ellipse")
                                             .foregroundColor(.white)
                                             .frame(width: 44, height: 44)
-                                            .background(Color("new2"))
+                                            .background(Color.blue)
                                             .clipShape(Circle())
                                         
                                         VStack(alignment: .leading, spacing: 2) {
@@ -176,7 +186,7 @@ struct AddAlarmView: View {
                                         .foregroundColor(.white)
                                         .frame(maxWidth: .infinity)
                                         .padding(.vertical, 8)
-                                        .background(Color("new2").opacity(0.8))
+                                        .background(Color.blue.opacity(1.0))
                                     
                                     Button {
                                         showDepartureSheet.toggle()
@@ -185,7 +195,7 @@ struct AddAlarmView: View {
                                             Image(systemName: "paperplane.fill")
                                                 .foregroundColor(.white)
                                                 .frame(width: 44, height: 44)
-                                                .background(Color("new2"))
+                                                .background(Color.blue)
                                                 .clipShape(Circle())
                                             
                                             VStack(alignment: .leading, spacing: 2) {
@@ -220,10 +230,10 @@ struct AddAlarmView: View {
                                         showDestinationSheet.toggle()
                                     } label: {
                                         HStack(spacing: 16) {
-                                            Image(systemName: "anchor")
+                                            Image(systemName: "mappin.and.ellipse")
                                                 .foregroundColor(.white)
                                                 .frame(width: 44, height: 44)
-                                                .background(Color("new2"))
+                                                .background(Color.blue)
                                                 .clipShape(Circle())
                                             
                                             VStack(alignment: .leading, spacing: 2) {
@@ -257,9 +267,10 @@ struct AddAlarmView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color("new2").opacity(0.8), lineWidth: 1)
+                                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                                 )
-                                .onChange(of: viewModel.departureStation.name) { _, _ in
+                                .onChange(of: viewModel.departureStation.name) {
+                                    _, _ in
                                     let validDestinations = viewModel.getAvailableDestinations(for: viewModel.departureStation)
                                     if !validDestinations.contains(where: { $0.name == viewModel.destinationStation.name }) {
                                         viewModel.destinationStation = .none
@@ -267,14 +278,17 @@ struct AddAlarmView: View {
                                 }
                             }
 
-                            // Wake me up at
+                            
+                            
+                            
                             HStack(spacing: 16) {
                                 Image(systemName: "alarm.fill")
                                     .foregroundColor(.white)
                                     .frame(width: 44, height: 44)
-                                    .background(Color("new2"))
+                                    .background(Color.blue)
                                     .clipShape(Circle())
 
+                                
                                 VStack(alignment: .leading, spacing: 0) {
                                     Text("Bangunin Aku")
                                         .font(.body)
@@ -287,6 +301,7 @@ struct AddAlarmView: View {
                                 
                                 Spacer()
                                 
+            
                                 Menu {
                                     Picker("Wake me up at", selection: $viewModel.wakeMeUpAt) {
                                         ForEach(WakeUpTime.allCases, id: \.self) { time in
@@ -308,22 +323,28 @@ struct AddAlarmView: View {
                                 RoundedRectangle(cornerRadius: 12)
                                     .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                             )
+
+                            
+                            
+                            
+                            
                             
                             // pengaturan alarm
                             Text("Pengaturan Alarm")
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
+                            
                             HStack{
                                 Image(systemName: "speaker.wave.3.fill")
                                     .foregroundColor(.white)
                                     .frame(width:44, height: 44)
-                                    .background(Color("new2"))
+                                    .background(Color.blue)
                                     .clipShape(Circle())
                                 
                                 Text("Suara")
                                 Spacer()
                                 Toggle("", isOn: $viewModel.isSoundOn)
-                                    .tint(Color("new2"))
+                                    .tint(.blue)
                                     .labelsHidden()
                                     .onChange(of: viewModel.isSoundOn) {_, newValue in
                                         if !newValue {
@@ -346,15 +367,15 @@ struct AddAlarmView: View {
                 .navigationBarHidden(true)
                 .background(
                     LinearGradient(
-                        colors: [Color("new2").opacity(0.2), Color.cyan.opacity(0.1)],
+                        colors: [Color.blue.opacity(0.2), Color.cyan.opacity(0.1)],
                         startPoint: .top,
                         endPoint: .bottom
                     )
                 )
             }
             .blur(radius: showVibrationAlert ? 3 : 0)
-            
             if showVibrationAlert {
+                
                 VibrationAlertView {
                     withAnimation{
                         showVibrationAlert = false
