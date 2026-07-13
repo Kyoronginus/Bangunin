@@ -55,6 +55,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AppiOS/Views/Components/TrainProgressBar.swift,
+				AppiOS/Views/Components/VibrationAlertView.swift,
 				Assets.xcassets,
 				Shared/LiveActivities/AlarmAttributes.swift,
 				Shared/LiveActivities/CancelAlarmIntent.swift,
@@ -396,7 +397,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S6V9894Z7;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Bangunin/Info.plist;
@@ -433,7 +434,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S6V9894Z7;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Bangunin/Info.plist;
@@ -470,7 +471,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S6V9894Z7;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BanguninWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BanguninWidget;
@@ -501,7 +502,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S6V9894Z7;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BanguninWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BanguninWidget;

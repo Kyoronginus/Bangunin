@@ -26,7 +26,7 @@ struct RepeatSelectionView: View {
 
                 Spacer()
 
-                Text("Repeat")
+                Text("Ulangi")
                     .font(.headline)
                     .bold()
 
@@ -63,7 +63,7 @@ struct RepeatSelectionView: View {
                                 }
                             }
                             .padding()
-                            .background(Color(UIColor.systemGray6))
+                            .background(.white)
                         }
                         
                         if index < repeatOptions.count - 1 {

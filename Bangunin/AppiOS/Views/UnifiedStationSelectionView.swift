@@ -52,7 +52,16 @@ struct UnifiedStationSelectionView: View {
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $viewModel.searchText, prompt: "Search Station")
+        .searchable(text: $viewModel.searchText, prompt: "Search")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                }
+            }
+        }
     }
 
     private func stationRow(for station: Station) -> some View {
