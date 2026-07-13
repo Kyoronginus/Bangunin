@@ -54,6 +54,7 @@
 		077AE4DA2FF8D3EA00FD607A /* Exceptions for "Bangunin" folder in "BanguninWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AppiOS/Views/Components/DepartureAlertView.swift,
 				AppiOS/Views/Components/TrainProgressBar.swift,
 				AppiOS/Views/Components/VibrationAlertView.swift,
 				Assets.xcassets,
@@ -397,7 +398,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2H86GQQUYG;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Bangunin/Info.plist;
@@ -433,7 +434,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2H86GQQUYG;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Bangunin/Info.plist;
@@ -469,7 +470,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2H86GQQUYG;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BanguninWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BanguninWidget;
@@ -500,7 +501,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2H86GQQUYG;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BanguninWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BanguninWidget;

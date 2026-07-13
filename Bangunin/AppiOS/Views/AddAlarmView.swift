@@ -16,6 +16,7 @@ struct AddAlarmView: View {
     @State private var showDepartureSheet: Bool = false
     @State private var showDestinationSheet: Bool = false
     @State private var showVibrationAlert: Bool = false
+    @State private var showDepartureAlert: Bool = false
 
     init(editingAlarm: Alarm? = nil) {
         _viewModel = State(
@@ -275,12 +276,17 @@ struct AddAlarmView: View {
                                     if !validDestinations.contains(where: { $0.name == viewModel.destinationStation.name }) {
                                         viewModel.destinationStation = .none
                                     }
+                                    
+                                    if viewModel.departureStation.name != Station.none.name {
+                                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7, blendDuration: 0)) {
+                                            showDepartureAlert = true
+                                        }
+                                    }
                                 }
                             }
 
                             
-                            
-                            
+                            // Wake me up at
                             HStack(spacing: 16) {
                                 Image(systemName: "alarm.fill")
                                     .foregroundColor(.white)
@@ -288,7 +294,6 @@ struct AddAlarmView: View {
                                     .background(Color("new2"))
                                     .clipShape(Circle())
 
-                                
                                 VStack(alignment: .leading, spacing: 0) {
                                     Text("Bangunin Aku")
                                         .font(.body)
@@ -301,7 +306,6 @@ struct AddAlarmView: View {
                                 
                                 Spacer()
                                 
-            
                                 Menu {
                                     Picker("Wake me up at", selection: $viewModel.wakeMeUpAt) {
                                         ForEach(WakeUpTime.allCases, id: \.self) { time in
@@ -348,7 +352,9 @@ struct AddAlarmView: View {
                                     .labelsHidden()
                                     .onChange(of: viewModel.isSoundOn) {_, newValue in
                                         if !newValue {
-                                            showVibrationAlert = true
+                                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7, blendDuration: 0)) {
+                                                showVibrationAlert = true
+                                            }
                                         }
                                     }
                             }
@@ -373,15 +379,51 @@ struct AddAlarmView: View {
                     )
                 )
             }
-            .blur(radius: showVibrationAlert ? 3 : 0)
+            .blur(radius: showVibrationAlert || showDepartureAlert ? 3 : 0)
+            
             if showVibrationAlert {
-                
-                VibrationAlertView {
-                    withAnimation{
-                        showVibrationAlert = false
+                ZStack {
+                    Color.black.opacity(0.4)
+                        .edgesIgnoringSafeArea(.all)
+                        .transition(.opacity)
+                        .onTapGesture {
+                            withAnimation(.easeOut(duration: 0.2)) {
+                                showVibrationAlert = false
+                            }
+                        }
+                    
+                    VibrationAlertView {
+                        withAnimation(.easeOut(duration: 0.2)) {
+                            showVibrationAlert = false
+                        }
                     }
+                    .transition(.asymmetric(
+                        insertion: .scale(scale: 1.2).combined(with: .opacity),
+                        removal: .opacity
+                    ))
                 }
-                .transition(.scale.combined(with: .opacity))
+            }
+            
+            if showDepartureAlert {
+                ZStack {
+                    Color.black.opacity(0.4)
+                        .edgesIgnoringSafeArea(.all)
+                        .transition(.opacity)
+                        .onTapGesture {
+                            withAnimation(.easeOut(duration: 0.2)) {
+                                showDepartureAlert = false
+                            }
+                        }
+                    DepartureAlertView {
+                        withAnimation(.easeOut(duration: 0.2)) {
+                            showDepartureAlert = false
+                        }
+                    }
+                    .transition(.asymmetric(
+                        insertion: .scale(scale: 1.2).combined(with: .opacity),
+                        removal: .opacity
+                    ))
+                }
             }
         }
     }
