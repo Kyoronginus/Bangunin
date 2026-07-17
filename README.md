@@ -2,16 +2,23 @@
 
 Bangunin is a location-based iOS alarm application designed specifically for 9-to-5 workers who commutes daily.
 
+![Bangunin Screenshot](readme_assets/Challenge%204%20Bolang%20PPT%20Final.005.jpeg)
 
 ## Core Features
 ### Active Alarm Card
 A card that keeps commuters informed with their current active alarm, real-time estimated time remaining until their destination, and quick access to stop the alarm.
 
+![Bangunin Screenshot](readme_assets/activeAlarmCard.png)
+
 ### Live Activity
 A live activity that lets commuters monitor their journey at a glance with the destination, remaining time, progress bar, and quick alarm controls.
 
+![Bangunin Screenshot](readme_assets/liveActivity.png)
+
 ### Apple Watch Companion
 A companion app that displays the active alarm, delivers sound and haptic alerts upon arrival, and lets commuters stop the alarm directly from their wrist.
+
+![Bangunin Screenshot](readme_assets/watchSmartStack.png)
 
 
 ## Tech Stack & Architecture
