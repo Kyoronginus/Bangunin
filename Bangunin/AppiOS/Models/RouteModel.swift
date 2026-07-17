@@ -125,7 +125,7 @@ struct RouteData {
         let currentLon = LocationManager.shared.userLocation?.coordinate.longitude ?? 106.816666
         
         allRoutes[.debug] = [
-            Station(name: "ADA GOP 9", latitude: -6.3021, longitude: 106.6525),
+//            Station(name: "ADA GOP 9", latitude: -6.3021, longitude: 106.6525),
             Station(name: "Cisauk debug", latitude: -6.3262, longitude: 106.6433),
             Station(name: "Los Angeles Station debug", latitude: 34.0651, longitude: -118.2353),
             Station(name: "Debug DEPARTURE", latitude: currentLat, longitude: currentLon),

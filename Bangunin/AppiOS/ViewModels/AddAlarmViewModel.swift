@@ -200,7 +200,7 @@ class AddAlarmViewModel {
                 alarmID: targetAlarmID,
                 stationName: departureStation.name,
                 destinationName: destinationStation.name,
-                radius: 100,  // radius buat departure station
+                radius: 300,
                 coordinate: departureStation.coordinate
             )
 
