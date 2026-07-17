@@ -63,4 +63,4 @@ fastlane/test_output
 
 .DS_Store
 
-readme_assets   
+# readme_assets   
