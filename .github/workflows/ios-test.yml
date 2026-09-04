@@ -20,7 +20,7 @@ jobs:
         - name: Run Tests
           run: |
             xcodebuild test \
-            -project Bangunin/Bangunin.xcodeproj \
             -scheme Bangunin \
             -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
             clean test | xcpretty
+
