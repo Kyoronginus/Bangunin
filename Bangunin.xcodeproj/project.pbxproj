@@ -13,6 +13,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		07283D6A304A62EB0000DEBB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 077AE1D92FF5FAA200FD607A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 077AE1E02FF5FAA200FD607A;
+			remoteInfo = Bangunin;
+		};
+		07283D79304A634F0000DEBB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 077AE1D92FF5FAA200FD607A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 077AE1E02FF5FAA200FD607A;
+			remoteInfo = Bangunin;
+		};
 		077AE4CC2FF8C37200FD607A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 077AE1D92FF5FAA200FD607A /* Project object */;
@@ -37,6 +51,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		07283D66304A62EB0000DEBB /* BanguninTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BanguninTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		07283D73304A634F0000DEBB /* BanguninUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BanguninUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		077AE1E12FF5FAA200FD607A /* Bangunin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bangunin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		077AE4B82FF8C37000FD607A /* BanguninWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BanguninWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		077AE4BA2FF8C37000FD607A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -73,6 +89,16 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		07283D67304A62EB0000DEBB /* BanguninTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BanguninTests;
+			sourceTree = "<group>";
+		};
+		07283D74304A634F0000DEBB /* BanguninUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BanguninUITests;
+			sourceTree = "<group>";
+		};
 		077AE1E32FF5FAA200FD607A /* Bangunin */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -93,6 +119,20 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		07283D63304A62EB0000DEBB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		07283D70304A634F0000DEBB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		077AE1DE2FF5FAA200FD607A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -117,6 +157,8 @@
 			children = (
 				077AE1E32FF5FAA200FD607A /* Bangunin */,
 				077AE4BE2FF8C37000FD607A /* BanguninWidget */,
+				07283D67304A62EB0000DEBB /* BanguninTests */,
+				07283D74304A634F0000DEBB /* BanguninUITests */,
 				077AE4B92FF8C37000FD607A /* Frameworks */,
 				077AE1E22FF5FAA200FD607A /* Products */,
 			);
@@ -127,6 +169,8 @@
 			children = (
 				077AE1E12FF5FAA200FD607A /* Bangunin.app */,
 				077AE4B82FF8C37000FD607A /* BanguninWidgetExtension.appex */,
+				07283D66304A62EB0000DEBB /* BanguninTests.xctest */,
+				07283D73304A634F0000DEBB /* BanguninUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -143,6 +187,52 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		07283D65304A62EB0000DEBB /* BanguninTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 07283D6C304A62EB0000DEBB /* Build configuration list for PBXNativeTarget "BanguninTests" */;
+			buildPhases = (
+				07283D62304A62EB0000DEBB /* Sources */,
+				07283D63304A62EB0000DEBB /* Frameworks */,
+				07283D64304A62EB0000DEBB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				07283D6B304A62EB0000DEBB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				07283D67304A62EB0000DEBB /* BanguninTests */,
+			);
+			name = BanguninTests;
+			packageProductDependencies = (
+			);
+			productName = BanguninTests;
+			productReference = 07283D66304A62EB0000DEBB /* BanguninTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		07283D72304A634F0000DEBB /* BanguninUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 07283D7B304A634F0000DEBB /* Build configuration list for PBXNativeTarget "BanguninUITests" */;
+			buildPhases = (
+				07283D6F304A634F0000DEBB /* Sources */,
+				07283D70304A634F0000DEBB /* Frameworks */,
+				07283D71304A634F0000DEBB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				07283D7A304A634F0000DEBB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				07283D74304A634F0000DEBB /* BanguninUITests */,
+			);
+			name = BanguninUITests;
+			packageProductDependencies = (
+			);
+			productName = BanguninUITests;
+			productReference = 07283D73304A634F0000DEBB /* BanguninUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		077AE1E02FF5FAA200FD607A /* Bangunin */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 077AE1EC2FF5FAA500FD607A /* Build configuration list for PBXNativeTarget "Bangunin" */;
@@ -199,6 +289,14 @@
 				LastSwiftUpdateCheck = 2660;
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
+					07283D65304A62EB0000DEBB = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = 077AE1E02FF5FAA200FD607A;
+					};
+					07283D72304A634F0000DEBB = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = 077AE1E02FF5FAA200FD607A;
+					};
 					077AE1E02FF5FAA200FD607A = {
 						CreatedOnToolsVersion = 26.6;
 					};
@@ -223,11 +321,27 @@
 			targets = (
 				077AE1E02FF5FAA200FD607A /* Bangunin */,
 				077AE4B72FF8C37000FD607A /* BanguninWidgetExtension */,
+				07283D65304A62EB0000DEBB /* BanguninTests */,
+				07283D72304A634F0000DEBB /* BanguninUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		07283D64304A62EB0000DEBB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		07283D71304A634F0000DEBB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		077AE1DF2FF5FAA200FD607A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -245,6 +359,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		07283D62304A62EB0000DEBB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		07283D6F304A634F0000DEBB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		077AE1DD2FF5FAA200FD607A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -262,6 +390,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		07283D6B304A62EB0000DEBB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 077AE1E02FF5FAA200FD607A /* Bangunin */;
+			targetProxy = 07283D6A304A62EB0000DEBB /* PBXContainerItemProxy */;
+		};
+		07283D7A304A634F0000DEBB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 077AE1E02FF5FAA200FD607A /* Bangunin */;
+			targetProxy = 07283D79304A634F0000DEBB /* PBXContainerItemProxy */;
+		};
 		077AE4CD2FF8C37200FD607A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 077AE4B72FF8C37000FD607A /* BanguninWidgetExtension */;
@@ -270,6 +408,88 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		07283D6D304A62EB0000DEBB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tohru.BanguninTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bangunin.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Bangunin";
+			};
+			name = Debug;
+		};
+		07283D6E304A62EB0000DEBB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tohru.BanguninTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bangunin.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Bangunin";
+			};
+			name = Release;
+		};
+		07283D7C304A634F0000DEBB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tohru.BanguninUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Bangunin;
+			};
+			name = Debug;
+		};
+		07283D7D304A634F0000DEBB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2VMZ7HJCSL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tohru.BanguninUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Bangunin;
+			};
+			name = Release;
+		};
 		077AE1EA2FF5FAA500FD607A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -528,6 +748,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		07283D6C304A62EB0000DEBB /* Build configuration list for PBXNativeTarget "BanguninTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07283D6D304A62EB0000DEBB /* Debug */,
+				07283D6E304A62EB0000DEBB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		07283D7B304A634F0000DEBB /* Build configuration list for PBXNativeTarget "BanguninUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07283D7C304A634F0000DEBB /* Debug */,
+				07283D7D304A634F0000DEBB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		077AE1DC2FF5FAA200FD607A /* Build configuration list for PBXProject "Bangunin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
