@@ -21,6 +21,6 @@ jobs:
           run: |
             xcodebuild test \
             -scheme Bangunin \
-            -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
             clean test | xcpretty
 
