@@ -14,9 +14,22 @@ jobs:
         - name: Checkout Code
           uses: actions/checkout@v4
 
+        - name: Setup iOS Simulator
+          uses: futureware-tech/simulator-action@v4
+          with:
+            model: 'iPhone 17'
+
         - name: Run Tests
           run: |
+            set -o pipefail
             xcodebuild test \
             -scheme Bangunin \
             -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
-            clean test | xcpretty
+            clean test | xcpretty --report junit --output build/reports/junit.xml
+
+        - name: Publish Test Report
+          uses: mikepenz/action-junit-report@v4
+          if: success() || failure()
+          with:
+            report_paths: 'build/reports/junit.xml'
+            check_name: "iOS Test Results"
