@@ -22,22 +22,36 @@ final class BanguninUITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
+    // empty state for searchBar
     @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    func test_searchBar_withInvalidString_showsNoResults() throws {
         let app = XCUIApplication()
         app.launch()
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // XCUIAutomation Documentation
-        // https://developer.apple.com/documentation/xcuiautomation
-    }
-
-    @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
+        // 1. Navigate to Add alarm screen (tap the '+' button)
+        let addButton = app.buttons["Add"]
+        if !addButton.exists {
+            // Sometimes systemName: "plus" is just labeled "Add" in accessibility.
+            // If not, we can find it as the last button in the navigation bar.
+            XCTAssertTrue(app.navigationBars.buttons.count > 0, "Navigation bar should have buttons")
         }
+        addButton.tap()
+
+        // 2. Press "Turun di" (Destination Station)
+        // SwiftUI merges the text in the HStack for the button's accessibility label.
+        let turunDiButton = app.buttons.containing(.staticText, identifier: "Turun di").firstMatch
+        XCTAssertTrue(turunDiButton.waitForExistence(timeout: 2.0), "Turun di button should appear")
+        turunDiButton.tap()
+
+        // 3. Enter random strings in the searchBar
+        let searchBar = app.searchFields["Search"]
+        XCTAssertTrue(searchBar.waitForExistence(timeout: 2.0), "Search bar should appear")
+        searchBar.tap()
+        searchBar.typeText("InvalidStation123xyz")
+
+        // 4. Verify default case (empty list / no stations found)
+        // The list should have 0 cells.
+        let cellsCount = app.cells.count
+        XCTAssertEqual(cellsCount, 0, "List should be empty when searching for an invalid string")
     }
 }

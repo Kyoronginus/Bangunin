@@ -9,6 +9,11 @@ on:
 jobs:
     build_and_test:
         runs-on: macos-26
+        timeout-minutes: 30
+        permissions:
+            contents: read
+            checks: write
+            pull-requests: write
 
         steps:
         - name: Checkout Code
@@ -19,13 +24,23 @@ jobs:
           with:
             model: 'iPhone 17'
 
+        - name: Build for Testing
+          run: |
+            set -o pipefail
+            xcodebuild build-for-testing \
+            -scheme Bangunin \
+            -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
+            -parallel-testing-enabled NO \
+            clean | xcpretty
+
         - name: Run Tests
           run: |
             set -o pipefail
-            xcodebuild test \
+            xcodebuild test-without-building \
             -scheme Bangunin \
             -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
-            clean test | xcpretty --report junit --output build/reports/junit.xml
+            -parallel-testing-enabled NO \
+            | xcpretty --report junit --output build/reports/junit.xml
 
         - name: Publish Test Report
           uses: mikepenz/action-junit-report@v4
