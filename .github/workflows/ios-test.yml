@@ -14,33 +14,8 @@ jobs:
         - name: Checkout Code
           uses: actions/checkout@v4
 
-        - name: Find and Select Xcode
-          run: |
-            echo "=== Available Xcode installations ==="
-            ls -d /Applications/Xcode*.app || echo "No Xcode found"
-            
-            echo ""
-            echo "=== Current Xcode ==="
-            xcode-select -p
-            xcodebuild -version
-            
-            echo ""
-            echo "=== Installed SDKs ==="
-            xcodebuild -showsdks
-            
-            echo ""
-            echo "=== Installed Platforms ==="
-            xcrun simctl runtime list || true
-
-        - name: Install iOS Simulator Runtime
-          run: |
-            echo "Downloading iOS platform (this may take a few minutes)..."
-            xcodebuild -downloadPlatform iOS
-            echo "Download complete."
-            
-            echo ""
-            echo "=== Verify simulators are now available ==="
-            xcrun simctl list devices available | grep -i "iphone" | head -5
+        - name: Select Xcode 26.2
+          run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
 
         - name: Run Tests
           run: |
