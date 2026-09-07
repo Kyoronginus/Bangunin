@@ -14,15 +14,19 @@ jobs:
         - name: Checkout Code
           uses: actions/checkout@v4
 
+        - name: Select Xcode 16.4
+          run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+
         - name: Setup iOS Simulator
           uses: futureware-tech/simulator-action@v4
           with:
             model: 'iPhone 16'
+            os_version: '=18.5'
 
         - name: Run Tests
           run: |
+            DEVICE_UDID=$(xcrun simctl list devices booted -j | python3 -c "import sys,json; devs=json.load(sys.stdin)['devices']; print(next(d['udid'] for ds in devs.values() for d in ds))")
             xcodebuild test \
             -scheme Bangunin \
-            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -destination "platform=iOS Simulator,id=$DEVICE_UDID" \
             clean test | xcpretty
-
