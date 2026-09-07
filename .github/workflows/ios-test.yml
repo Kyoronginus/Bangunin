@@ -8,14 +8,11 @@ on:
 
 jobs:
     build_and_test:
-        runs-on: macos-15
+        runs-on: macos-14
 
         steps:
         - name: Checkout Code
           uses: actions/checkout@v4
-        
-        - name: Download iOS Simulator Runtime
-          run: xcodebuild -downloadPlatform iOS
 
         - name: Run Tests
           run: |
