@@ -20,6 +20,11 @@ jobs:
           uses: actions/checkout@v4
 
 
+        - name: Setup iOS Simulator
+          uses: futureware-tech/simulator-action@v4
+          with:
+            model: 'iPhone 17'
+
         - name: Build for Testing
           run: |
             set -o pipefail
