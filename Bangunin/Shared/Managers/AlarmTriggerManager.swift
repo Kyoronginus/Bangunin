@@ -13,11 +13,11 @@ extension Notification.Name {
     static let banguninAlarmDidCancel = Notification.Name("banguninAlarmDidCancel")
 }
 
-class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate {
+class AlarmTriggerManager: NSObject, UNUserNotificationCenterDelegate, AlarmTriggerManaging {
     static let shared = AlarmTriggerManager()
     
     // Store reference to the active Live Activities keyed by alarmID
-    private var activeActivities: [String: Any] = [:]
+    var activeActivities: [String: Any] = [:]
     
     private override init() {
         super.init()
