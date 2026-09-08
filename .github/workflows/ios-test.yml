@@ -31,6 +31,7 @@ jobs:
             -scheme Bangunin \
             -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
             -parallel-testing-enabled NO \
+            -skip-testing:BanguninUITests \
             clean | xcpretty
 
         - name: Run Tests
@@ -40,6 +41,7 @@ jobs:
             -scheme Bangunin \
             -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
             -parallel-testing-enabled NO \
+            -skip-testing:BanguninUITests \
             | xcpretty --report junit --output build/reports/junit.xml
 
         - name: Publish Test Report

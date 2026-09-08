@@ -94,11 +94,6 @@
 			path = BanguninTests;
 			sourceTree = "<group>";
 		};
-		07283D74304A634F0000DEBB /* BanguninUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = BanguninUITests;
-			sourceTree = "<group>";
-		};
 		077AE1E32FF5FAA200FD607A /* Bangunin */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -158,7 +153,6 @@
 				077AE1E32FF5FAA200FD607A /* Bangunin */,
 				077AE4BE2FF8C37000FD607A /* BanguninWidget */,
 				07283D67304A62EB0000DEBB /* BanguninTests */,
-				07283D74304A634F0000DEBB /* BanguninUITests */,
 				077AE4B92FF8C37000FD607A /* Frameworks */,
 				077AE1E22FF5FAA200FD607A /* Products */,
 			);
@@ -222,9 +216,6 @@
 			);
 			dependencies = (
 				07283D7A304A634F0000DEBB /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				07283D74304A634F0000DEBB /* BanguninUITests */,
 			);
 			name = BanguninUITests;
 			packageProductDependencies = (

@@ -75,7 +75,7 @@ struct LocationManagerTests{
         context.insert(alarm)
         try context.save()
         
-        let sut = LocationManager() // Fresh instance!
+        let sut = LocationManager()
         let mockAlarmTriggerManager = MockAlarmTriggerManager()
         sut.alarmTriggerManager = mockAlarmTriggerManager
         
