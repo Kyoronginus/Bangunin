@@ -23,12 +23,12 @@ jobs:
         - name: Build for Testing
           run: |
             set -o pipefail
-            xcodebuild build-for-testing \
+            xcodebuild clean build-for-testing \
             -scheme Bangunin \
             -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
             -parallel-testing-enabled NO \
             -skip-testing:BanguninUITests \
-            clean | xcpretty
+            | xcpretty
 
         - name: Run Tests
           run: |
