@@ -8,6 +8,18 @@ import CoreLocation
 import Foundation
 import SwiftData
 
+protocol AddAlarmViewModelProtocol {
+    var alarmName: String { get set }
+    var departureStation: Station { get set }
+    var destinationStation: Station { get set }
+    var wakeMeUpAt: WakeUpTime { get set }
+    var selectedRepeatOptions: Set<RepeatOption> { get set }
+    var isVibrationOn: Bool { get set }
+    var isSoundOn: Bool { get set }
+    var isRepeating: Bool { get set }
+    
+}
+
 @Observable
 class AddAlarmViewModel {
     var alarmName: String = ""
