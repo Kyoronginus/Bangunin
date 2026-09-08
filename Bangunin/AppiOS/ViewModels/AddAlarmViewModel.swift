@@ -9,6 +9,7 @@ import Foundation
 import SwiftData
 
 protocol AddAlarmViewModelProtocol {
+    // variables
     var alarmName: String { get set }
     var departureStation: Station { get set }
     var destinationStation: Station { get set }
@@ -18,6 +19,15 @@ protocol AddAlarmViewModelProtocol {
     var isSoundOn: Bool { get set }
     var isRepeating: Bool { get set }
     
+    // computed properties
+    var isEditMode: Bool { get }
+    var isFormValid: Bool { get }
+    var repeatText: String { get }
+    var allStations: [Station] { get }
+    
+    // methods
+    func getAllAvailableDestinations(for departure: Station) -> [Station]
+    func saveAlarm(context: ModelContext)
 }
 
 @Observable

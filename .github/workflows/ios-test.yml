@@ -35,9 +35,6 @@ jobs:
             -skip-testing:BanguninUITests \
             | xcpretty
 
-        - name: Install xcbeautify
-          run: brew install xcbeautify
-
         - name: Run Tests
           run: |
             set -o pipefail
@@ -46,12 +43,12 @@ jobs:
             -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
             -parallel-testing-enabled NO \
             -skip-testing:BanguninUITests \
-            | xcbeautify --report junit --junit-report-pathname build/reports/junit.xml
+            -resultBundlePath TestResults.xcresult
 
-        - name: Publish Test Report
-          uses: mikepenz/action-junit-report@v4
+        - name: Upload Test Results
+          uses: actions/upload-artifact@v4
           if: success() || failure()
           with:
-            report_paths: 'build/reports/junit.xml'
-            check_name: "iOS Test Results"
+            name: TestResults
+            path: TestResults.xcresult
 
