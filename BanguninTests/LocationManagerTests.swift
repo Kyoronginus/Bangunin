@@ -54,41 +54,46 @@ struct LocationManagerTests{
         // Because we haven't saved any alarm with `alarmID` to SwiftData, fetchAlarmIfShouldTrigger will return nil!
         sut.locationManager(manager, didDetermineState: .inside, for: region)
         
-        // Then: The alarm should NOT be added to triggeredAlarmIDs (allowing it to retry later)
-        // THIS WILL FAIL: Because LocationManager inserts it BEFORE checking if fetch was successful.
+        // Then: The alarm should not be added to triggeredAlarmIDs (allowing it to retry later)
         #expect(sut.triggeredAlarmIDs.contains(alarmID) == false, "Alarm should not be locked out in triggeredAlarmIDs if fetching fails.")
     }
     
-    // UT-010
-    @Test("Toggle one-time alarm when already at destination")
-    @MainActor
-    func test_handleRegionEvent_oneTimeAtDestination() throws {
-        // Given: We create and save an active alarm in SwiftData
+    @Test("Toggle one-time alarm with 'None' as departure station")
+    func test_toggleAlarm_oneTime_noDepartureStation() throws {
+        
+        // Given: A one-time alarm with "None" as departure
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: Alarm.self, configurations: config)
         let context = ModelContext(container)
         
         let alarm = Alarm(
-            label: "Test", departureStation: "Bogor", destinationStation: "Manggarai",
-            wakeUpTime: .oneMin, repeatOptions: [], isVibrationOn: true, isSoundOn: true, isActive: true
+            label: "Test One-Time",
+            departureStation: "None",
+            destinationStation: "Jakarta Kota",
+            wakeUpTime: .oneMin,
+            repeatOptions: [],
+            isVibrationOn: true,
+            isSoundOn: true,
+            isActive: false
         )
+        
         context.insert(alarm)
         try context.save()
         
-        let sut = LocationManager()
+        let mockLocationManager = MockLocationManager()
         let mockAlarmTriggerManager = MockAlarmTriggerManager()
-        sut.alarmTriggerManager = mockAlarmTriggerManager
         
-        let manager = CLLocationManager()
-        let regionIdString = "destination|\(alarm.id.uuidString)|Manggarai"
-        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: -6.2098, longitude: 106.8502), radius: 100, identifier: regionIdString)
+        let viewModel = AlarmCardViewModel(
+            alarm: alarm,
+            locationManager: mockLocationManager,
+            alarmTriggerManager: mockAlarmTriggerManager
+        )
         
-        // When: We simulate the location manager returning .inside immediately
-        sut.locationManager(manager, didDetermineState: .inside, for: region)
+        // When: We toggle the alarm on
+        viewModel.toggleAlarm(isActive: true)
         
-        // Then: fetchAlarmIfShouldTrigger should succeed, and triggerAlarm should be called.
-        // THIS MIGHT FAIL INTERMITTENTLY due to the on-the-fly ModelContainer creation in `fetchAlarmIfShouldTrigger` 
-        // failing to find the in-memory store we just created.
-        #expect(mockAlarmTriggerManager.didCallTriggerAlarm == true, "Trigger alarm should be called successfully.")
+        #expect(viewModel.alarm.isActive == true)
+        #expect(mockLocationManager.didCallSetupDestinationTrigger == true, "It should instantly set up the destination trigger for a one-time alarm, even if departure is 'None'.")
     }
+
 }

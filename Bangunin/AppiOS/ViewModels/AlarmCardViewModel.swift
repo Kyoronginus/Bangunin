@@ -60,10 +60,14 @@ class AlarmCardViewModel {
         try? alarm.modelContext?.save()
         
         if isActive {
-            if let depStation = findStation(name: alarm.departureStation),
-               let destStation = findStation(name: alarm.destinationStation) {
+            // We ONLY strictly require the destination station
+            if let destStation = findStation(name: alarm.destinationStation) {
                 
-                if alarm.repeatOptions.isEmpty {
+                // Departure station is optional (One-time alarms save it as "None")
+                let depStation = findStation(name: alarm.departureStation)
+                let distanceToDeparture = depStation.map { locationManager.distanceTo(destinationCoordinate: $0.coordinate) ?? 10000 } ?? 10000
+                
+                if alarm.repeatOptions.isEmpty || distanceToDeparture <= 300 {
                     // One-Time Alarm: Immediate tracking
                     let distance = locationManager.distanceTo(destinationCoordinate: destStation.coordinate) ?? 10000 // default fallback
                     locationManager.activeAlarmsData[alarm.id.uuidString] = LocationManager.ActiveAlarmData(
@@ -82,7 +86,8 @@ class AlarmCardViewModel {
                         alarmID: alarm.id.uuidString
                     )
                     print("One-Time Alarm turned ON: Started tracking immediately to \(destStation.name)")
-                } else {
+                    
+                } else if let depStation = depStation {
                     // Scheduled Alarm: Wait at departure
                     locationManager.startMonitoringDeparture(
                         alarmID: alarm.id.uuidString,
@@ -92,7 +97,11 @@ class AlarmCardViewModel {
                         coordinate: depStation.coordinate
                     )
                     print("Scheduled Alarm turned ON: registered departure geofence.")
+                } else {
+                    print("ERROR: Scheduled alarm turned ON but missing a valid departure station!")
                 }
+            } else {
+                print("ERROR: Failed to find destination station: '\(alarm.destinationStation)'")
             }
         } else {
             // Alarm turned OFF
@@ -102,4 +111,5 @@ class AlarmCardViewModel {
             print("Alarm turned OFF, cleared geofences.")
         }
     }
+
 }

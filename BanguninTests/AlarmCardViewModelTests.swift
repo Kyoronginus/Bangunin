@@ -23,29 +23,27 @@ struct AlarmCardViewModelTests {
         let alarm = Alarm(
             label: "Test",
             departureStation: "Manggarai",
-            destinationStation: "JakartaKota",
+            destinationStation: "Jakarta Kota",
             wakeUpTime: .oneMin,
             repeatOptions: [.monday, .tuesday, .wednesday, .thursday, .friday],
             isVibrationOn: true,
             isSoundOn: true,
             isActive: false
         )
+        
         context.insert(alarm)
         try context.save()
         
         let mockLocationManager = MockLocationManager()
         let mockAlarmTriggerManager = MockAlarmTriggerManager()
         
-        // Pass the mocks and context into the view model
         let viewModel = AlarmCardViewModel(
             alarm: alarm,
             locationManager: mockLocationManager,
             alarmTriggerManager: mockAlarmTriggerManager
         )
         
-        // Let's pretend the user is currently at the destination.
-        // The mock distanceTo function can return a very short distance, but in this specific logic,
-        // the bug is that it just blindly calls startMonitoringDeparture because it's a scheduled alarm.
+        // pretend the user is currently at the destination.
         mockLocationManager.distanceToReturn = 50
         
         

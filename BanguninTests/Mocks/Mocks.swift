@@ -10,7 +10,6 @@ import CoreLocation
 class MockLocationManager: LocationManaging {
     var activeAlarmsData: [String : LocationManager.ActiveAlarmData] = [:]
     
-    // Spies to check if functions were called
     var didCallSetupDestinationTrigger = false
     var didCallStartMonitoringDeparture = false
     var distanceToReturn: CLLocationDistance? = 10000
@@ -28,7 +27,7 @@ class MockLocationManager: LocationManaging {
     }
     
     func stopMonitoringRegion(purpose: RegionPurpose, alarmID: String) {
-        // Mock implementation
+ 
     }
 }
 
@@ -46,7 +45,7 @@ class MockAlarmTriggerManager: AlarmTriggerManaging {
     }
     
     func updateLiveActivityProgress(for alarmID: String, progress: Double, eta: Int) {
-        // Mock implementation
+
     }
     
     func endLiveActivity(for alarmID: String) {

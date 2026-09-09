@@ -94,6 +94,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate, LocationManaging {
     
     // Dependency Injection for testing
     var alarmTriggerManager: AlarmTriggerManaging = AlarmTriggerManager.shared
+    
+    var customModelContainer: ModelContainer?
+
 
 
     override init() {
@@ -350,14 +353,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate, LocationManaging {
         case .destination:
             if !triggeredAlarmIDs.contains(regionId.alarmID) {
                 print("User near destination station! Trigger alarm!")
-
-                triggeredAlarmIDs.insert(regionId.alarmID)
                 
                 guard let alarm = fetchAlarmIfShouldTrigger(alarmID: regionId.alarmID) else {
                     print("alarm silent gagal di trigger")
                     return
                 }
-
+                
+                triggeredAlarmIDs.insert(regionId.alarmID)
 
                 alarmTriggerManager.triggerAlarm(
                     for: regionId.stationName,
@@ -391,8 +393,12 @@ class LocationManager: NSObject, CLLocationManagerDelegate, LocationManaging {
     }
     
     private func fetchAlarmIfShouldTrigger(alarmID: String) -> Alarm? {
-        guard let container = try? ModelContainer(for: Alarm.self) else { return nil }
-        let context = ModelContext(container)
+//        guard let container = try? ModelContainer(for: Alarm.self) else { return nil }
+        guard let container = try? customModelContainer ?? ModelContainer(for: Alarm.self) else { return nil }
+
+        
+        
+        let context = container.mainContext
         let descriptor = FetchDescriptor<Alarm>()
         guard let alarms = try? context.fetch(descriptor) else { return nil }
         

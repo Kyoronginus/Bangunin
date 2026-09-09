@@ -1,19 +1,25 @@
-//
-//  BanguninApp.swift
-//  Bangunin
-//
-//  Created by Tohru Djunaedi Sato on 02/07/26.
-//
-
 import SwiftUI
 import SwiftData
 
 @main
 struct IOSApp: App {
+    // 1. Create a single shared container
+    let sharedContainer: ModelContainer
+
+    init() {
+        do {
+            sharedContainer = try ModelContainer(for: Alarm.self)
+            LocationManager.shared.customModelContainer = sharedContainer
+            
+        } catch {
+            fatalError("Failed to create ModelContainer: \(error)")
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             HomePageView()
-//            LocationDebugView()
-        }.modelContainer(for: Alarm.self)
+        }
+        .modelContainer(sharedContainer) 
     }
 }

@@ -18,6 +18,22 @@ struct CalculateFormulaTests {
         #expect(eta > 0)
     }
     
+    @Test("ETA calculation with passing positive velocity")
+    func test_etaWithPositiveVelocity() {
+        let distance: Double =  5000
+        let eta = calculateEstimateTime(distanceInMeters: distance, speedKmPerHour: 10)
+        
+        #expect(eta > 0)
+    }
+    
+    @Test("ETA calculation with passing 0 as the velocity")
+    func test_etaWithZeroVelocity() {
+        let distance: Double = 5000
+        let eta = calculateEstimateTime(distanceInMeters: distance, speedKmPerHour: 0)
+        
+        // should provide edge case handling if the input was 0
+        #expect(eta > 0)
+    }
     @Test("ETA calculation with passing negative velocity")
     func test_etaWithNegativeVelocity() {
         let distance: Double = 5000
