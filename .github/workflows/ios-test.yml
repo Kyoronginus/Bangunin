@@ -1,0 +1,46 @@
+name: Unit Testing & UI Testing
+
+on:
+    push:
+        branches: ["**"]
+    pull_request:
+        branches: ["main"]
+
+jobs:
+    build_and_test:
+        runs-on: macos-26
+        timeout-minutes: 30
+        permissions:
+            contents: read
+            checks: write
+            pull-requests: write
+
+        steps:
+        - name: Checkout Code
+          uses: actions/checkout@v4
+
+
+        - name: Setup iOS Simulator
+          uses: futureware-tech/simulator-action@v4
+          with:
+            model: 'iPhone 17'
+
+        - name: Build for Testing
+          run: |
+            set -o pipefail
+            xcodebuild clean build-for-testing \
+            -scheme Bangunin \
+            -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
+            -parallel-testing-enabled NO \
+            -skip-testing:BanguninUITests \
+            | xcpretty
+
+        - name: Run Tests
+          run: |
+            set -o pipefail
+            xcodebuild test-without-building \
+            -scheme Bangunin \
+            -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
+            -parallel-testing-enabled NO \
+            -skip-testing:BanguninUITests \
+            -resultBundlePath TestResults.xcresult

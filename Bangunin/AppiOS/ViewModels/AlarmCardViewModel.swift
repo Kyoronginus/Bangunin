@@ -11,9 +11,15 @@ import SwiftData
 @Observable
 class AlarmCardViewModel {
     var alarm: Alarm
+    @ObservationIgnored var locationManager: LocationManaging
+    @ObservationIgnored var alarmTriggerManager: AlarmTriggerManaging
     
-    init(alarm: Alarm) {
+    init(alarm: Alarm,
+         locationManager: LocationManaging = LocationManager.shared,
+         alarmTriggerManager: AlarmTriggerManaging = AlarmTriggerManager.shared) {
         self.alarm = alarm
+        self.locationManager = locationManager
+        self.alarmTriggerManager = alarmTriggerManager
     }
     
     var repeatStatus: String {
@@ -38,7 +44,7 @@ class AlarmCardViewModel {
     
     var isTracking: Bool {
         alarm.isActive &&
-        LocationManager.shared.activeAlarmsData[alarm.id.uuidString] != nil
+        locationManager.activeAlarmsData[alarm.id.uuidString] != nil
     }
     
     var isWaiting: Bool {
@@ -54,31 +60,36 @@ class AlarmCardViewModel {
         try? alarm.modelContext?.save()
         
         if isActive {
-            if let depStation = findStation(name: alarm.departureStation),
-               let destStation = findStation(name: alarm.destinationStation) {
+            // We ONLY strictly require the destination station
+            if let destStation = findStation(name: alarm.destinationStation) {
                 
-                if alarm.repeatOptions.isEmpty {
+                // Departure station is optional (One-time alarms save it as "None")
+                let depStation = findStation(name: alarm.departureStation)
+                let distanceToDeparture = depStation.map { locationManager.distanceTo(destinationCoordinate: $0.coordinate) ?? 10000 } ?? 10000
+                
+                if alarm.repeatOptions.isEmpty || distanceToDeparture <= 300 {
                     // One-Time Alarm: Immediate tracking
-                    let distance = LocationManager.shared.distanceTo(destinationCoordinate: destStation.coordinate) ?? 10000 // default fallback
-                    LocationManager.shared.activeAlarmsData[alarm.id.uuidString] = LocationManager.ActiveAlarmData(
+                    let distance = locationManager.distanceTo(destinationCoordinate: destStation.coordinate) ?? 10000 // default fallback
+                    locationManager.activeAlarmsData[alarm.id.uuidString] = LocationManager.ActiveAlarmData(
                         destinationCoordinate: destStation.coordinate,
                         totalDistance: distance
                     )
                     
-                    LocationManager.shared.setupDestinationTrigger(
+                    locationManager.setupDestinationTrigger(
                         alarmID: alarm.id.uuidString,
                         destination: destStation,
                         radius: alarm.wakeUpTime.radiusInMeters
                     )
                     
-                    AlarmTriggerManager.shared.triggerDepartureNotification(
+                    alarmTriggerManager.triggerDepartureNotification(
                         for: destStation.name,
                         alarmID: alarm.id.uuidString
                     )
                     print("One-Time Alarm turned ON: Started tracking immediately to \(destStation.name)")
-                } else {
+                    
+                } else if let depStation = depStation {
                     // Scheduled Alarm: Wait at departure
-                    LocationManager.shared.startMonitoringDeparture(
+                    locationManager.startMonitoringDeparture(
                         alarmID: alarm.id.uuidString,
                         stationName: depStation.name,
                         destinationName: destStation.name,
@@ -86,14 +97,19 @@ class AlarmCardViewModel {
                         coordinate: depStation.coordinate
                     )
                     print("Scheduled Alarm turned ON: registered departure geofence.")
+                } else {
+                    print("ERROR: Scheduled alarm turned ON but missing a valid departure station!")
                 }
+            } else {
+                print("ERROR: Failed to find destination station: '\(alarm.destinationStation)'")
             }
         } else {
             // Alarm turned OFF
-            LocationManager.shared.stopMonitoringRegion(purpose: .departure, alarmID: alarm.id.uuidString)
-            LocationManager.shared.stopMonitoringRegion(purpose: .destination, alarmID: alarm.id.uuidString)
-            AlarmTriggerManager.shared.endLiveActivity(for: alarm.id.uuidString)
+            locationManager.stopMonitoringRegion(purpose: .departure, alarmID: alarm.id.uuidString)
+            locationManager.stopMonitoringRegion(purpose: .destination, alarmID: alarm.id.uuidString)
+            alarmTriggerManager.endLiveActivity(for: alarm.id.uuidString)
             print("Alarm turned OFF, cleared geofences.")
         }
     }
+
 }

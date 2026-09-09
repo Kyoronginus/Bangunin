@@ -8,6 +8,29 @@ import CoreLocation
 import Foundation
 import SwiftData
 
+//protocol AddAlarmViewModelProtocol {
+//    // variables
+//    var alarmName: String { get set }
+//    var departureStation: Station { get set }
+//    var destinationStation: Station { get set }
+//    var wakeMeUpAt: WakeUpTime { get set }
+//    var selectedRepeatOptions: Set<RepeatOption> { get set }
+//    var isVibrationOn: Bool { get set }
+//    var isSoundOn: Bool { get set }
+//    var isRepeating: Bool { get set }
+//    
+//    
+//    // computed properties
+//    var isEditMode: Bool { get }
+//    var isFormValid: Bool { get }
+//    var repeatText: String { get }
+//    var allStations: [Station] { get }
+//    
+//    // methods
+//    func getAllAvailableDestinations(for departure: Station) -> [Station]
+//    func saveAlarm(context: ModelContext)
+//}
+
 @Observable
 class AddAlarmViewModel {
     var alarmName: String = ""
@@ -21,6 +44,9 @@ class AddAlarmViewModel {
 
     private var editingAlarm: Alarm?
 
+    private let locationManager: LocationManaging
+    private let alarmTriggerManager: AlarmTriggerManaging
+        
     var isEditMode: Bool {
         editingAlarm != nil
     }
@@ -35,9 +61,14 @@ class AddAlarmViewModel {
         }
     }
 
-    init(editingAlarm: Alarm? = nil) {
+    init(
+        editingAlarm: Alarm? = nil,
+        locationManager: LocationManaging = LocationManager.shared,
+        alarmTriggerManager: AlarmTriggerManaging = AlarmTriggerManager.shared
+    ){
+        self.locationManager = locationManager
+        self.alarmTriggerManager = alarmTriggerManager
         self.editingAlarm = editingAlarm
-
         if let alarm = editingAlarm {
             self.alarmName = alarm.label
             self.departureStation =
@@ -119,7 +150,6 @@ class AddAlarmViewModel {
         // Convert wakeMeUpAt to an approximate distance radius
         var distanceRadiusInMeters: Double
         switch wakeMeUpAt {
-//        case .atDestination: distanceRadiusInMeters = 200
         case .oneMin: distanceRadiusInMeters = 1160
         case .threeMin: distanceRadiusInMeters = 3480
         case .fiveMin: distanceRadiusInMeters = 5800
@@ -165,8 +195,11 @@ class AddAlarmViewModel {
             print("Gagal menyimpan alarm: \(error)")
         }
 
-        LocationManager.shared.stopMonitoringRegion(purpose: .departure, alarmID: targetAlarmID)
-        LocationManager.shared.stopMonitoringRegion(purpose: .destination, alarmID: targetAlarmID)
+//        LocationManager.shared.stopMonitoringRegion(purpose: .departure, alarmID: targetAlarmID)
+//        LocationManager.shared.stopMonitoringRegion(purpose: .destination, alarmID: targetAlarmID)
+        self.locationManager.stopMonitoringRegion(purpose: .destination, alarmID: targetAlarmID)
+        self.alarmTriggerManager.endLiveActivity(for: targetAlarmID)
+        
         AlarmTriggerManager.shared.endLiveActivity(for: targetAlarmID)
 
         if selectedRepeatOptions.isEmpty {

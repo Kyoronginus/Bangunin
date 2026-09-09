@@ -61,7 +61,7 @@ struct RegionIdentifier {
 }
 
 @Observable
-class LocationManager: NSObject, CLLocationManagerDelegate {
+class LocationManager: NSObject, CLLocationManagerDelegate, LocationManaging {
 
     // Singleton instance for easy background access
     static let shared = LocationManager()
@@ -90,10 +90,16 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     var activeAlarmsData: [String: ActiveAlarmData] = [:]
     
-    private var triggeredAlarmIDs: Set<String> = []
+    var triggeredAlarmIDs: Set<String> = []
+    
+    // Dependency Injection for testing
+    var alarmTriggerManager: AlarmTriggerManaging = AlarmTriggerManager.shared
+    
+    var customModelContainer: ModelContainer?
 
 
-    private override init() {
+
+    override init() {
         // Initialize the starting authorization status
         self.authorizationStatus = manager.authorizationStatus
         super.init()
@@ -246,7 +252,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             self.activeAlarmsData[alarmID]?.eta = "\(eta) menit"
             
             // 2. Passing to the manager
-            AlarmTriggerManager.shared.updateLiveActivityProgress(for: alarmID, progress: progress, eta: eta)
+            alarmTriggerManager.updateLiveActivityProgress(for: alarmID, progress: progress, eta: eta)
         }
     }
 
@@ -338,7 +344,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                     )
                 }
                 
-                AlarmTriggerManager.shared.triggerDepartureNotification(
+                alarmTriggerManager.triggerDepartureNotification(
                     for: destName,
                     alarmID: regionId.alarmID
                 )
@@ -347,16 +353,15 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         case .destination:
             if !triggeredAlarmIDs.contains(regionId.alarmID) {
                 print("User near destination station! Trigger alarm!")
-
-                triggeredAlarmIDs.insert(regionId.alarmID)
                 
                 guard let alarm = fetchAlarmIfShouldTrigger(alarmID: regionId.alarmID) else {
                     print("alarm silent gagal di trigger")
                     return
                 }
+                
+                triggeredAlarmIDs.insert(regionId.alarmID)
 
-
-                AlarmTriggerManager.shared.triggerAlarm(
+                alarmTriggerManager.triggerAlarm(
                     for: regionId.stationName,
                     alarmID: regionId.alarmID,
                     isSoundOn: alarm.isSoundOn
@@ -388,8 +393,12 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     private func fetchAlarmIfShouldTrigger(alarmID: String) -> Alarm? {
-        guard let container = try? ModelContainer(for: Alarm.self) else { return nil }
-        let context = ModelContext(container)
+//        guard let container = try? ModelContainer(for: Alarm.self) else { return nil }
+        guard let container = try? customModelContainer ?? ModelContainer(for: Alarm.self) else { return nil }
+
+        
+        
+        let context = container.mainContext
         let descriptor = FetchDescriptor<Alarm>()
         guard let alarms = try? context.fetch(descriptor) else { return nil }
         
