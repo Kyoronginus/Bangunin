@@ -44,5 +44,3 @@ jobs:
             -parallel-testing-enabled NO \
             -skip-testing:BanguninUITests \
             -resultBundlePath TestResults.xcresult
-
-A
