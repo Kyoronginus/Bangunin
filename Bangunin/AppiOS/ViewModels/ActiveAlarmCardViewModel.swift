@@ -11,16 +11,18 @@ import CoreLocation
 @Observable
 class ActiveAlarmCardViewModel {
     var alarm: Alarm
+    @ObservationIgnored var locationManager: LocationManaging
     
-    init(alarm: Alarm) {
+    init(alarm: Alarm, locationManager: LocationManaging = LocationManager.shared) {
         self.alarm = alarm
+        self.locationManager = locationManager
     }
     
     var etaString: String {
-        LocationManager.shared.activeAlarmsData[alarm.id.uuidString]?.eta ?? "Menghitung..."
+        locationManager.activeAlarmsData[alarm.id.uuidString]?.eta ?? "Menghitung..."
     }
     
     var progress: Double {
-        LocationManager.shared.activeAlarmsData[alarm.id.uuidString]?.progress ?? 0.0
+        locationManager.activeAlarmsData[alarm.id.uuidString]?.progress ?? 0.0
     }
 }

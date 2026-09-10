@@ -9,10 +9,15 @@ import CoreLocation
 
 class MockLocationManager: LocationManaging {
     var activeAlarmsData: [String : LocationManager.ActiveAlarmData] = [:]
-    
     var didCallSetupDestinationTrigger = false
     var didCallStartMonitoringDeparture = false
+    var didCallStopMonitoringRegion = false
+    var didCallRequestPermission = false
     var distanceToReturn: CLLocationDistance? = 10000
+    
+    func requestPermission() {
+        didCallRequestPermission = true
+    }
     
     func distanceTo(destinationCoordinate: CLLocationCoordinate2D) -> CLLocationDistance? {
         return distanceToReturn
@@ -27,14 +32,19 @@ class MockLocationManager: LocationManaging {
     }
     
     func stopMonitoringRegion(purpose: RegionPurpose, alarmID: String) {
- 
+        didCallStopMonitoringRegion = true
     }
 }
 
 class MockAlarmTriggerManager: AlarmTriggerManaging {
+    
     var didCallTriggerAlarm = false
     var didCallTriggerDepartureNotification = false
     var didCallEndLiveActivity = false
+    var didCallRequestPermissions = false
+    func requestPermissions() {
+        didCallRequestPermissions = true
+    }
     
     func triggerAlarm(for stationName: String, alarmID: String, isSoundOn: Bool) {
         didCallTriggerAlarm = true

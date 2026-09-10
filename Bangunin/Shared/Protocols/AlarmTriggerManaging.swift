@@ -6,6 +6,7 @@
 //
 
 protocol AlarmTriggerManaging {
+    func requestPermissions()
     func triggerAlarm(for stationName: String, alarmID: String, isSoundOn: Bool)
     func triggerDepartureNotification(for stationName: String, alarmID: String)
     func updateLiveActivityProgress(for alarmID: String, progress: Double, eta: Int)
