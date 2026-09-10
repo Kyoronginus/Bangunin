@@ -55,4 +55,72 @@ struct AlarmCardViewModelTests {
         #expect(viewModel.alarm.isActive == true)
         #expect(mockLocationManager.didCallSetupDestinationTrigger == true, "It should register the destination geofence directly if we are already there, but instead it blindly waits for departure.")
     }
+    
+    @Test("repeatStatus formats all repeat combinations correctly")
+    func test_repeatStatus() {
+        let mockLocation = MockLocationManager()
+        let mockTrigger = MockAlarmTriggerManager()
+        
+        let alarm = Alarm(
+            label: "test alarm",
+            departureStation: "Sudirman",
+            destinationStation: "Jakarta",
+            wakeUpTime: .oneMin,
+            repeatOptions: [],
+            isVibrationOn: true,
+            isSoundOn: true
+        )
+        let viewModel = AlarmCardViewModel(alarm: alarm, locationManager: mockLocation, alarmTriggerManager: mockTrigger)
+        
+        alarm.repeatOptions = []
+        #expect(viewModel.repeatStatus == "Never")
+        
+        alarm.repeatOptions = RepeatOption.allCases
+        #expect(viewModel.repeatStatus == "Setiap Hari")
+        
+        alarm.repeatOptions = [.monday, .tuesday, .wednesday, .thursday, .friday]
+        #expect(viewModel.repeatStatus == "Setiap Hari Kerja")
+        
+        alarm.repeatOptions = [.saturday, .sunday]
+        #expect(viewModel.repeatStatus == "Setiap Hari Libur")
+        
+        alarm.repeatOptions = [.monday, .wednesday]
+        #expect(viewModel.repeatStatus == "Sen, Rab")
+    }
+    
+    @Test("isOneTime, isTracking, and isWaiting correctly functioning")
+    func test_computedProperties() {
+        let mockLocation = MockLocationManager()
+        let mockTrigger = MockAlarmTriggerManager()
+        
+        let alarm = Alarm(
+            label: "test alarm",
+            departureStation: "Sudirman",
+            destinationStation: "Jakarta",
+            wakeUpTime: .oneMin,
+            repeatOptions: [],
+            isVibrationOn: true,
+            isSoundOn: true,
+            isActive: true
+        )
+        
+        let viewModel = AlarmCardViewModel(alarm: alarm, locationManager: mockLocation, alarmTriggerManager: mockTrigger)
+        
+        #expect(viewModel.isOneTime)
+        #expect(viewModel.isTracking == false)
+        #expect(viewModel.isWaiting)
+        
+        // then put into tracking mode
+        mockLocation.activeAlarmsData[alarm.id.uuidString] = LocationManager.ActiveAlarmData(
+            destinationCoordinate: CLLocationCoordinate2D(latitude: -6.2088, longitude: 106.7975),
+            totalDistance: 5000
+        )
+        
+        #expect(viewModel.isOneTime)
+        #expect(viewModel.isTracking)
+        #expect(viewModel.isWaiting == false)
+        
+        
+        
+    }
 }

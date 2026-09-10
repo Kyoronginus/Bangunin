@@ -6,6 +6,7 @@
 //
 
 import Testing
+import SwiftData
 @testable import Bangunin
 
 struct AddAlarmViewModelTests {
@@ -78,6 +79,33 @@ struct AddAlarmViewModelTests {
     }
     
     
+    // add alarm
+    @Test("saveAlarm creates and inserts new alarm into SwiftData")
+    func test_saveAlarm_createNewAlarm() throws {
+        let context = try makeContext()
+        
+        let mockLocation = MockLocationManager()
+        let mockTrigger = MockAlarmTriggerManager()
+        let viewModel = AddAlarmViewModel(locationManager: mockLocation, alarmTriggerManager: mockTrigger)
+        
+        let station = Station(name: "Jakarta Kota", latitude: -6.1375, longitude: 106.8146)
+        viewModel.alarmName = "Test Alarm"
+        viewModel.destinationStation = station
+        viewModel.wakeMeUpAt = .fiveMin
+        viewModel.selectedRepeatOptions = []
+        
+        viewModel.saveAlarm(context: context)
+        
+        let alarms = try context.fetch(FetchDescriptor<Alarm>())
+        
+        #expect(alarms.count == 1)
+        #expect(alarms.first?.label == "Test Alarm")
+        #expect(alarms.first?.destinationStation == "Jakarta Kota")
+        #expect(alarms.first?.wakeUpTime == .fiveMin)
+        #expect(alarms.first?.isActive == true)
+        #expect(mockLocation.didCallStopMonitoringRegion == true)
+        #expect(mockTrigger.didCallEndLiveActivity == true)
+    }
     
     
 }

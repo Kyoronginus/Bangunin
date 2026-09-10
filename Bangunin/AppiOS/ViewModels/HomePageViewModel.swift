@@ -11,7 +11,17 @@ class HomePageViewModel {
     var showAddAlarm: Bool = false
     var selectedAlarm: Alarm? = nil
     
-    private var locationManager = LocationManager.shared
+//    private var locationManager = LocationManager.shared
+    @ObservationIgnored private var locationManager: LocationManaging
+    @ObservationIgnored private var alarmTriggerManager: AlarmTriggerManaging
+    
+    init(
+        locationManager: LocationManaging = LocationManager.shared,
+        alarmTriggerManager: AlarmTriggerManaging = AlarmTriggerManager.shared
+    ) {
+        self.locationManager = locationManager
+        self.alarmTriggerManager = alarmTriggerManager
+    }
     
     func activeAlarms(from alarms: [Alarm]) -> [Alarm] {
         let activeIDs = locationManager.activeAlarmsData.keys
@@ -28,16 +38,16 @@ class HomePageViewModel {
     }
     
     func requestNotificationPermission() {
-        AlarmTriggerManager.shared.requestPermissions()
+        alarmTriggerManager.requestPermissions()
     }
     
     // We pass the modelContext in to perform the delete operation.
     // The actual array of alarms is still managed via @Query in the View for reactive performance.
     func deleteAlarm(_ alarm: Alarm, context: ModelContext) {
         if alarm.isActive {
-            LocationManager.shared.stopMonitoringRegion(purpose: .departure, alarmID: alarm.id.uuidString)
-            LocationManager.shared.stopMonitoringRegion(purpose: .destination, alarmID: alarm.id.uuidString)
-            AlarmTriggerManager.shared.endLiveActivity(for: alarm.id.uuidString)
+            locationManager.stopMonitoringRegion(purpose: .departure, alarmID: alarm.id.uuidString)
+            locationManager.stopMonitoringRegion(purpose: .destination, alarmID: alarm.id.uuidString)
+            alarmTriggerManager.endLiveActivity(for: alarm.id.uuidString)
         }
         
         context.delete(alarm)
